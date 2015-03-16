@@ -1,5 +1,7 @@
 window.onReady(function() {
 game = Z.extend(game, {
+	rabbits:0,
+	autoRate:0,
 	load: function() {
 		if (window.localStorage.game) {
 			var i = Z.extend(true, {}, JSON.parse(window.localStorage.game), {items:game.items})
@@ -11,31 +13,37 @@ game = Z.extend(game, {
 		window.localStorage.game = JSON.stringify(game)
 	},
 	click: function() {
-		game.num++
+		game.rabbits++
 		game.autoRate++
-		game.showNum()
+		game.showNums()
 	},
 	autoClick: function() {
 		game.autoRate = 0
 		game.items.forEach(function(i) {
+			if (!i.level) i.level = 0
 			game.autoRate += i.bonus * i.level
 		})
-		game.num += game.autoRate / 35
-		game.showNum()
-		game.toAuto = setTimeout(game.autoClick, 1000 / 35)
+		var clicksPerSecond = 1
+		if (game.autoRate > 100)
+			clicksPerSecond = 10
+		if (game.autoRate > 1000)
+			clicksPerSecond = 20
+		if (game.autoRate > 5000)
+			clicksPerSecond = 35
+		game.rabbits += game.autoRate / clicksPerSecond
+		game.showNums()
+		game.toAuto = setTimeout(game.autoClick, 1000 / clicksPerSecond)
 		game.enableShopItems()
 	},
-	showNum: function() {
-		if (!game.num) game.num = 0
-		if (!game.autoRate) game.autoRate = 0
+	showNums: function() {
 		var str
 		if (!game.format && Intl && Intl.NumberFormat) {
 			game.format = new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format
 		}
 		if (game.format) {
-			str = game.format(game.num)
+			str = game.format(game.rabbits)
 		} else {
-			str = game.num
+			str = game.rabbits
 		}
 		game.save()
 		Z('main > output').text(str)
@@ -76,7 +84,7 @@ game = Z.extend(game, {
 	},
 	enableShopItems: function() {
 		Z('#shop > ul > li').attr('disabled', null).each(function(i) {
-			if (Number.parseInt(Z(this).attr('data-cost')) > game.num) Z(this).attr('disabled', 'disabled')
+			if (Number.parseInt(Z(this).attr('data-cost')) > game.rabbits) Z(this).attr('disabled', 'disabled')
 		})
 	},
 	buyItem: function(e) {
@@ -86,15 +94,15 @@ game = Z.extend(game, {
 			name = el.find('.name').text(),
 			cost = el.attr('data-cost'),
 			item
-		if (game.num < cost) return
+		if (game.rabbits < cost) return
 		game.items.forEach(function(i) {
 			if (i.name == name) item = i
 		})
 		item.level++
-		game.num -= cost
+		game.rabbits -= cost
 		el = game.updateShopItem(item, el)
 		game.enableShopItems()
-		game.showNum()
+		game.showNums()
 	},
 	items:[
 		{
