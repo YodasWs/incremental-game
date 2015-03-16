@@ -1,0 +1,131 @@
+/** CSS Reset **/
+* { -webkit-box-sizing: border-box; box-sizing: border-box; }
+:root { font-family: 'Trebuchet MS', 'Open San', sans-serif; font-size: 1em; }
+html,body { margin: 0; padding: 0; }
+body { position: relative; overflow: hidden; }
+body > * {
+	height: 100vh; width: 100vw; max-width: 480px;
+	margin: 0 auto;
+	position: absolute; top: 0;
+	display: none;
+}
+a img, a:link img, a:visited img { border: 0 none; }
+div#intro { display: block; }
+main {
+	background: forestgreen;
+	padding: 2em 5em;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+img#rabbit {
+	display: block;
+	height: 200px;
+	margin: 2rem auto;
+}
+main > output {
+	display: block;
+	font-size: 3rem;
+	color: white;
+	font-weight: bold;
+	font-family: monospace;
+	text-align: right;
+}
+main > small {
+	display: block;
+	color: white;
+	text-align: center;
+}
+main > small::before { content: '+'; }
+main > small::after { content: ' rps'; }
+
+/** Store **/
+#shop {
+	background: whitesmoke;
+	padding: 1rem;
+}
+#shop > ul {
+	list-style: none; margin: 0; padding: 0;
+	height: 100%; overflow-y: auto;
+	border: 1px solid black;
+}
+#shop > ul > li {
+	display: block; border-bottom: 1px solid black;
+	min-height: 50px; padding: 5px 10px;
+	cursor: pointer; clear: both;
+	background: white;
+}
+#shop > ul > li:first-of-type { padding-right: 4rem; }
+#shop > ul > li[disabled] {
+	cursor: default;
+	background: lightgrey;
+}
+#shop > a {
+	display: block; float: right;
+	color: black; text-transform: uppercase;
+	text-decoration: none;
+	-webkit-transform: rotate(20deg);
+	-moz-transform: rotate(20deg);
+	-ms-transform: rotate(20deg);
+	transform: rotate(20deg);
+	padding: 2px 5px;
+	border: 1px outset black; border-radius: 7px; background: white;
+	position: absolute; top: 1rem; right: 1rem;
+}
+#shop .name, #shop .cost { float: left; }
+#shop .level, #shop .bonus { float: right; }
+#shop .cost { clear: left; }
+#shop .bonus { clear: right; }
+#shop .level::before {
+	content: 'lvl ';
+}
+#shop .bonus::before {
+	content: '+';
+}
+
+/** Rabbits! **/
+main > .rabbit { display: none; }
+/*
+main > .rabbit {
+	position: absolute; left: 100%; top: 50vh;
+	display: block; width: 50px; height: 50px; background: blue;
+	-webkit-mask-image: url("../img/rabbit-2.png");
+	-webkit-mask-size: contain;
+	-webkit-mask-type: luminance;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	mask-image: url("../img/rabbit-2.png");
+	mask-size: contain;
+	mask-type: luminance;
+	-webkit-animation-timing-function: ease-in-out;
+	-webkit-animation-name: running;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
+	animation-name: running;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+}
+@-webkit-keyframes running {
+	from { left: 100%; }
+	to { left: -50px; }
+}
+@keyframes running {
+	from { left: 100%; }
+	to { left: -50px; }
+}
+@keyframes jumping {
+	from {
+		transform: rotate(10deg);
+	}
+	to {
+		transform: rotate(-10deg);
+	}
+}
+/**/
+
+/** Links **/
+main > a[href="#shop"] {
+	display: block; text-indent: -1000px;
+	width: 122px; height: 90px;
+	background: -149px -5px url('../img/stores.png') no-repeat;
+}
