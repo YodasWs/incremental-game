@@ -1,0 +1,5 @@
+# .gitignore
+*.bak
+*.swp
+*~
+Thumbs.db
