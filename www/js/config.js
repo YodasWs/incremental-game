@@ -1,5 +1,6 @@
 window.onReady(function() {
 game = Z.extend(game, {
+	v:'1.0.1',
 	rabbits:0,
 	autoRate:0,
 	load: function() {
@@ -10,9 +11,19 @@ game = Z.extend(game, {
 		game.autoClick()
 	},
 	save: function() {
-		window.localStorage.game = JSON.stringify(game)
+		// Copy Game Data
+		var g = Z.extend(true, {}, game)
+		// Delete Unnecessary Data
+		g.items.forEach(function(i) {
+			delete i.baseCost
+			delete i.bonus
+		})
+		delete g.autoRate
+		delete g.toAuto
+		// Save
+		window.localStorage.game = JSON.stringify(g)
 	},
-	click: function() {
+	clkRabbit: function() {
 		game.rabbits++
 		game.autoRate++
 		game.showNums()
@@ -48,6 +59,42 @@ game = Z.extend(game, {
 		game.save()
 		Z('main > output').text(str)
 		Z('main > small').text(game.autoRate)
+	},
+	toggleMenu: function(e) {
+		if (Z('body > nav').css('display') != 'block')
+			game.openMenu()
+		else
+			game.closeMenu()
+	},
+	openMenu: function(e) {
+		var time = 400
+		Z('body > nav').show().css({
+			left: '-' + Z('body > nav').width() + 'px'
+		}).animate({
+			left:'0px'
+		}, time)
+		var l = Z('#main').css('left')
+		Z('#main').css({
+			left:(l && l != 'auto' ? l : '0px')
+		}).animate({
+			left:Z('body > nav').width() + 'px'
+		}, time)
+	},
+	closeMenu: function(e) {
+		var time = 400
+		Z('body > nav').css({
+			left:0
+		}).animate({
+			left:'-' + Z('body > nav').width() + 'px'
+		}, time, function() {
+			Z('body > nav').hide()
+		})
+		var l = Z('#main').css('left')
+		Z('#main').css({
+			left:(l && l != 'auto' ? l : '0px')
+		}).animate({
+			left:0
+		}, time)
 	},
 	openShop: function(e) {
 		Z('#shop > ul').children().remove()
@@ -112,47 +159,64 @@ game = Z.extend(game, {
 		},
 		{
 			name:'Nesting Hay',
-			baseCost:10,
+			baseCost:20,
 			bonus:.5,
 		},
 		{
 			name:'Rabbit Cages',
-			baseCost:30,
+			baseCost:50,
 			bonus:1,
 		},
 		{
 			name:'Breeding Expert',
-			baseCost:70,
+			baseCost:100,
 			bonus:5,
 		},
 		{
 			name:'Rabbit Toys',
-			baseCost:150,
+			baseCost:300,
 			bonus:10,
 		},
 		{
 			name:'Rabbit Perfume',
-			baseCost:3000,
+			baseCost:5000,
 			bonus:200,
 		},
 		{
 			name:'Rabbit Hormones',
-			baseCost:10000,
+			baseCost:15000,
 			bonus:500,
 		},
 		{
 			name:'Rabbit Viagra',
-			baseCost:100000,
+			baseCost:300000,
 			bonus:1000,
 		}
 	],
 })
-Z('img#rabbit').on('click', game.click)
+Z('#version').text(game.v)
+Z('img#rabbit').on('click', game.clkRabbit)
 Z(document).on('click', 'a[href^="#"]', function(e) {
 	e.preventDefault()
 	e.stopPropagation()
 })
 Z(document).on('click', 'a[href="#shop"]', game.openShop)
+Z(document).on('click', 'a[href="#menu"]', game.toggleMenu)
 Z(document).on('click', '#shop a[href="#main"]', game.closeShop)
+Z(document).on('click', 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on('click', '#shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on('click', 'a[href="#destroy"]', function(e) {
+	var g = Z.extend(true, {}, game)
+	g.items.forEach(function(i) {
+		delete i.baseCost
+		delete i.bonus
+		i.level = 0
+	})
+	game.items.forEach(function(i) {
+		delete i.level
+	})
+	g.rabbits = 0
+	window.localStorage.game = JSON.stringify(g)
+	game.load()
+})
 })

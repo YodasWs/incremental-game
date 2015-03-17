@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <title>Rabbit Farm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
 <link rel="stylesheet" href="css/base.css"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <script>
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
@@ -39,15 +39,19 @@ window.onload = function() {
 <body>
 <div id="intro">
 	<h1>Rabbit Farm</h1>
+	<small id="version"></small>
 </div>
-<nav>
+<nav id="menu">
+	<a href="#main">&#xd7;</a>
 	<a href="#about">About</a>
+	<a href="#destroy">Start Over</a>
 </nav>
 <main id="main">
 	<output>0</output>
 	<small>0</small>
 	<img id="rabbit" src="img/rabbit-1.png" alt="&#x1f407;" />
 	<div class="rabbit"></div>
+	<a href="#menu">Menu</a>
 	<a href="#shop">Shop</a>
 </main>
 <div id="shop">

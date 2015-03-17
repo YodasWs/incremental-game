@@ -2,7 +2,7 @@
 * { -webkit-box-sizing: border-box; box-sizing: border-box; }
 :root { font-family: 'Trebuchet MS', 'Open San', sans-serif; font-size: 1em; }
 html,body { margin: 0; padding: 0; }
-body { position: relative; overflow: hidden; }
+body { position: relative; overflow-x: hidden; }
 body > * {
 	height: 100vh; width: 100vw; max-width: 480px;
 	margin: 0 auto;
@@ -37,10 +37,47 @@ main > small {
 }
 main > small::before { content: '+'; }
 main > small::after { content: ' rps'; }
+main > a[href="#menu"] {
+	position: absolute; left: 10px; top: 20px;
+}
+
+/** Main Menu **/
+a[href="#menu"] {
+	display: block; text-indent: -10000px; overflow: hidden;
+	background: center center no-repeat url('../img/menu.png');
+	background: #001111;
+	width: 30px; height: 30px;
+	-webkit-mask-image: url("../img/menu.png");
+	-webkit-mask-size: contain;
+	-webkit-mask-type: luminance;
+	-webkit-mask-repeat: no-repeat;
+	mask-image: url("../img/menu.png");
+	mask-size: contain;
+	mask-type: luminance;
+	mask-repeat: no-repeat;
+}
+body > nav {
+	width: 200px; max-width: 80vw;
+	background: white;
+}
+body > nav > a {
+	display: block; width: 75%; line-height: 2rem;
+	border: 1px solid black; padding: 5px 10px; margin: 10px auto;
+	white-space: nowrap; overflow: hidden;
+	text-decoration: none; color: black;
+}
+body > nav > a[href="#main"] {
+	display: block; color: red; text-decoration: none; text-align: center;
+	height: 20px; width: 20px; font-size: 24px; line-height: 20px;
+	position: absolute; top: 0px; right: 0px;
+	border: 0 none; padding: 0; margin: 0;
+	background: white; font-weight: bold;
+}
 
 /** Store **/
 #shop {
-	background: whitesmoke;
+	height: 70vh; top: 20vh;
+	background: rgba(245, 245, 245, .9); /* whitesmoke #F5F5F5 */
 	padding: 1rem;
 }
 #shop > ul {
