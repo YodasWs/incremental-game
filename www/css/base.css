@@ -2,20 +2,23 @@
 * { -webkit-box-sizing: border-box; box-sizing: border-box; }
 :root { font-family: 'Trebuchet MS', 'Open San', sans-serif; font-size: 1em; }
 html,body { margin: 0; padding: 0; }
-body { position: relative; overflow-x: hidden; }
+body { position: relative; overflow-x: hidden; background: forestgreen; }
 body > * {
 	height: 100vh; width: 100vw; max-width: 480px;
 	margin: 0 auto;
 	position: absolute; top: 0;
 	display: none;
-}
-a img, a:link img, a:visited img { border: 0 none; }
-div#intro { display: block; }
-main {
-	background: forestgreen;
-	padding: 2em 5em;
 	overflow-x: hidden;
 	overflow-y: auto;
+}
+a img, a:link img, a:visited img { border: 0 none; }
+
+/** Splash Screen **/
+div#intro { display: block; text-align: center; }
+
+/** Main Game Center **/
+main {
+	padding: 2em 5em;
 }
 img#rabbit {
 	display: block;
@@ -66,6 +69,7 @@ body > nav > a {
 	white-space: nowrap; overflow: hidden;
 	text-decoration: none; color: black;
 }
+#about > a[href="#main"],
 body > nav > a[href="#main"] {
 	display: block; color: red; text-decoration: none; text-align: center;
 	height: 20px; width: 20px; font-size: 24px; line-height: 20px;
@@ -166,3 +170,18 @@ main > a[href="#shop"] {
 	width: 122px; height: 90px;
 	background: -149px -5px url('../img/stores.png') no-repeat;
 }
+
+/** About **/
+#about {
+	background: white; height: 200px;
+	padding: 0 1rem;
+}
+#about > small {
+	display: block; text-align: center;
+}
+#about > div {
+	margin-top: 1.3rem;
+}
+#about > h1 { text-align: center; margin-bottom: 0; }
+#license { max-width: 200px; }
+#version::before { content: 'v'; }

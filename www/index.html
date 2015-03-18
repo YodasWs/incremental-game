@@ -6,7 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
 <link rel="stylesheet" href="css/base.css"/>
+<script src="phonegap.js"></script>
 <script>
+if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
+	document.write('<script type="text/javascript" src="res/phonegap.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
 var c=0,a=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
@@ -23,23 +26,28 @@ window.game={}
 // Wait for document ready
 window.onReady(function() {
 	window.Z = Zepto
-	Z('body').css({background:Z('main').css('background-color')})
 })
 window.onload = function() {
 	game.load()
-	Z('body > *').hide()
-	Z('main').css({
-		display:'block',opacity:0
-	}).animate({
+	Z('body > #intro').css({
 		opacity:1
-	}, 1000, 'ease-out')
+	}).animate({
+		opacity:0
+	}, 200, function() {
+		$('body > #intro').hide()
+		Z('main').css({
+			display:'block',opacity:0
+		}).animate({
+			opacity:1
+		}, 600, 'ease-out')
+	})
+	/**/
 }
 </script>
 </head>
 <body>
 <div id="intro">
 	<h1>Rabbit Farm</h1>
-	<small id="version"></small>
 </div>
 <nav id="menu">
 	<a href="#main">&#xd7;</a>
@@ -59,9 +67,12 @@ window.onload = function() {
 	<ul></ul>
 </div>
 <small id="about">
-	<div rel="copyright">&copy;2015 Sam Grundman</div>
+	<a href="#main">&#xd7;</a>
+	<h1>Rabbit Farm</h1>
+	<small id="version"></small>
+	<small rel="copyright">&copy;2015 Sam Grundman</small>
 	<div>All images in public domain</div>
-	<div>
+	<div id="license">
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
 			<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
 		</a><br />

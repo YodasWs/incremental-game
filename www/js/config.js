@@ -180,12 +180,12 @@ game = Z.extend(game, {
 		{
 			name:'Rabbit Perfume',
 			baseCost:5000,
-			bonus:200,
+			bonus:100,
 		},
 		{
 			name:'Rabbit Hormones',
 			baseCost:15000,
-			bonus:500,
+			bonus:200,
 		},
 		{
 			name:'Rabbit Viagra',
@@ -193,6 +193,21 @@ game = Z.extend(game, {
 			bonus:1000,
 		}
 	],
+	openAbout:function(e) {
+		game.closeMenu()
+		$('#about').css({
+			display:'block',top:'100vh'
+		}).animate({
+			top:'calc(100vh - ' + $('#about').height() + 'px)'
+		}, 600, 'ease-out')
+	},
+	closeAbout:function(e) {
+		$('#about').animate({
+			top:'100vh'
+		}, 600, function() {
+			$('#about').hide()
+		})
+	}
 })
 Z('#version').text(game.v)
 Z('img#rabbit').on('click', game.clkRabbit)
@@ -202,9 +217,12 @@ Z(document).on('click', 'a[href^="#"]', function(e) {
 })
 Z(document).on('click', 'a[href="#shop"]', game.openShop)
 Z(document).on('click', 'a[href="#menu"]', game.toggleMenu)
+Z(document).on('click', 'a[href="#about"]', game.openAbout)
 Z(document).on('click', '#shop a[href="#main"]', game.closeShop)
+Z(document).on('click', '#about a[href="#main"]', game.closeAbout)
 Z(document).on('click', 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on('click', '#shop > ul > li:not([disabled])', game.buyItem)
+// Restart Game
 Z(document).on('click', 'a[href="#destroy"]', function(e) {
 	var g = Z.extend(true, {}, game)
 	g.items.forEach(function(i) {
