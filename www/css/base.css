@@ -1,3 +1,11 @@
+/**
+ * Rabbit Farm
+ * Copyright © 2015 Sam Grundman
+ *
+ * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+ * http://creativecommons.org/licenses/by-nc-sa/4.0/
+ */
+
 /** CSS Reset **/
 * { -webkit-box-sizing: border-box; box-sizing: border-box; }
 :root { font-family: 'Trebuchet MS', 'Open San', sans-serif; font-size: 1em; }

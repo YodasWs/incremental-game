@@ -1,12 +1,22 @@
-﻿// On document load, fire deviceready event
-window.addEventListener('load', function() {
-	// http://stackoverflow.com/questions/2490825/how-to-trigger-event-in-javascript
-	var event = document.createEvent("HTMLEvents")
-	event.initEvent('deviceready', true, true)
-	event.eventName = 'deviceready'
-	event.memo = {}
-	document.dispatchEvent(event)
-}, false)
+/**
+ * Rabbit Farm
+ * Copyright © 2015 Sam Grundman
+ *
+ * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+ * http://creativecommons.org/licenses/by-nc-sa/4.0/
+ */
+
+// On DOM ready, fire deviceready event
+;(function() {
+	var a = function() {
+		// http://stackoverflow.com/questions/2490825/how-to-trigger-event-in-javascript
+		var event = document.createEvent("HTMLEvents")
+		event.initEvent('deviceready', true, true);event.eventName = 'deviceready';event.memo = {}
+		document.dispatchEvent(event)
+	},c=0,b=function(){if(!c){if(document.readyState=='complete'){a();c=true}}}
+	if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
+	else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
+})();
 
 // console
 if (!window.console) var console = {
@@ -59,8 +69,8 @@ if (!navigator.vibrate) navigator.vibrate = function(t){}
 
 // camera, http://docs.phonegap.com/en/3.0.0/cordova_camera_camera.md.html#Camera
 camera = {
-	getPicture:function() {},
-	cleanup:function() {}
+	getPicture:function(){},
+	cleanup:function(){}
 }
 
 // for desktop testing
@@ -68,7 +78,3 @@ window.onerror = function(error) { console.error(error); }
 if (device.platform == 'Chrome') device.platform = 'Android'
 else if (device.platform.indexOf('Win') > -1) device.platform = 'Win32NT'
 else if (device.platform.indexOf('Safari') > -1) device.platform = 'iOS'
-
-// Augmented Reality: http://phonegap.com/blog/2012/10/09/wikitude-provides-users-with-augmented-reality-plugin/
-
-// For Android Development: http://phonegap-pain-points.appspot.com/#/
