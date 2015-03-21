@@ -1,3 +1,11 @@
+/**
+ * Rabbit Farm
+ * Copyright © 2015 Sam Grundman
+ *
+ * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+ * http://creativecommons.org/licenses/by-nc-sa/4.0/
+ */
+
 /** CSS Reset **/
 * { -webkit-box-sizing: border-box; box-sizing: border-box; }
 :root { font-family: 'Trebuchet MS', 'Open San', sans-serif; font-size: 1em; }
@@ -164,11 +172,15 @@ main > .rabbit {
 }
 /**/
 
-/** Links **/
+/** Buttons **/
 main > a[href="#shop"] {
 	display: block; text-indent: -1000px;
 	width: 122px; height: 90px;
 	background: -149px -5px url('../img/stores.png') no-repeat;
+}
+a[href="#shop"], a[href="#menu"], a[href="#main"],
+nav > a, img#rabbit, #shop > a, #shop > ul > li {
+	-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
 }
 
 /** About **/

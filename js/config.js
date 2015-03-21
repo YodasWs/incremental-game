@@ -1,6 +1,13 @@
+/**
+ * Rabbit Farm
+ * Copyright © 2015 Sam Grundman
+ *
+ * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+ * http://creativecommons.org/licenses/by-nc-sa/4.0/
+ */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.0.1',
+	v:'1.0.2a',
 	rabbits:0,
 	autoRate:0,
 	load: function() {
@@ -80,8 +87,8 @@ game = Z.extend(game, {
 			left:Z('body > nav').width() + 'px'
 		}, time)
 	},
-	closeMenu: function(e) {
-		var time = 400
+	closeMenu: function(e,t) {
+		var time = t ? t : 400
 		Z('body > nav').css({
 			left:0
 		}).animate({
@@ -145,6 +152,7 @@ game = Z.extend(game, {
 		game.items.forEach(function(i) {
 			if (i.name == name) item = i
 		})
+		if (!item.level) item.level = 0
 		item.level++
 		game.rabbits -= cost
 		el = game.updateShopItem(item, el)
@@ -194,36 +202,36 @@ game = Z.extend(game, {
 		}
 	],
 	openAbout:function(e) {
-		game.closeMenu()
+		game.closeMenu(e,200)
 		$('#about').css({
 			display:'block',top:'100vh'
 		}).animate({
 			top:'calc(100vh - ' + $('#about').height() + 'px)'
-		}, 600, 'ease-out')
+		}, 400, 'ease-out')
 	},
 	closeAbout:function(e) {
 		$('#about').animate({
 			top:'100vh'
-		}, 600, function() {
+		}, 200, function() {
 			$('#about').hide()
 		})
 	}
 })
 Z('#version').text(game.v)
-Z('img#rabbit').on('click', game.clkRabbit)
-Z(document).on('click', 'a[href^="#"]', function(e) {
+Z('img#rabbit').on('tap click', game.clkRabbit)
+Z(document).on('tap click', 'a[href^="#"]', function(e) {
 	e.preventDefault()
 	e.stopPropagation()
 })
-Z(document).on('click', 'a[href="#shop"]', game.openShop)
-Z(document).on('click', 'a[href="#menu"]', game.toggleMenu)
-Z(document).on('click', 'a[href="#about"]', game.openAbout)
-Z(document).on('click', '#shop a[href="#main"]', game.closeShop)
-Z(document).on('click', '#about a[href="#main"]', game.closeAbout)
-Z(document).on('click', 'body > nav a[href="#main"]', game.closeMenu)
-Z(document).on('click', '#shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
+Z(document).on('tap click', 'a[href="#menu"]', game.toggleMenu)
+Z(document).on('tap click', 'a[href="#about"]', game.openAbout)
+Z(document).on('tap click', '#shop a[href="#main"]', game.closeShop)
+Z(document).on('tap click', '#about a[href="#main"]', game.closeAbout)
+Z(document).on('tap click', 'body > nav a[href="#main"]', game.closeMenu)
+Z(document).on('tap click', '#shop > ul > li:not([disabled])', game.buyItem)
 // Restart Game
-Z(document).on('click', 'a[href="#destroy"]', function(e) {
+Z(document).on('tap click', 'a[href="#destroy"]', function(e) {
 	var g = Z.extend(true, {}, game)
 	g.items.forEach(function(i) {
 		delete i.baseCost
