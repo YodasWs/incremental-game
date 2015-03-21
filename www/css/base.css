@@ -172,11 +172,15 @@ main > .rabbit {
 }
 /**/
 
-/** Links **/
+/** Buttons **/
 main > a[href="#shop"] {
 	display: block; text-indent: -1000px;
 	width: 122px; height: 90px;
 	background: -149px -5px url('../img/stores.png') no-repeat;
+}
+a[href="#shop"], a[href="#menu"], a[href="#main"],
+nav > a, img#rabbit, #shop > a, #shop > ul > li {
+	-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
 }
 
 /** About **/

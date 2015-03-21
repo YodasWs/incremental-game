@@ -74,7 +74,7 @@ camera = {
 }
 
 // for desktop testing
-window.onerror = function(error) { console.error(error); }
+window.addEventListener('error', function(e) { console.error(e) })
 if (device.platform == 'Chrome') device.platform = 'Android'
 else if (device.platform.indexOf('Win') > -1) device.platform = 'Win32NT'
 else if (device.platform.indexOf('Safari') > -1) device.platform = 'iOS'
