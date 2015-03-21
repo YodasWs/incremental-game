@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="1" version="1.0.2">
+	versionCode="2" version="1.0.2a">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
@@ -22,9 +22,11 @@
 
 	<!-- For future Android support -->
 	<gap:platform name="android" />
+	<!--
 	<gap:config-file platform="android" parent="/manifest" mode="merge">
 		<supports-screens android:xlargeScreens="false" android:largeScreens="false" />
 	</gap:config-file>
+	-->
 
 	<!-- For future iOS support
 	<gap:platform name="ios" />

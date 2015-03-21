@@ -12,7 +12,8 @@ if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser
 	document.write('<script type="text/javascript" src="res/phonegap.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
-if(Element.prototype.addEventListener)document.addEventListener('deviceready',cb)
+if(document.readyState=='complete')cb()
+else if(Element.prototype.addEventListener)document.addEventListener('deviceready',cb)
 else if(Element.prototype.attachEvent)document.attachEvent('ondeviceready',cb)
 };
 // Build Basic Game Object
