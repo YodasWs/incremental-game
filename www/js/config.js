@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.0.2',
+	v:'1.0.2a',
 	rabbits:0,
 	autoRate:0,
 	load: function() {
@@ -110,8 +110,8 @@ game = Z.extend(game, {
 			Z('#shop > ul').append(el)
 		})
 		game.enableShopItems()
-		Z('#shop').css({
-			left:'100vw',display:'block'
+		Z('#shop').show().css({
+			left:'100vw'
 		}).animate({
 			left:0
 		}, 600, 'ease-out', function() {
@@ -203,8 +203,8 @@ game = Z.extend(game, {
 	],
 	openAbout:function(e) {
 		game.closeMenu(e,200)
-		$('#about').css({
-			display:'block',top:'100vh'
+		$('#about').show().css({
+			top:'100vh'
 		}).animate({
 			top:'calc(100vh - ' + $('#about').height() + 'px)'
 		}, 400, 'ease-out')
@@ -223,7 +223,7 @@ Z(document).on('tap click', 'a[href^="#"]', function(e) {
 	e.preventDefault()
 	e.stopPropagation()
 })
-Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
+Z(document).on('tap click', 'a[href="#shop"], a[href="#shop"] img', game.openShop)
 Z(document).on('tap click', 'a[href="#menu"]', game.toggleMenu)
 Z(document).on('tap click', 'a[href="#about"]', game.openAbout)
 Z(document).on('tap click', '#shop a[href="#main"]', game.closeShop)

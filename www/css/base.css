@@ -88,6 +88,7 @@ body > nav > a[href="#main"] {
 
 /** Store **/
 #shop {
+	position: absolute;
 	height: 70vh; top: 20vh;
 	background: rgba(245, 245, 245, .9); /* whitesmoke #F5F5F5 */
 	padding: 1rem;
