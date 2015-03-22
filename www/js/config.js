@@ -6,6 +6,12 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
+// Prevent False Double Tap
+var c = false
+tapComplete = function() {
+	c = false
+}
+
 game = Z.extend(game, {
 	v:'1.0.2a',
 	rabbits:0,
@@ -151,43 +157,51 @@ Z(document).on('tap click', 'a[href^="#"]', function(e) {
 	e.preventDefault()
 	e.stopPropagation()
 })
+
 // Close the Game Menu
 game.closeMenu = function(e,t) {
-	var time = t ? t : 400
+	t=t?t:400
 	Z('body > nav').css({
 		left:0
 	}).animate({
 		left:'-' + Z('body > nav').width() + 'px'
-	}, time, function() {
+	}, t, function() {
 		Z('body > nav').hide()
+		tapComplete()
 	})
 	var l = Z('#main').css('left')
 	Z('#main').css({
 		left:(l && l != 'auto' ? l : '0px')
 	}).animate({
 		left:0
-	}, time)
+	}, t)
 }
 // Open the Game Menu
-Z(document).on('tap click', 'a[href="#menu"]', function(e) {
+game.openMenu = function(e) {
+	if (c) return
+	c = true
 	if (Z('body > nav').css('display') != 'block') {
-		var time = 400
+		var t=400
 		Z('body > nav').show().css({
 			left: '-' + Z('body > nav').width() + 'px'
 		}).animate({
 			left:'0px'
-		}, time)
+		}, t, tapComplete)
 		var l = Z('#main').css('left')
 		Z('#main').css({
 			left:(l && l != 'auto' ? l : '0px')
 		}).animate({
 			left:Z('body > nav').width() + 'px'
-		}, time)
+		}, t)
 	} else game.closeMenu()
-})
-Z(document).on('tap click', 'body > nav a[href="#main"]', game.closeMenu)
+}
+
 // Open the Country Store
-Z(document).on('tap click', 'a[href="#shop"]', function(e) {
+game.openShop = function(e) {
+	if (c) return
+	c = true
+	var t = 600
+	game.showModalBG(t)
 	Z('#shop > ul').children().remove()
 	game.items.forEach(function(i) {
 		el = game.updateShopItem(i, Z('<li></li>'))
@@ -198,37 +212,97 @@ Z(document).on('tap click', 'a[href="#shop"]', function(e) {
 		left:'100vw'
 	}).animate({
 		left:0
-	}, 600, 'ease-out', function() {
-	})
-})
+	}, t, 'ease-out', tapComplete)
+}
 // Close the Country Store
-Z(document).on('tap click', '#shop a[href="#main"]', function(e) {
+game.closeShop = function(e) {
+	if (c) return
+	c = true
+	var t = 400
+	game.hideModalBG(t)
 	Z('#shop').css({
 	}).animate({
 		left:'-' + Z('#shop').width() + 'px'
-	}, 400, 'ease-in', function() {
+	}, t, 'ease-in', function() {
+		Z(this).hide()
+		tapComplete()
+	})
+}
+
+// Show Modal Background Screen
+game.showModalBG = function(t) {
+	t = t?t:400
+	Z('main').css({
+		'-webkit-filter':'blur(0)',
+		filter:'blur(0)'
+	}).animate({
+		'-webkit-filter':'blur(2px)',
+		filter:'blur(2px)'
+	}, t*2)
+	Z('#modal-bg').show().css({
+		opacity:0
+	}).animate({
+		opacity:0.4
+	}, t)
+}
+// Hide Modal Background Screen
+game.hideModalBG = function(t) {
+	t = t?t:400
+	Z('main').css({
+		'-webkit-filter':'blur(2px)',
+		filter:'blur(2px)'
+	}).animate({
+		'-webkit-filter':'blur(0)',
+		filter:'blur(0)'
+	}, t*2)
+	Z('#modal-bg').css({
+		opacity:0.4
+	}).animate({
+		opacity:0
+	}, t, function() {
 		Z(this).hide()
 	})
-})
+}
+
+// Hide Modals
+game.hideModals = function(e) {
+	if (Z('#about').css('display') == 'block')
+		game.closeAbout()
+	if (Z('#shop').css('display') == 'block')
+		game.closeShop()
+}
+
 // Open About Screen
-Z(document).on('tap click', 'a[href="#about"]', function(e) {
-	game.closeMenu(e,200)
-	$('#about').show().css({
+game.openAbout = function(e) {
+	if (c) return
+	c = true
+	var t = 400
+	game.showModalBG(t)
+	game.closeMenu(e,t/2)
+	Z('#about').show().css({
 		top:'100vh'
 	}).animate({
-		top:'calc(100vh - ' + $('#about').height() + 'px)'
-	}, 400, 'ease-out')
-})
+		top:'calc(100vh - ' + Z('#about').height() + 'px)'
+	}, t, 'ease-out', tapComplete)
+}
 // Close About Screen
-Z(document).on('tap click', '#about a[href="#main"]', function(e) {
-	$('#about').animate({
+game.closeAbout = function(e) {
+	if (c) return
+	c = true
+	var t = 200
+	game.hideModalBG(t)
+	Z('#about').animate({
 		top:'100vh'
-	}, 200, function() {
-		$('#about').hide()
+	}, t, function() {
+		Z('#about').hide()
+		tapComplete()
 	})
-})
+}
+
 // Buy Item from Country Store
-Z(document).on('tap click', '#shop > ul > li:not([disabled])', function(e) {
+game.buyItem = function(e) {
+	if (c) return
+	c = true
 	var el = Z(e.target),
 		bonus = Number.parseFloat(el.find('.bonus').text()),
 		level = Number.parseFloat(el.find('.level').text()),
@@ -245,9 +319,13 @@ Z(document).on('tap click', '#shop > ul > li:not([disabled])', function(e) {
 	el = game.updateShopItem(item, el)
 	game.enableShopItems()
 	game.showNums()
-})
+	// Prevent False Double Tap
+	setTimeout(tapComplete, 200)
+}
 // Restart Game
-Z(document).on('tap click', 'a[href="#destroy"]', function(e) {
+game.restart = function(e) {
+	if (c) return
+	c = true
 	var g = Z.extend(true, {}, game)
 	g.items.forEach(function(i) {
 		delete i.baseCost
@@ -260,5 +338,17 @@ Z(document).on('tap click', 'a[href="#destroy"]', function(e) {
 	g.rabbits = 0
 	window.localStorage.game = JSON.stringify(g)
 	game.load()
-})
+	tapComplete()
+}
+
+Z(document).on('tap click', '#shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on('tap click', 'body > nav a[href="#main"]', game.closeMenu)
+Z(document).on('tap click', '#about a[href="#main"]', game.closeAbout)
+Z(document).on('tap click', '#shop a[href="#main"]', game.closeShop)
+Z(document).on('tap click', 'a[href="#destroy"]', game.restart)
+Z(document).on('tap click', 'a[href="#about"]', game.openAbout)
+Z(document).on('tap click', 'a[href="#menu"]', game.openMenu)
+Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
+Z(document).on('tap click', '#modal-bg', game.hideModals)
+
 })
