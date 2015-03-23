@@ -39,25 +39,23 @@ var device = {
 	cordova:'sam-testing'
 }
 device.model = device.name
-console.log('userAgent: ' + navigator.userAgent)
-console.log('device: ' + JSON.stringify(device))
 
 // geolocation, http://docs.phonegap.com/en/2.9.0/cordova_geolocation_geolocation.md.html#Geolocation
 if (!navigator) var navigator = {}
-if (!navigator.geolocation) {
-	navigator.geolocation = {
-		getCurrentPosition:function(success,error,options) {
-			if (typeof error === 'function')
-				error({code:1,message:'Position Unavailable on this device'})
-		},
-		watchPosition:function(success,error,options) {
-			if (typeof error === 'function')
-				error({code:1,message:'Position Unavailable on this device'})
-			return 'faulty'
-		},
-		clearPosition:function(){}
-	}
+if (!navigator.geolocation)
+navigator.geolocation = {
+	getCurrentPosition:function(success,error,options) {
+		if (typeof error === 'function')
+			error({code:1,message:'Position Unavailable on this device'})
+	},
+	watchPosition:function(success,error,options) {
+		if (typeof error === 'function')
+			error({code:1,message:'Position Unavailable on this device'})
+		return 'faulty'
+	},
+	clearPosition:function(){}
 }
+if (false)
 navigator.geolocation.getCurrentPosition(function(position) {
 	console.log('geolocation: ' + position.latitude + ', ' + position.longitude)
 }, function(error) {
@@ -68,13 +66,16 @@ navigator.geolocation.getCurrentPosition(function(position) {
 if (!navigator.vibrate) navigator.vibrate = function(t){}
 
 // camera, http://docs.phonegap.com/en/3.0.0/cordova_camera_camera.md.html#Camera
+if (!window.camera)
 camera = {
 	getPicture:function(){},
 	cleanup:function(){}
 }
 
 // for desktop testing
-window.addEventListener('error', function(e) { console.error(e) })
+window.addEventListener('error', function(e) { console.error(e.message) })
 if (device.platform == 'Chrome') device.platform = 'Android'
 else if (device.platform.indexOf('Win') > -1) device.platform = 'Win32NT'
 else if (device.platform.indexOf('Safari') > -1) device.platform = 'iOS'
+console.log('userAgent: ' + navigator.userAgent)
+console.log('device: ' + JSON.stringify(device))

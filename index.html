@@ -12,8 +12,10 @@ if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser
 	document.write('<script type="text/javascript" src="res/phonegap.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
-if(Element.prototype.addEventListener)document.addEventListener('deviceready',cb)
-else if(Element.prototype.attachEvent)document.attachEvent('ondeviceready',cb)
+var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
+if(document.readyState=='complete')b()
+else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
+else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 };
 // Build Basic Game Object
 window.game={}
@@ -65,6 +67,7 @@ window.onload = function() {
 	<a href="#main">Close</a>
 	<ul></ul>
 </div>
+<div id="modal-bg"></div>
 <small id="about">
 	<a href="#main">&#xd7;</a>
 	<h1>Rabbit Farm</h1>
