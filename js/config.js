@@ -93,8 +93,8 @@ game = Z.extend(game, {
 		Z('main > small').text(str['rps'])
 	},
 	updateShopItem: function(i, el) {
-		var cost = Math.ceil(i.baseCost * Math.pow(1.4, i.level))
 		if (!i.level) i.level = 0
+		var cost = Math.ceil(i.baseCost * Math.pow(1.4, i.level))
 		el.children().remove()
 		el.attr('data-cost', cost)
 		el.append('<span class="name">' + i.name + '</span>')
