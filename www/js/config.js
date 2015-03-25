@@ -337,8 +337,8 @@ game.restart = function(e) {
 	})
 	g.rabbits = 0
 	window.localStorage.game = JSON.stringify(g)
+	game.closeMenu()
 	game.load()
-	tapComplete()
 }
 
 Z(document).on('tap click', '#shop > ul > li:not([disabled])', game.buyItem)
