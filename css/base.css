@@ -56,16 +56,8 @@ main > a[href="#menu"] {
 a[href="#menu"] {
 	display: block; text-indent: -10000px; overflow: hidden;
 	background: center center no-repeat url('../img/menu.png');
-	background: #001111;
 	width: 30px; height: 30px;
-	-webkit-mask-image: url("../img/menu.png");
-	-webkit-mask-size: contain;
-	-webkit-mask-type: luminance;
-	-webkit-mask-repeat: no-repeat;
-	mask-image: url("../img/menu.png");
-	mask-size: contain;
-	mask-type: luminance;
-	mask-repeat: no-repeat;
+	background-size: contain;
 }
 body > nav {
 	width: 200px; max-width: 80vw;
