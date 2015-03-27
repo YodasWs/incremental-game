@@ -91,8 +91,9 @@ body > nav > a[href="#main"] {
 	border: 1px solid black;
 }
 #shop > ul > li {
+	position: relative;
 	display: block; border-bottom: 1px solid black;
-	min-height: 50px; padding: 5px 10px;
+	min-height: 50px; padding: 5px 10px 5px calc(2rem + 5px);
 	cursor: pointer; clear: both;
 	background: white;
 }
@@ -112,6 +113,7 @@ body > nav > a[href="#main"] {
 	padding: 2px 5px;
 	border: 1px outset black; border-radius: 7px; background: white;
 	position: absolute; top: 1rem; right: 1rem;
+	z-index: 1;
 }
 #shop .name, #shop .cost { float: left; }
 #shop .level, #shop .bonus { float: right; }
@@ -122,6 +124,11 @@ body > nav > a[href="#main"] {
 }
 #shop .bonus::before {
 	content: '+';
+}
+#shop > ul > li > img {
+	display: block; position: absolute;
+	height: 2rem; width: 2rem;
+	top: 7px; left: 3px;
 }
 
 /** Rabbits! **/

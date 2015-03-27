@@ -39,6 +39,7 @@ game = Z.extend(game, {
 		g.items.forEach(function(i) {
 			delete i.baseCost
 			delete i.bonus
+			delete i.img
 		})
 		;[
 			'autoRate',
@@ -97,6 +98,9 @@ game = Z.extend(game, {
 		var cost = Math.ceil(i.baseCost * Math.pow(1.4, i.level))
 		el.children().remove()
 		el.attr('data-cost', cost)
+		if (i.img) {
+			el.append('<img src="img/' + i.img + '" alt="&#x2327;" />')
+		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
 		el.append('<span class="cost">' + (game.format ? game.format.whole(cost) : cost) + '</span>')
@@ -113,41 +117,43 @@ game = Z.extend(game, {
 			name:'Carrots',
 			baseCost:5,
 			bonus:.1,
+			img:'carrot.png'
 		},
 		{
 			name:'Nesting Hay',
 			baseCost:20,
 			bonus:.5,
+			img:'haybale.png'
 		},
 		{
 			name:'Rabbit Cages',
 			baseCost:50,
-			bonus:1,
+			bonus:1
 		},
 		{
 			name:'Breeding Expert',
 			baseCost:100,
-			bonus:5,
+			bonus:5
 		},
 		{
 			name:'Rabbit Toys',
 			baseCost:300,
-			bonus:10,
+			bonus:10
 		},
 		{
 			name:'Rabbit Perfume',
 			baseCost:5000,
-			bonus:100,
+			bonus:100
 		},
 		{
 			name:'Rabbit Hormones',
 			baseCost:15000,
-			bonus:200,
+			bonus:200
 		},
 		{
 			name:'Rabbit Viagra',
 			baseCost:300000,
-			bonus:1000,
+			bonus:1000
 		}
 	]
 })
