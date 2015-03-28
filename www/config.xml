@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="2" version="1.0.2a">
+	versionCode="3" version="1.0.2a">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
@@ -32,6 +32,7 @@
 	<gap:platform name="ios" />
 	<preference name="target-device" value="handset" />
 	<gap:plugin name="cc.fovea.plugins.inapppurchase" version="3.4.0" />
+	<gap:plugin name="com.rjfun.cordova.plugin.iad" version="0.1.8" />
 	-->
 
 	<!-- For future Windows Phone support
