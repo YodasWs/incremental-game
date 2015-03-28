@@ -62,20 +62,13 @@ game = Z.extend(game, {
 			if (!i.level) i.level = 0
 			game.autoRate += i.bonus * i.level
 		})
-		var clicksPerSecond = 1
-		if (game.autoRate > 100)
-			clicksPerSecond = 10
-		if (game.autoRate > 1000)
-			clicksPerSecond = 20
-		if (game.autoRate > 5000)
-			clicksPerSecond = 35
-		game.rabbits += game.autoRate / clicksPerSecond
+		game.rabbits += game.autoRate
 		game.showNums()
-		game.toAuto = setTimeout(game.autoClick, 1000 / clicksPerSecond)
+		game.toAuto = setTimeout(game.autoClick, 1000)
 		game.enableShopItems()
 	},
 	showNums: function() {
-		var str = {}
+		var str = {}, i = 2, m
 		if (!game.format && Intl && Intl.NumberFormat) {
 			game.format = {
 				whole: new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format,
@@ -90,7 +83,15 @@ game = Z.extend(game, {
 			str['rps'] = game.autoRate
 		}
 		game.save()
-		Z('main > output').text(str['rabbits'])
+		if (game.autoRate > 14) {
+			str['rabbits'] = str['rabbits'].slice(0, -1) + '<img src="img/nums.gif"/>'
+			while ((m = game.autoRate / Math.pow(10, i++)) && m > 1.5) {
+				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1)
+					+ '<img src="img/nums.gif"/>'
+					+ str['rabbits'].substring(str['rabbits'].indexOf('<'))
+			}
+		}
+		Z('main > output').html(str['rabbits'])
 		Z('main > small').text(str['rps'])
 	},
 	updateShopItem: function(i, el) {

@@ -32,6 +32,7 @@ img#rabbit {
 	display: block;
 	height: 200px;
 	margin: 2rem auto;
+	cursor: pointer;
 }
 main > output {
 	display: block;
@@ -40,6 +41,10 @@ main > output {
 	font-weight: bold;
 	font-family: monospace;
 	text-align: right;
+}
+main > output > img {
+	display: inline-block;
+	height: .65em;
 }
 main > small {
 	display: block;
