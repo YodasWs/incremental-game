@@ -13,7 +13,7 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.2a',
+	v:'1.0.2',
 	rabbits:0,
 	autoRate:0,
 	load: function() {
@@ -39,6 +39,7 @@ game = Z.extend(game, {
 		g.items.forEach(function(i) {
 			delete i.baseCost
 			delete i.bonus
+			delete i.img
 		})
 		;[
 			'autoRate',
@@ -61,20 +62,13 @@ game = Z.extend(game, {
 			if (!i.level) i.level = 0
 			game.autoRate += i.bonus * i.level
 		})
-		var clicksPerSecond = 1
-		if (game.autoRate > 100)
-			clicksPerSecond = 10
-		if (game.autoRate > 1000)
-			clicksPerSecond = 20
-		if (game.autoRate > 5000)
-			clicksPerSecond = 35
-		game.rabbits += game.autoRate / clicksPerSecond
+		game.rabbits += game.autoRate
 		game.showNums()
-		game.toAuto = setTimeout(game.autoClick, 1000 / clicksPerSecond)
+		game.toAuto = setTimeout(game.autoClick, 1000)
 		game.enableShopItems()
 	},
 	showNums: function() {
-		var str = {}
+		var str = {}, i = 2, m
 		if (!game.format && Intl && Intl.NumberFormat) {
 			game.format = {
 				whole: new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format,
@@ -89,7 +83,15 @@ game = Z.extend(game, {
 			str['rps'] = game.autoRate
 		}
 		game.save()
-		Z('main > output').text(str['rabbits'])
+		if (game.autoRate > 14) {
+			str['rabbits'] = str['rabbits'].slice(0, -1) + '<img src="img/nums.gif"/>'
+			while ((m = game.autoRate / Math.pow(10, i++)) && m > 1.5) {
+				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1)
+					+ '<img src="img/nums.gif"/>'
+					+ str['rabbits'].substring(str['rabbits'].indexOf('<'))
+			}
+		}
+		Z('main > output').html(str['rabbits'])
 		Z('main > small').text(str['rps'])
 	},
 	updateShopItem: function(i, el) {
@@ -97,6 +99,9 @@ game = Z.extend(game, {
 		var cost = Math.ceil(i.baseCost * Math.pow(1.4, i.level))
 		el.children().remove()
 		el.attr('data-cost', cost)
+		if (i.img) {
+			el.append('<img src="img/' + i.img + '" alt="&#x2327;" />')
+		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
 		el.append('<span class="cost">' + (game.format ? game.format.whole(cost) : cost) + '</span>')
@@ -113,41 +118,43 @@ game = Z.extend(game, {
 			name:'Carrots',
 			baseCost:5,
 			bonus:.1,
+			img:'carrot.png'
 		},
 		{
 			name:'Nesting Hay',
 			baseCost:20,
 			bonus:.5,
+			img:'haybale.png'
 		},
 		{
 			name:'Rabbit Cages',
 			baseCost:50,
-			bonus:1,
+			bonus:1
 		},
 		{
 			name:'Breeding Expert',
 			baseCost:100,
-			bonus:5,
+			bonus:5
 		},
 		{
 			name:'Rabbit Toys',
 			baseCost:300,
-			bonus:10,
+			bonus:10
 		},
 		{
 			name:'Rabbit Perfume',
 			baseCost:5000,
-			bonus:100,
+			bonus:100
 		},
 		{
 			name:'Rabbit Hormones',
 			baseCost:15000,
-			bonus:200,
+			bonus:200
 		},
 		{
 			name:'Rabbit Viagra',
 			baseCost:300000,
-			bonus:1000,
+			bonus:1000
 		}
 	]
 })
