@@ -1,12 +1,34 @@
+/**
+ * Rabbit Farm
+ * Copyright © 2015 Sam Grundman
+ *
+ * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+ * http://creativecommons.org/licenses/by-nc-sa/4.0/
+ */
 window.onReady(function() {
+// Prevent False Double Tap
+var c = false
+tapComplete = function() {
+	c = false
+}
+
 game = Z.extend(game, {
-	v:'1.0.1',
+	v:'1.0.2',
 	rabbits:0,
 	autoRate:0,
 	load: function() {
 		if (window.localStorage.game) {
-			var i = Z.extend(true, {}, JSON.parse(window.localStorage.game), {items:game.items})
-			game = Z.extend(true, game, i)
+			// Merge Data
+			game = Z.extend(
+				true,
+				game,
+				JSON.parse(window.localStorage.game), // Saved Data
+				{
+					// Necessary Updated Game Data
+					v:game.v,
+					items:game.items
+				}
+			)
 		}
 		game.autoClick()
 	},
@@ -17,9 +39,15 @@ game = Z.extend(game, {
 		g.items.forEach(function(i) {
 			delete i.baseCost
 			delete i.bonus
+			delete i.img
 		})
-		delete g.autoRate
-		delete g.toAuto
+		;[
+			'autoRate',
+			'format',
+			'toAuto'
+		].forEach(function(a) {
+			delete g[a]
+		})
 		// Save
 		window.localStorage.game = JSON.stringify(g)
 	},
@@ -34,196 +62,277 @@ game = Z.extend(game, {
 			if (!i.level) i.level = 0
 			game.autoRate += i.bonus * i.level
 		})
-		var clicksPerSecond = 1
-		if (game.autoRate > 100)
-			clicksPerSecond = 10
-		if (game.autoRate > 1000)
-			clicksPerSecond = 20
-		if (game.autoRate > 5000)
-			clicksPerSecond = 35
-		game.rabbits += game.autoRate / clicksPerSecond
+		game.rabbits += game.autoRate
 		game.showNums()
-		game.toAuto = setTimeout(game.autoClick, 1000 / clicksPerSecond)
+		game.toAuto = setTimeout(game.autoClick, 1000)
 		game.enableShopItems()
 	},
 	showNums: function() {
-		var str
+		var str = {}, i = 2, m
 		if (!game.format && Intl && Intl.NumberFormat) {
-			game.format = new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format
+			game.format = {
+				whole: new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format,
+				rate: new Intl.NumberFormat('en-US', {maximumFractionDigits: 1}).format
+			}
 		}
 		if (game.format) {
-			str = game.format(game.rabbits)
+			str['rabbits'] = game.format.whole(game.rabbits)
+			str['rps'] = game.format.rate(game.autoRate)
 		} else {
-			str = game.rabbits
+			str['rabbits'] = game.rabbits
+			str['rps'] = game.autoRate
 		}
 		game.save()
-		Z('main > output').text(str)
-		Z('main > small').text(game.autoRate)
-	},
-	toggleMenu: function(e) {
-		if (Z('body > nav').css('display') != 'block')
-			game.openMenu()
-		else
-			game.closeMenu()
-	},
-	openMenu: function(e) {
-		var time = 400
-		Z('body > nav').show().css({
-			left: '-' + Z('body > nav').width() + 'px'
-		}).animate({
-			left:'0px'
-		}, time)
-		var l = Z('#main').css('left')
-		Z('#main').css({
-			left:(l && l != 'auto' ? l : '0px')
-		}).animate({
-			left:Z('body > nav').width() + 'px'
-		}, time)
-	},
-	closeMenu: function(e) {
-		var time = 400
-		Z('body > nav').css({
-			left:0
-		}).animate({
-			left:'-' + Z('body > nav').width() + 'px'
-		}, time, function() {
-			Z('body > nav').hide()
-		})
-		var l = Z('#main').css('left')
-		Z('#main').css({
-			left:(l && l != 'auto' ? l : '0px')
-		}).animate({
-			left:0
-		}, time)
-	},
-	openShop: function(e) {
-		Z('#shop > ul').children().remove()
-		game.items.forEach(function(i) {
-			el = game.updateShopItem(i, Z('<li></li>'))
-			Z('#shop > ul').append(el)
-		})
-		game.enableShopItems()
-		Z('#shop').css({
-			left:'100vw',display:'block'
-		}).animate({
-			left:0
-		}, 600, 'ease-out', function() {
-		})
+		if (game.autoRate > 14) {
+			str['rabbits'] = str['rabbits'].slice(0, -1) + '<img src="img/nums.gif"/>'
+			while ((m = game.autoRate / Math.pow(10, i++)) && m > 1.5) {
+				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1)
+					+ '<img src="img/nums.gif"/>'
+					+ str['rabbits'].substring(str['rabbits'].indexOf('<'))
+			}
+		}
+		Z('main > output').html(str['rabbits'])
+		Z('main > small').text(str['rps'])
 	},
 	updateShopItem: function(i, el) {
-		var cost = Math.ceil(i.baseCost * Math.pow(1.4, i.level))
 		if (!i.level) i.level = 0
+		var cost = Math.ceil(i.baseCost * Math.pow(1.4, i.level))
 		el.children().remove()
 		el.attr('data-cost', cost)
+		if (i.img) {
+			el.append('<img src="img/' + i.img + '" alt="&#x2327;" />')
+		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
-		el.append('<span class="cost">' + (game.format ? game.format(cost) : cost) + '</span>')
-		el.append('<span class="bonus">' + (i.bonus < 0 ? '0' + i.bonus : i.bonus) + '</span>')
+		el.append('<span class="cost">' + (game.format ? game.format.whole(cost) : cost) + '</span>')
+		el.append('<span class="bonus">' + (game.format ? game.format.rate(i.bonus) : i.bonus) + '</span>')
 		return el
-	},
-	closeShop: function(e) {
-		Z('#shop').css({
-		}).animate({
-			left:'-' + Z('#shop').width() + 'px'
-		}, 400, 'ease-in', function() {
-			Z(this).hide()
-		})
 	},
 	enableShopItems: function() {
 		Z('#shop > ul > li').attr('disabled', null).each(function(i) {
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.rabbits) Z(this).attr('disabled', 'disabled')
 		})
 	},
-	buyItem: function(e) {
-		var el = Z(e.target),
-			bonus = Number.parseFloat(el.find('.bonus').text()),
-			level = Number.parseFloat(el.find('.level').text()),
-			name = el.find('.name').text(),
-			cost = el.attr('data-cost'),
-			item
-		if (game.rabbits < cost) return
-		game.items.forEach(function(i) {
-			if (i.name == name) item = i
-		})
-		item.level++
-		game.rabbits -= cost
-		el = game.updateShopItem(item, el)
-		game.enableShopItems()
-		game.showNums()
-	},
 	items:[
 		{
 			name:'Carrots',
 			baseCost:5,
 			bonus:.1,
+			img:'carrot.png'
 		},
 		{
 			name:'Nesting Hay',
 			baseCost:20,
 			bonus:.5,
+			img:'haybale.png'
 		},
 		{
 			name:'Rabbit Cages',
 			baseCost:50,
-			bonus:1,
+			bonus:1
 		},
 		{
 			name:'Breeding Expert',
 			baseCost:100,
-			bonus:5,
+			bonus:5
 		},
 		{
 			name:'Rabbit Toys',
 			baseCost:300,
-			bonus:10,
+			bonus:10
 		},
 		{
 			name:'Rabbit Perfume',
 			baseCost:5000,
-			bonus:100,
+			bonus:100
 		},
 		{
 			name:'Rabbit Hormones',
 			baseCost:15000,
-			bonus:200,
+			bonus:200
 		},
 		{
 			name:'Rabbit Viagra',
 			baseCost:300000,
-			bonus:1000,
+			bonus:1000
 		}
-	],
-	openAbout:function(e) {
-		game.closeMenu()
-		$('#about').css({
-			display:'block',top:'100vh'
-		}).animate({
-			top:'calc(100vh - ' + $('#about').height() + 'px)'
-		}, 600, 'ease-out')
-	},
-	closeAbout:function(e) {
-		$('#about').animate({
-			top:'100vh'
-		}, 600, function() {
-			$('#about').hide()
-		})
-	}
+	]
 })
 Z('#version').text(game.v)
-Z('img#rabbit').on('click', game.clkRabbit)
-Z(document).on('click', 'a[href^="#"]', function(e) {
+Z('img#rabbit').on('tap click', game.clkRabbit)
+Z(document).on('tap click', 'a[href^="#"]', function(e) {
 	e.preventDefault()
 	e.stopPropagation()
 })
-Z(document).on('click', 'a[href="#shop"]', game.openShop)
-Z(document).on('click', 'a[href="#menu"]', game.toggleMenu)
-Z(document).on('click', 'a[href="#about"]', game.openAbout)
-Z(document).on('click', '#shop a[href="#main"]', game.closeShop)
-Z(document).on('click', '#about a[href="#main"]', game.closeAbout)
-Z(document).on('click', 'body > nav a[href="#main"]', game.closeMenu)
-Z(document).on('click', '#shop > ul > li:not([disabled])', game.buyItem)
+
+// Close the Game Menu
+game.closeMenu = function(e,t) {
+	t=t?t:400
+	Z('body > nav').css({
+		left:0
+	}).animate({
+		left:'-' + Z('body > nav').width() + 'px'
+	}, t, function() {
+		Z('body > nav').hide()
+		tapComplete()
+	})
+	var l = Z('#main').css('left')
+	Z('#main').css({
+		left:(l && l != 'auto' ? l : '0px')
+	}).animate({
+		left:0
+	}, t)
+}
+// Open the Game Menu
+game.openMenu = function(e) {
+	if (c) return
+	c = true
+	if (Z('body > nav').css('display') != 'block') {
+		var t=400
+		Z('body > nav').show().css({
+			left: '-' + Z('body > nav').width() + 'px'
+		}).animate({
+			left:'0px'
+		}, t, tapComplete)
+		var l = Z('#main').css('left')
+		Z('#main').css({
+			left:(l && l != 'auto' ? l : '0px')
+		}).animate({
+			left:Z('body > nav').width() + 'px'
+		}, t)
+	} else game.closeMenu()
+}
+
+// Open the Country Store
+game.openShop = function(e) {
+	if (c) return
+	c = true
+	var t = 600
+	game.showModalBG(t)
+	Z('#shop > ul').children().remove()
+	game.items.forEach(function(i) {
+		el = game.updateShopItem(i, Z('<li></li>'))
+		Z('#shop > ul').append(el)
+	})
+	game.enableShopItems()
+	Z('#shop').show().css({
+		left:'100vw'
+	}).animate({
+		left:0
+	}, t, 'ease-out', tapComplete)
+}
+// Close the Country Store
+game.closeShop = function(e) {
+	if (c) return
+	c = true
+	var t = 400
+	game.hideModalBG(t)
+	Z('#shop').css({
+	}).animate({
+		left:'-' + Z('#shop').width() + 'px'
+	}, t, 'ease-in', function() {
+		Z(this).hide()
+		tapComplete()
+	})
+}
+
+// Show Modal Background Screen
+game.showModalBG = function(t) {
+	t = t?t:400
+	Z('main').css({
+		'-webkit-filter':'blur(0)',
+		filter:'blur(0)'
+	}).animate({
+		'-webkit-filter':'blur(2px)',
+		filter:'blur(2px)'
+	}, t*2)
+	Z('#modal-bg').show().css({
+		opacity:0
+	}).animate({
+		opacity:0.4
+	}, t)
+}
+// Hide Modal Background Screen
+game.hideModalBG = function(t) {
+	t = t?t:400
+	Z('main').css({
+		'-webkit-filter':'blur(2px)',
+		filter:'blur(2px)'
+	}).animate({
+		'-webkit-filter':'blur(0)',
+		filter:'blur(0)'
+	}, t*2)
+	Z('#modal-bg').css({
+		opacity:0.4
+	}).animate({
+		opacity:0
+	}, t, function() {
+		Z(this).hide()
+	})
+}
+
+// Hide Modals
+game.hideModals = function(e) {
+	if (Z('#about').css('display') == 'block')
+		game.closeAbout()
+	if (Z('#shop').css('display') == 'block')
+		game.closeShop()
+}
+
+// Open About Screen
+game.openAbout = function(e) {
+	if (c) return
+	c = true
+	var t = 400
+	game.showModalBG(t)
+	game.closeMenu(e,t/2)
+	Z('#about').show().css({
+		top:'100vh'
+	}).animate({
+		top:'calc(100vh - ' + Z('#about').height() + 'px)'
+	}, t, 'ease-out', tapComplete)
+}
+// Close About Screen
+game.closeAbout = function(e) {
+	if (c) return
+	c = true
+	var t = 200
+	game.hideModalBG(t)
+	Z('#about').animate({
+		top:'100vh'
+	}, t, function() {
+		Z('#about').hide()
+		tapComplete()
+	})
+}
+
+// Buy Item from Country Store
+game.buyItem = function(e) {
+	if (c) return
+	c = true
+	var el = Z(e.target),
+		bonus = Number.parseFloat(el.find('.bonus').text()),
+		level = Number.parseFloat(el.find('.level').text()),
+		name = el.find('.name').text(),
+		cost = el.attr('data-cost'),
+		item
+	if (game.rabbits < cost) return
+	game.items.forEach(function(i) {
+		if (i.name == name) item = i
+	})
+	if (!item.level) item.level = 0
+	item.level++
+	game.rabbits -= cost
+	el = game.updateShopItem(item, el)
+	game.enableShopItems()
+	game.showNums()
+	// Prevent False Double Tap
+	setTimeout(tapComplete, 200)
+}
 // Restart Game
-Z(document).on('click', 'a[href="#destroy"]', function(e) {
+game.restart = function(e) {
+	if (c) return
+	c = true
 	var g = Z.extend(true, {}, game)
 	g.items.forEach(function(i) {
 		delete i.baseCost
@@ -235,6 +344,18 @@ Z(document).on('click', 'a[href="#destroy"]', function(e) {
 	})
 	g.rabbits = 0
 	window.localStorage.game = JSON.stringify(g)
+	game.closeMenu()
 	game.load()
-})
+}
+
+Z(document).on('tap click', '#shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on('tap click', 'body > nav a[href="#main"]', game.closeMenu)
+Z(document).on('tap click', '#about a[href="#main"]', game.closeAbout)
+Z(document).on('tap click', '#shop a[href="#main"]', game.closeShop)
+Z(document).on('tap click', 'a[href="#destroy"]', game.restart)
+Z(document).on('tap click', 'a[href="#about"]', game.openAbout)
+Z(document).on('tap click', 'a[href="#menu"]', game.openMenu)
+Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
+Z(document).on('tap click', '#modal-bg', game.hideModals)
+
 })

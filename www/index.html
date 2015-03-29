@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
 <head>
 <meta charset="utf-8"/>
 <title>Rabbit Farm</title>
@@ -12,9 +12,10 @@ if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser
 	document.write('<script type="text/javascript" src="res/phonegap.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
-var c=0,a=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
-if(Element.prototype.addEventListener)document.addEventListener('readystatechange',a)
-else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',a)
+var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
+if(document.readyState=='complete')b()
+else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
+else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 };
 // Build Basic Game Object
 window.game={}
@@ -66,6 +67,7 @@ window.onload = function() {
 	<a href="#main">Close</a>
 	<ul></ul>
 </div>
+<div id="modal-bg"></div>
 <small id="about">
 	<a href="#main">&#xd7;</a>
 	<h1>Rabbit Farm</h1>
@@ -74,7 +76,7 @@ window.onload = function() {
 	<div>All images in public domain</div>
 	<div id="license">
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
-			<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+			<img alt="Creative Commons License" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
 		</a><br />
 		This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 	</div>

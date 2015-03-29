@@ -1,3 +1,11 @@
+/**
+ * Rabbit Farm
+ * Copyright © 2015 Sam Grundman
+ *
+ * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+ * http://creativecommons.org/licenses/by-nc-sa/4.0/
+ */
+
 /** CSS Reset **/
 * { -webkit-box-sizing: border-box; box-sizing: border-box; }
 :root { font-family: 'Trebuchet MS', 'Open San', sans-serif; font-size: 1em; }
@@ -18,12 +26,13 @@ div#intro { display: block; text-align: center; }
 
 /** Main Game Center **/
 main {
-	padding: 2em 5em;
+	padding: 2em 5em; z-index: 0;
 }
 img#rabbit {
 	display: block;
 	height: 200px;
 	margin: 2rem auto;
+	cursor: pointer;
 }
 main > output {
 	display: block;
@@ -32,6 +41,10 @@ main > output {
 	font-weight: bold;
 	font-family: monospace;
 	text-align: right;
+}
+main > output > img {
+	display: inline-block;
+	height: .65em;
 }
 main > small {
 	display: block;
@@ -48,16 +61,8 @@ main > a[href="#menu"] {
 a[href="#menu"] {
 	display: block; text-indent: -10000px; overflow: hidden;
 	background: center center no-repeat url('../img/menu.png');
-	background: #001111;
 	width: 30px; height: 30px;
-	-webkit-mask-image: url("../img/menu.png");
-	-webkit-mask-size: contain;
-	-webkit-mask-type: luminance;
-	-webkit-mask-repeat: no-repeat;
-	mask-image: url("../img/menu.png");
-	mask-size: contain;
-	mask-type: luminance;
-	mask-repeat: no-repeat;
+	background-size: contain;
 }
 body > nav {
 	width: 200px; max-width: 80vw;
@@ -80,6 +85,7 @@ body > nav > a[href="#main"] {
 
 /** Store **/
 #shop {
+	position: absolute; z-index: 2;
 	height: 70vh; top: 20vh;
 	background: rgba(245, 245, 245, .9); /* whitesmoke #F5F5F5 */
 	padding: 1rem;
@@ -90,8 +96,9 @@ body > nav > a[href="#main"] {
 	border: 1px solid black;
 }
 #shop > ul > li {
+	position: relative;
 	display: block; border-bottom: 1px solid black;
-	min-height: 50px; padding: 5px 10px;
+	min-height: 50px; padding: 5px 10px 5px calc(2rem + 5px);
 	cursor: pointer; clear: both;
 	background: white;
 }
@@ -111,6 +118,7 @@ body > nav > a[href="#main"] {
 	padding: 2px 5px;
 	border: 1px outset black; border-radius: 7px; background: white;
 	position: absolute; top: 1rem; right: 1rem;
+	z-index: 1;
 }
 #shop .name, #shop .cost { float: left; }
 #shop .level, #shop .bonus { float: right; }
@@ -121,6 +129,11 @@ body > nav > a[href="#main"] {
 }
 #shop .bonus::before {
 	content: '+';
+}
+#shop > ul > li > img {
+	display: block; position: absolute;
+	height: 2rem; width: 2rem;
+	top: 7px; left: 3px;
 }
 
 /** Rabbits! **/
@@ -164,17 +177,30 @@ main > .rabbit {
 }
 /**/
 
-/** Links **/
+/** Buttons **/
 main > a[href="#shop"] {
 	display: block; text-indent: -1000px;
 	width: 122px; height: 90px;
 	background: -149px -5px url('../img/stores.png') no-repeat;
 }
+a[href="#shop"], a[href="#menu"], a[href="#main"],
+nav > a, img#rabbit, #shop > a, #shop > ul > li {
+	-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+}
+
+/** Modal Background **/
+#modal-bg {
+	z-index: 1;
+	background: black;
+	opacity: .4;
+	position: fixed; top: 0; left: 0;
+	width: 100vw; height: 100vh;
+}
 
 /** About **/
 #about {
 	background: white; height: 200px;
-	padding: 0 1rem;
+	padding: 0 1rem; z-index: 2;
 }
 #about > small {
 	display: block; text-align: center;
