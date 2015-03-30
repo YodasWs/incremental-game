@@ -13,7 +13,7 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.2',
+	v:'1.0.3a',
 	rabbits:0,
 	autoRate:0,
 	load: function() {
@@ -209,18 +209,32 @@ game.openShop = function(e) {
 	c = true
 	var t = 600
 	game.showModalBG(t)
+	error_log('in openShop')
 	Z('#shop > ul').children().remove()
+	error_log('shop items removed')
 	game.items.forEach(function(i) {
 		el = game.updateShopItem(i, Z('<li></li>'))
 		Z('#shop > ul').append(el)
+		error_log('appended item ' + i.name)
 	})
+	error_log('store updated')
 	game.enableShopItems()
+	error_log('store items enabled')
 	Z('#shop').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
 	}, t, 'ease-out', tapComplete)
+	error_log('store should be coming in view')
 }
+error_log = function(msg) {
+	Z.ajax({
+		type:'POST',
+		url:'http://1feed.me/log.php',
+		data:{'msg':msg}
+	})
+}
+window.addEventListener('error', function(e) { error_log(e.message) })
 // Close the Country Store
 game.closeShop = function(e) {
 	if (c) return
