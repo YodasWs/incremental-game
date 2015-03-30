@@ -209,32 +209,18 @@ game.openShop = function(e) {
 	c = true
 	var t = 600
 	game.showModalBG(t)
-	error_log('in openShop')
 	Z('#shop > ul').children().remove()
-	error_log('shop items removed')
 	game.items.forEach(function(i) {
 		el = game.updateShopItem(i, Z('<li></li>'))
 		Z('#shop > ul').append(el)
-		error_log('appended item ' + i.name)
 	})
-	error_log('store updated')
 	game.enableShopItems()
-	error_log('store items enabled')
 	Z('#shop').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
 	}, t, 'ease-out', tapComplete)
-	error_log('store should be coming in view')
 }
-error_log = function(msg) {
-	Z.ajax({
-		type:'POST',
-		url:'http://1feed.me/log.php',
-		data:{'msg':msg}
-	})
-}
-window.addEventListener('error', function(e) { error_log(e.message) })
 // Close the Country Store
 game.closeShop = function(e) {
 	if (c) return
@@ -373,3 +359,12 @@ Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
 Z(document).on('tap click', '#modal-bg', game.hideModals)
 
 })
+
+error_log = function(msg) {
+	Z.ajax({
+		type:'POST',
+		url:'http://1feed.me/log.php',
+		data:{'msg':msg}
+	})
+}
+window.addEventListener('error', function(e) { error_log(e.message) })
