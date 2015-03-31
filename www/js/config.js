@@ -13,7 +13,7 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.2a',
+	v:'1.0.3a',
 	rabbits:0,
 	autoRate:0,
 	load: function() {
@@ -162,7 +162,6 @@ Z('#version').text(game.v)
 Z('img#rabbit').on('tap click', game.clkRabbit)
 Z(document).on('tap click', 'a[href^="#"]', function(e) {
 	e.preventDefault()
-	e.stopPropagation()
 })
 
 // Close the Game Menu
@@ -311,8 +310,6 @@ game.buyItem = function(e) {
 	if (c) return
 	c = true
 	var el = Z(e.target),
-		bonus = Number.parseFloat(el.find('.bonus').text()),
-		level = Number.parseFloat(el.find('.level').text()),
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
 		item
@@ -320,6 +317,7 @@ game.buyItem = function(e) {
 	game.items.forEach(function(i) {
 		if (i.name == name) item = i
 	})
+	if (!item) return
 	if (!item.level) item.level = 0
 	item.level++
 	game.rabbits -= cost
@@ -340,7 +338,7 @@ game.restart = function(e) {
 		i.level = 0
 	})
 	game.items.forEach(function(i) {
-		delete i.level
+		i.level = 0
 	})
 	g.rabbits = 0
 	window.localStorage.game = JSON.stringify(g)
@@ -358,4 +356,15 @@ Z(document).on('tap click', 'a[href="#menu"]', game.openMenu)
 Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
 Z(document).on('tap click', '#modal-bg', game.hideModals)
 
+Z(document).on('tap click', function(){ setTimeout(tapComplete, 200) })
+
 })
+
+error_log = function(msg) {
+	Z.ajax({
+		type:'POST',
+		url:'http://1feed.me/log.php',
+		data:{'msg':msg}
+	})
+}
+window.addEventListener('error', function(e) { error_log(e.message) })
