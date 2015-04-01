@@ -127,6 +127,7 @@ game = Z.extend(game, {
 			img:'haybale.png'
 		},
 		{
+			img:'rabbits/cage.png',
 			name:'Rabbit Cages',
 			baseCost:50,
 			bonus:1
