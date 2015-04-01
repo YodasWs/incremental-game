@@ -142,12 +142,12 @@ main > .rabbit { display: none; }
 main > .rabbit {
 	position: absolute; left: 100%; top: 50vh;
 	display: block; width: 50px; height: 50px; background: blue;
-	-webkit-mask-image: url("../img/rabbit-2.png");
+	-webkit-mask-image: url("../img/rabbits/silhouette.png");
 	-webkit-mask-size: contain;
 	-webkit-mask-type: luminance;
 	-webkit-mask-repeat: no-repeat;
 	mask-repeat: no-repeat;
-	mask-image: url("../img/rabbit-2.png");
+	mask-image: url("../img/rabbits/silhouette.png");
 	mask-size: contain;
 	mask-type: luminance;
 	-webkit-animation-timing-function: ease-in-out;
