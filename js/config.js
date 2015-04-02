@@ -368,4 +368,4 @@ error_log = function(msg) {
 		data:{'msg':msg}
 	})
 }
-window.addEventListener('error', function(e) { error_log(e.message) })
+window.addEventListener('error', function(e) { error_log(e.fileName + ', line ' + e.lineNumber + '; ' + e.message) })
