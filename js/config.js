@@ -160,6 +160,7 @@ game = Z.extend(game, {
 })
 Z('#version').text(game.v)
 Z('img#rabbit').on('tap click', game.clkRabbit)
+Z('img#rabbit').on('selectstart contextmenu MSHoldVisual',function(e){e.preventDefault()})
 Z(document).on('tap click', 'a[href^="#"]', function(e) {
 	e.preventDefault()
 })
