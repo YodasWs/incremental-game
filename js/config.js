@@ -72,8 +72,8 @@ game = Z.extend(game, {
 		var str = {}, i = 2, m
 		if (!game.format && Intl && Intl.NumberFormat) {
 			game.format = {
-				whole: new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format,
-				rate: new Intl.NumberFormat('en-US', {maximumFractionDigits: 1}).format
+				whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
+				rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
 			}
 		}
 		if (game.format) {
