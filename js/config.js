@@ -55,6 +55,7 @@ game = Z.extend(game, {
 		game.rabbits++
 		game.autoRate++
 		game.showNums()
+		return false
 	},
 	autoClick: function() {
 		game.autoRate = 0
@@ -160,10 +161,8 @@ game = Z.extend(game, {
 })
 Z('#version').text(game.v)
 Z('img#rabbit').on('tap click', game.clkRabbit)
-Z('img#rabbit').on('selectstart contextmenu MSHoldVisual',function(e){e.preventDefault()})
-Z(document).on('tap click', 'a[href^="#"]', function(e) {
-	e.preventDefault()
-})
+Z('img#rabbit').on('selectstart contextmenu MSHoldVisual',false)
+Z(document).on('tap click','a[href^="#"]',false)
 
 // Close the Game Menu
 game.closeMenu = function(e,t) {
