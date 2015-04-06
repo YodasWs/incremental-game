@@ -70,11 +70,14 @@ game = Z.extend(game, {
 	},
 	showNums: function() {
 		var str = {}, i = 2, m
-		if (!game.format && Intl && Intl.NumberFormat) {
+		try { if (!game.format && Intl && Intl.NumberFormat)
 			game.format = {
 				whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
 				rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
 			}
+		} catch (e) {
+			// Safari doesn't like Intl
+			game.format = false
 		}
 		if (game.format) {
 			str['rabbits'] = game.format.whole(game.rabbits)
@@ -360,11 +363,12 @@ Z(document).on('tap click', function(){ setTimeout(tapComplete, 200) })
 
 })
 
-error_log = function(msg) {
+error_log = function(e) {
 	Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':msg}
+		data:{'msg':e.message}
 	})
 }
-window.addEventListener('error', function(e) { error_log(e.fileName + ', line ' + e.lineNumber + '; ' + e.message) })
+if(Element.prototype.addEventListener)window.addEventListener('error',function(e){error_log(e)})
+else if(Element.prototype.attachEvent)window.attachEvent('error',function(e){error_log(e)})
