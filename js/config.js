@@ -370,6 +370,16 @@ Z(document).on('tap click', '#modal-bg', game.hideModals)
 
 Z(document).on('tap click', function(){ setTimeout(tapComplete, 200) })
 
+Z(document).on('keydown', function(e) {
+	switch (e.keyCode) {
+		// ESC from modals
+		case 27:
+			game.closeMenu()
+			game.hideModals()
+			break;
+	}
+})
+
 })
 
 error_log = function(e) {
