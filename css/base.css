@@ -19,6 +19,7 @@ body > * {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
+a:link, a:visited { color: #0000ff; text-decoration: none; }
 a img, a:link img, a:visited img { border: 0 none; }
 
 /** Splash Screen **/
@@ -73,6 +74,9 @@ body > nav > a {
 	border: 1px solid black; padding: 5px 10px; margin: 10px auto;
 	white-space: nowrap; overflow: hidden;
 	text-decoration: none; color: black;
+}
+body > nav > a:link, body > nav > a:visited {
+	color: black;
 }
 #about > a[href="#main"],
 body > nav > a[href="#main"] {
