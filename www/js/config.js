@@ -13,7 +13,7 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.3',
+	v:'1.0.4',
 	animals:{
 		rabbits:0
 	},
@@ -227,7 +227,7 @@ game.openShop = function(e) {
 		Z('#shop > ul').append(el)
 	})
 	game.enableShopItems()
-	Z('#shop').show().css({
+	Z('#shop').trigger('update').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
