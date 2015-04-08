@@ -13,7 +13,7 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.3a',
+	v:'1.0.3',
 	animals:{
 		rabbits:0
 	},
@@ -140,6 +140,7 @@ game = Z.extend(game, {
 			img:'haybale.png'
 		},
 		{
+			img:'rabbits/cage.png',
 			name:'Rabbit Cages',
 			baseCost:50,
 			bonus:1
