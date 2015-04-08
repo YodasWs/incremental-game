@@ -13,7 +13,7 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.3',
+	v:'1.0.4b',
 	animals:{
 		rabbits:0
 	},
@@ -85,23 +85,43 @@ game = Z.extend(game, {
 				rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
 			}
 		} catch (e) {
-			// Safari doesn't like Intl
-			game.format = false
 		}
-		if (game.format) {
-			str['rabbits'] = game.format.whole(game.animals['rabbits'])
-			str['rps'] = game.format.rate(game.autoRate['rabbits'])
-		} else {
-			str['rabbits'] = game.animals['rabbits']
-			str['rps'] = game.autoRate['rabbits']
+		// For browsers without Intl
+		if (!game.format) game.format = {
+			whole: function(a) {
+				// Get Int
+				a = '' + Math.floor(a)
+				// Add Commas
+				for (var i=a.length-2; i>0; i-=4)
+					a = [a.slice(0,i), a.slice(i)].join(',')
+				return a
+			},
+			rate: function(a) {
+				return Math.round(a * 10) / 10
+			}
 		}
+		str['rabbits'] = game.format.whole(game.animals['rabbits'])
+		str['rps'] = game.format.rate(game.autoRate['rabbits'])
 		game.save()
+		// Animate Fast Number Increase
 		if (game.autoRate['rabbits'] > 14) {
 			str['rabbits'] = str['rabbits'].slice(0, -1) + '<img src="img/nums.gif"/>'
+			// Replace Successive Digits with Animation
 			while ((m = game.autoRate['rabbits'] / Math.pow(10, i++)) && m > 1.5) {
-				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1)
+				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1).trim(',. ')
 					+ '<img src="img/nums.gif"/>'
 					+ str['rabbits'].substring(str['rabbits'].indexOf('<'))
+			}
+			// Add Commas
+			var j = str['rabbits'].length
+			if (str['rabbits'].split('<').length - 1 >= 3)
+			for (i=0; i<str['rabbits'].split('<').length - 1; i++) {
+				j = str['rabbits'].lastIndexOf('<', j - 1)
+				if (i % 3 == 2)
+				str['rabbits'] = [
+					str['rabbits'].slice(0, j),
+					str['rabbits'].slice(j)
+				].join(',')
 			}
 		}
 		Z('main > output').html(str['rabbits'])
@@ -117,8 +137,8 @@ game = Z.extend(game, {
 		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
-		el.append('<span class="cost">' + (game.format ? game.format.whole(cost) : cost) + '</span>')
-		el.append('<span class="bonus">' + (game.format ? game.format.rate(i.bonus) : i.bonus) + '</span>')
+		el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+		el.append('<span class="bonus">' + game.format.rate(i.bonus) + '</span>')
 		return el
 	},
 	enableShopItems: function() {
@@ -147,12 +167,12 @@ game = Z.extend(game, {
 		},
 		{
 			name:'Breeding Expert',
-			baseCost:100,
+			baseCost:200,
 			bonus:5
 		},
 		{
 			name:'Rabbit Toys',
-			baseCost:300,
+			baseCost:500,
 			bonus:10
 		},
 		{

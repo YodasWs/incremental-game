@@ -73,7 +73,6 @@ camera = {
 }
 
 // for desktop testing
-window.addEventListener('error', function(e) { console.error(e.message) })
 if (device.platform.indexOf('Win') > -1) device.platform = 'Win32NT'
 console.log('userAgent: ' + navigator.userAgent)
 console.log('device: ' + JSON.stringify(device))
