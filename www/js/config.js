@@ -13,15 +13,19 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.2',
-	rabbits:0,
-	autoRate:0,
+	v:'1.0.3',
+	animals:{
+		rabbits:0
+	},
+	autoRate:{
+		rabbits:0
+	},
 	load: function() {
 		if (window.localStorage.game) {
 			// Merge Data
 			game = Z.extend(
-				true,
-				game,
+				true, // Merge Recursively
+				game, // Game object
 				JSON.parse(window.localStorage.game), // Saved Data
 				{
 					// Necessary Updated Game Data
@@ -29,6 +33,11 @@ game = Z.extend(game, {
 					items:game.items
 				}
 			)
+			// Update Save File
+			if (game.rabbits) {
+				game.animals['rabbits'] = game.rabbits
+				delete game.rabbits
+			}
 		}
 		game.autoClick()
 	},
@@ -52,40 +61,44 @@ game = Z.extend(game, {
 		window.localStorage.game = JSON.stringify(g)
 	},
 	clkRabbit: function() {
-		game.rabbits++
-		game.autoRate++
+		game.animals['rabbits']++
+		game.autoRate['rabbits']++
 		game.showNums()
+		return false
 	},
 	autoClick: function() {
-		game.autoRate = 0
+		game.autoRate['rabbits'] = 0
 		game.items.forEach(function(i) {
 			if (!i.level) i.level = 0
-			game.autoRate += i.bonus * i.level
+			game.autoRate['rabbits'] += i.bonus * i.level
 		})
-		game.rabbits += game.autoRate
+		game.animals['rabbits'] += game.autoRate['rabbits']
 		game.showNums()
 		game.toAuto = setTimeout(game.autoClick, 1000)
 		game.enableShopItems()
 	},
 	showNums: function() {
 		var str = {}, i = 2, m
-		if (!game.format && Intl && Intl.NumberFormat) {
+		try { if (!game.format && Intl && Intl.NumberFormat)
 			game.format = {
-				whole: new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format,
-				rate: new Intl.NumberFormat('en-US', {maximumFractionDigits: 1}).format
+				whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
+				rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
 			}
+		} catch (e) {
+			// Safari doesn't like Intl
+			game.format = false
 		}
 		if (game.format) {
-			str['rabbits'] = game.format.whole(game.rabbits)
-			str['rps'] = game.format.rate(game.autoRate)
+			str['rabbits'] = game.format.whole(game.animals['rabbits'])
+			str['rps'] = game.format.rate(game.autoRate['rabbits'])
 		} else {
-			str['rabbits'] = game.rabbits
-			str['rps'] = game.autoRate
+			str['rabbits'] = game.animals['rabbits']
+			str['rps'] = game.autoRate['rabbits']
 		}
 		game.save()
-		if (game.autoRate > 14) {
+		if (game.autoRate['rabbits'] > 14) {
 			str['rabbits'] = str['rabbits'].slice(0, -1) + '<img src="img/nums.gif"/>'
-			while ((m = game.autoRate / Math.pow(10, i++)) && m > 1.5) {
+			while ((m = game.autoRate['rabbits'] / Math.pow(10, i++)) && m > 1.5) {
 				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1)
 					+ '<img src="img/nums.gif"/>'
 					+ str['rabbits'].substring(str['rabbits'].indexOf('<'))
@@ -110,7 +123,7 @@ game = Z.extend(game, {
 	},
 	enableShopItems: function() {
 		Z('#shop > ul > li').attr('disabled', null).each(function(i) {
-			if (Number.parseInt(Z(this).attr('data-cost')) > game.rabbits) Z(this).attr('disabled', 'disabled')
+			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
 		})
 	},
 	items:[
@@ -127,6 +140,7 @@ game = Z.extend(game, {
 			img:'haybale.png'
 		},
 		{
+			img:'rabbits/cage.png',
 			name:'Rabbit Cages',
 			baseCost:50,
 			bonus:1
@@ -160,10 +174,8 @@ game = Z.extend(game, {
 })
 Z('#version').text(game.v)
 Z('img#rabbit').on('tap click', game.clkRabbit)
-Z(document).on('tap click', 'a[href^="#"]', function(e) {
-	e.preventDefault()
-	e.stopPropagation()
-})
+Z('img#rabbit').on('selectstart contextmenu MSHoldVisual',false)
+Z(document).on('tap click','a[href^="#"]',false)
 
 // Close the Game Menu
 game.closeMenu = function(e,t) {
@@ -311,18 +323,17 @@ game.buyItem = function(e) {
 	if (c) return
 	c = true
 	var el = Z(e.target),
-		bonus = Number.parseFloat(el.find('.bonus').text()),
-		level = Number.parseFloat(el.find('.level').text()),
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
 		item
-	if (game.rabbits < cost) return
+	if (game.animals['rabbits'] < cost) return
 	game.items.forEach(function(i) {
 		if (i.name == name) item = i
 	})
+	if (!item) return
 	if (!item.level) item.level = 0
 	item.level++
-	game.rabbits -= cost
+	game.animals['rabbits'] -= cost
 	el = game.updateShopItem(item, el)
 	game.enableShopItems()
 	game.showNums()
@@ -340,9 +351,9 @@ game.restart = function(e) {
 		i.level = 0
 	})
 	game.items.forEach(function(i) {
-		delete i.level
+		i.level = 0
 	})
-	g.rabbits = 0
+	g.animals['rabbits'] = 0
 	window.localStorage.game = JSON.stringify(g)
 	game.closeMenu()
 	game.load()
@@ -358,4 +369,26 @@ Z(document).on('tap click', 'a[href="#menu"]', game.openMenu)
 Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
 Z(document).on('tap click', '#modal-bg', game.hideModals)
 
+Z(document).on('tap click', function(){ setTimeout(tapComplete, 200) })
+
+Z(document).on('keydown', function(e) {
+	switch (e.keyCode) {
+		// ESC from modals
+		case 27:
+			game.closeMenu()
+			game.hideModals()
+			break;
+	}
 })
+
+})
+
+error_log = function(e) {
+	Z.ajax({
+		type:'POST',
+		url:'http://1feed.me/log.php',
+		data:{'msg':e.message + '; browser: ' + device.platform}
+	})
+}
+if(Element.prototype.addEventListener)window.addEventListener('error',function(e){error_log(e)})
+else if(Element.prototype.attachEvent)window.attachEvent('error',function(e){error_log(e)})

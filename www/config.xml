@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="3" version="1.0.2">
+	versionCode="7" version="1.0.3">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
@@ -9,7 +9,7 @@
 	<preference name="orientation" value="portrait" />
 	<preference name="fullscreen" value="true" />
 
-	<icon src="img/rabbit-1.png" />
+	<icon src="img/rabbit-150.png" />
 
 	<!-- For future game development
 	<gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1" />
