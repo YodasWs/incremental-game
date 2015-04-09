@@ -10,3 +10,12 @@ if(!Number.isInteger)
 Number.isInteger=function(a){return typeof a==='number'&&isFinite(a)&&Math.abs(a)<Math.pow(2,53)-1&&Math.floor(a)===a};
 if(!Number.parseFloat)Number.parseFloat=parseFloat;
 if(!Number.parseInt)Number.parseInt=parseInt;
+
+// Android Styling Issues
+window.onReady(function() {
+	if (device.platform.indexOf('Android') == -1) return;
+	// Padding for Shop Item Images
+	Z(document).on('update','#shop',function(){Z(this).children('ul').children('li').css({padding:'5px 10px 5px 2.5rem'})})
+	// Menu Height
+	Z('body>nav').css({height:Z(window).height()})
+})

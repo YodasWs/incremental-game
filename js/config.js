@@ -247,7 +247,7 @@ game.openShop = function(e) {
 		Z('#shop > ul').append(el)
 	})
 	game.enableShopItems()
-	Z('#shop').show().css({
+	Z('#shop').trigger('update').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
