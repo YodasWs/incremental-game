@@ -74,6 +74,7 @@ game = Z.extend(game, {
 		})
 		game.animals['rabbits'] += game.autoRate['rabbits']
 		game.showNums()
+		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
 		game.enableShopItems()
 	},
@@ -410,5 +411,5 @@ error_log = function(e) {
 		data:{'msg':e.message + '; browser: ' + device.platform}
 	})
 }
-if(Element.prototype.addEventListener)window.addEventListener('error',function(e){error_log(e)})
-else if(Element.prototype.attachEvent)window.attachEvent('error',function(e){error_log(e)})
+if(Element.prototype.addEventListener)window.addEventListener('error',error_log)
+else if(Element.prototype.attachEvent)window.attachEvent('error',error_log)
