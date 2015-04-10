@@ -358,8 +358,6 @@ game.buyItem = function(e) {
 	el = game.updateShopItem(item, el)
 	game.enableShopItems()
 	game.showNums()
-	// Prevent False Double Tap
-	setTimeout(tapComplete, 200)
 }
 // Restart Game
 game.restart = function(e) {
@@ -380,17 +378,20 @@ game.restart = function(e) {
 	game.load()
 }
 
-Z(document).on('tap click', '#shop > ul > li:not([disabled])', game.buyItem)
-Z(document).on('tap click', 'body > nav a[href="#main"]', game.closeMenu)
-Z(document).on('tap click', '#about a[href="#main"]', game.closeAbout)
-Z(document).on('tap click', '#shop a[href="#main"]', game.closeShop)
-Z(document).on('tap click', 'a[href="#destroy"]', game.restart)
-Z(document).on('tap click', 'a[href="#about"]', game.openAbout)
-Z(document).on('tap click', 'a[href="#menu"]', game.openMenu)
-Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
-Z(document).on('tap click', '#modal-bg', game.hideModals)
+var evtClick = 'tap click'
+if (device.platform.indexOf('Android') != -1) evtClick = 'tap'
 
-Z(document).on('tap click', function(){ setTimeout(tapComplete, 200) })
+Z(document).on(evtClick, '#shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
+Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
+Z(document).on(evtClick, '#shop a[href="#main"]', game.closeShop)
+Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
+Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
+Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
+Z(document).on(evtClick, 'a[href="#shop"]', game.openShop)
+Z(document).on(evtClick, '#modal-bg', game.hideModals)
+
+Z(document).on(evtClick, function(){ setTimeout(tapComplete, 200) })
 
 Z(document).on('keydown', function(e) {
 	switch (e.keyCode) {
