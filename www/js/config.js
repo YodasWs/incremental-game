@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 // Prevent False Double Tap
-var c = false
+var c = false,
 tapComplete = function() {
 	c = false
 }

@@ -10,6 +10,11 @@
 <script>
 if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
 	document.write('<script type="text/javascript" src="res/phonegap.js"><\/script>');
+// Load Android Polyfills and Plugins
+;(function(d,t){if(device.platform.indexOf('Android')==-1)return;
+	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1;
+	a.src='js/android.js';m.parentNode.insertBefore(a,m)
+})(document,'script');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
 var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
