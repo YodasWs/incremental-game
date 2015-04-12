@@ -13,7 +13,7 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.4',
+	v:'1.0.4a',
 	animals:{
 		rabbits:0
 	},
@@ -74,6 +74,7 @@ game = Z.extend(game, {
 		})
 		game.animals['rabbits'] += game.autoRate['rabbits']
 		game.showNums()
+		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
 		game.enableShopItems()
 	},
@@ -85,23 +86,43 @@ game = Z.extend(game, {
 				rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
 			}
 		} catch (e) {
-			// Safari doesn't like Intl
-			game.format = false
 		}
-		if (game.format) {
-			str['rabbits'] = game.format.whole(game.animals['rabbits'])
-			str['rps'] = game.format.rate(game.autoRate['rabbits'])
-		} else {
-			str['rabbits'] = game.animals['rabbits']
-			str['rps'] = game.autoRate['rabbits']
+		// For browsers without Intl
+		if (!game.format) game.format = {
+			whole: function(a) {
+				// Get Int
+				a = '' + Math.floor(a)
+				// Add Commas
+				for (var i=a.length-2; i>0; i-=4)
+					a = [a.slice(0,i), a.slice(i)].join(',')
+				return a
+			},
+			rate: function(a) {
+				return Math.round(a * 10) / 10
+			}
 		}
+		str['rabbits'] = game.format.whole(game.animals['rabbits'])
+		str['rps'] = game.format.rate(game.autoRate['rabbits'])
 		game.save()
+		// Animate Fast Number Increase
 		if (game.autoRate['rabbits'] > 14) {
 			str['rabbits'] = str['rabbits'].slice(0, -1) + '<img src="img/nums.gif"/>'
+			// Replace Successive Digits with Animation
 			while ((m = game.autoRate['rabbits'] / Math.pow(10, i++)) && m > 1.5) {
-				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1)
+				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1).trim(',. ')
 					+ '<img src="img/nums.gif"/>'
 					+ str['rabbits'].substring(str['rabbits'].indexOf('<'))
+			}
+			// Add Commas
+			var j = str['rabbits'].length
+			if (str['rabbits'].split('<').length - 1 >= 3)
+			for (i=0; i<str['rabbits'].split('<').length - 1; i++) {
+				j = str['rabbits'].lastIndexOf('<', j - 1)
+				if (i % 3 == 2)
+				str['rabbits'] = [
+					str['rabbits'].slice(0, j),
+					str['rabbits'].slice(j)
+				].join(',')
 			}
 		}
 		Z('main > output').html(str['rabbits'])
@@ -117,8 +138,8 @@ game = Z.extend(game, {
 		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
-		el.append('<span class="cost">' + (game.format ? game.format.whole(cost) : cost) + '</span>')
-		el.append('<span class="bonus">' + (game.format ? game.format.rate(i.bonus) : i.bonus) + '</span>')
+		el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+		el.append('<span class="bonus">' + game.format.rate(i.bonus) + '</span>')
 		return el
 	},
 	enableShopItems: function() {
@@ -147,12 +168,12 @@ game = Z.extend(game, {
 		},
 		{
 			name:'Breeding Expert',
-			baseCost:100,
+			baseCost:200,
 			bonus:5
 		},
 		{
 			name:'Rabbit Toys',
-			baseCost:300,
+			baseCost:500,
 			bonus:10
 		},
 		{
@@ -337,8 +358,6 @@ game.buyItem = function(e) {
 	el = game.updateShopItem(item, el)
 	game.enableShopItems()
 	game.showNums()
-	// Prevent False Double Tap
-	setTimeout(tapComplete, 200)
 }
 // Restart Game
 game.restart = function(e) {
@@ -359,17 +378,20 @@ game.restart = function(e) {
 	game.load()
 }
 
-Z(document).on('tap click', '#shop > ul > li:not([disabled])', game.buyItem)
-Z(document).on('tap click', 'body > nav a[href="#main"]', game.closeMenu)
-Z(document).on('tap click', '#about a[href="#main"]', game.closeAbout)
-Z(document).on('tap click', '#shop a[href="#main"]', game.closeShop)
-Z(document).on('tap click', 'a[href="#destroy"]', game.restart)
-Z(document).on('tap click', 'a[href="#about"]', game.openAbout)
-Z(document).on('tap click', 'a[href="#menu"]', game.openMenu)
-Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
-Z(document).on('tap click', '#modal-bg', game.hideModals)
+var evtClick = 'tap click'
+if (device.platform.indexOf('Android') != -1) evtClick = 'tap'
 
-Z(document).on('tap click', function(){ setTimeout(tapComplete, 200) })
+Z(document).on(evtClick, '#shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
+Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
+Z(document).on(evtClick, '#shop a[href="#main"]', game.closeShop)
+Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
+Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
+Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
+Z(document).on(evtClick, 'a[href="#shop"]', game.openShop)
+Z(document).on(evtClick, '#modal-bg', game.hideModals)
+
+Z(document).on(evtClick, function(){ setTimeout(tapComplete, 200) })
 
 Z(document).on('keydown', function(e) {
 	switch (e.keyCode) {
@@ -390,5 +412,5 @@ error_log = function(e) {
 		data:{'msg':e.message + '; browser: ' + device.platform}
 	})
 }
-if(Element.prototype.addEventListener)window.addEventListener('error',function(e){error_log(e)})
-else if(Element.prototype.attachEvent)window.attachEvent('error',function(e){error_log(e)})
+if(Element.prototype.addEventListener)window.addEventListener('error',error_log)
+else if(Element.prototype.attachEvent)window.attachEvent('error',error_log)

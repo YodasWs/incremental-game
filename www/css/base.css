@@ -10,7 +10,7 @@
 * { -webkit-box-sizing: border-box; box-sizing: border-box; }
 :root { font-family: 'Trebuchet MS', 'Open San', sans-serif; font-size: 1em; }
 html,body { margin: 0; padding: 0; }
-body { position: relative; overflow-x: hidden; background: forestgreen; }
+body { position: relative; overflow-x: hidden; background: #4EA24E; }
 body > * {
 	height: 100vh; width: 100vw; max-width: 480px;
 	margin: 0 auto;
@@ -36,12 +36,10 @@ img#rabbit {
 	cursor: pointer;
 }
 main > output {
-	display: block;
-	font-size: 3rem;
-	color: white;
-	font-weight: bold;
-	font-family: monospace;
-	text-align: right;
+	display: block; padding: 0 5px; text-align: right;
+	white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+	font-size: 3rem; font-weight: bold; font-family: monospace;
+	color: white; background: forestgreen;
 }
 main > output > img {
 	display: inline-block;
