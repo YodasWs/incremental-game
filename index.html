@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Rabbit Farm</title>
+<link rel="icon" type="image/png" href="img/rabbit-1.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
+<style>
+/** CSS Reset **/
+:root { font-size: 1em; line-height: 1.3em; font-family: 'Open Sans', 'Trebuchet MS', sans-serif; }
+html,body { padding: 0; margin: 0; }
+a:link, a:visited { color: black; }
+a:link img, a:visited img { border: 0 none; }
+/** Main Content **/
+body { background: #4EA24E; }
+main { min-height: 75vh; padding: 0; margin: 0; }
+main > h1 {
+	background: forestgreen; color: white;
+	text-align: center; letter-spacing: 1px;
+	padding-top: 1rem; padding-bottom: 1rem; margin-top: 0;
+}
+main > div#link { display: block; text-align: center; margin: 3rem 0; }
+main > div#description {
+	font-size: 1.3rem; text-align: justify;
+	max-width: 400px; margin: 1rem auto;
+}
+/** Footer **/
+footer { padding: 0 5px; }
+footer > small { display: block; max-width: 250px; }
+footer > small:nth-of-type(2n-1) { float: left; }
+footer > small:nth-of-type(2n) { text-align: right; float: right; }
+footer::after { display: block; content: ''; float: none; clear: both; }
+</style>
+</head>
+<body>
+<main>
+	<h1>Rabbit Farm</h1>
+	<div id="description">Experience the fun and excitement of running and managing your own rabbit farm!</div>
+	<div id="link"><a href="www/index.html" title="Play Now!"><img src="www/img/rabbit-150.png"
+		alt="Play Now!" /><br/>Play Now!</a></div>
+</main>
+<footer>
+	<small rel="copyright">&copy;2015 Sam Grundman</small>
+	<small>
+		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+			<img alt="Creative Commons License" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+		</a><br />
+		This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+			target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+	</small>
+</footer>
+</body>
+</html>
