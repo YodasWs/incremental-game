@@ -6,6 +6,12 @@
 <link rel="icon" type="image/png" href="img/rabbit-1.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
+<script>
+// If App, Start Game
+// http://stackoverflow.com/questions/10347539/detect-between-a-mobile-browser-or-a-phonegap-application
+if(document.URL.indexOf('http://')==-1&&document.URL.indexOf('https://')==-1)
+	this.location='www/index.html'
+</script>
 <style>
 /** CSS Reset **/
 :root { font-size: 1em; line-height: 1.3em; font-family: 'Open Sans', 'Trebuchet MS', sans-serif; }
