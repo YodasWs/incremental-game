@@ -22,6 +22,7 @@
 
 	<!-- For future Android support -->
 	<gap:platform name="android" />
+	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6" />
 	<!--
 	<gap:config-file platform="android" parent="/manifest" mode="merge">
 		<supports-screens android:xlargeScreens="false" android:largeScreens="false" />
