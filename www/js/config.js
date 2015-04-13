@@ -311,6 +311,10 @@ game.hideModals = function(e) {
 	if (Z('#shop').css('display') == 'block')
 		game.closeShop()
 }
+game.closeAll = function(e) {
+	game.closeMenu()
+	game.hideModals()
+}
 
 // Open About Screen
 game.openAbout = function(e) {
@@ -381,6 +385,7 @@ game.restart = function(e) {
 var evtClick = 'tap click'
 if (device.platform.indexOf('Android') != -1) evtClick = 'tap'
 
+// User Interaction Events
 Z(document).on(evtClick, '#shop > ul > li:not([disabled])', game.buyItem)
 Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
@@ -393,12 +398,16 @@ Z(document).on(evtClick, '#modal-bg', game.hideModals)
 
 Z(document).on(evtClick, function(){ setTimeout(tapComplete, 200) })
 
+// Mobile Button Support
+Z(document).on('backbutton', game.closeAll)
+Z(document).on('menubutton', game.openMenu)
+
+// Keyboard Support
 Z(document).on('keydown', function(e) {
 	switch (e.keyCode) {
 		// ESC from modals
 		case 27:
-			game.closeMenu()
-			game.hideModals()
+			game.closeAll(e)
 			break;
 	}
 })
