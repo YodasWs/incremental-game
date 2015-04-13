@@ -175,7 +175,7 @@ nav > a, img#rabbit, #shop > a, #shop > ul > li {
 
 /** For Touch Screen **/
 .touch #about > a[href="#main"],
-.touch body > nav > a[href="#main"] {
+body.touch > nav > a[href="#main"] {
 	width: 40px; height: 40px; font-size: 44px; line-height: 40px;
 }
 .touch #shop > a[href="#main"] {
