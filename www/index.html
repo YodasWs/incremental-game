@@ -35,6 +35,7 @@ window.onReady(function(){
 // Wait for document ready
 window.onReady(function() {
 	window.Z = Zepto
+	if (navigator.maxTouchPoints) Z('body').addClass('touch')
 })
 window.onload = function() {
 	game.load()
