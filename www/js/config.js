@@ -234,6 +234,7 @@ game.openMenu = function(e) {
 			left:Z('body > nav').width() + 'px'
 		}, t)
 	} else game.closeMenu()
+	return false
 }
 
 // Open the Country Store
@@ -314,6 +315,7 @@ game.hideModals = function(e) {
 game.closeAll = function(e) {
 	game.closeMenu()
 	game.hideModals()
+	return false
 }
 
 // Open About Screen
