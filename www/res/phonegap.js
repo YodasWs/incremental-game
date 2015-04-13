@@ -40,8 +40,10 @@ var device = {
 }
 device.model = device.name
 
-// geolocation, http://docs.phonegap.com/en/2.9.0/cordova_geolocation_geolocation.md.html#Geolocation
 if (!navigator) var navigator = {}
+if (!navigator.maxTouchPoints) navigator.maxTouchPoints = 0
+
+// geolocation, http://docs.phonegap.com/en/2.9.0/cordova_geolocation_geolocation.md.html#Geolocation
 if (!navigator.geolocation)
 navigator.geolocation = {
 	getCurrentPosition:function(success,error,options) {

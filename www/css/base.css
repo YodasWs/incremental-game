@@ -109,7 +109,7 @@ body > nav > a[href="#main"] {
 	cursor: default;
 	background: lightgrey;
 }
-#shop > a {
+#shop > a[href="#main"] {
 	display: block; float: right;
 	color: black; text-transform: uppercase;
 	text-decoration: none;
@@ -172,3 +172,12 @@ nav > a, img#rabbit, #shop > a, #shop > ul > li {
 #about > h1 { text-align: center; margin-bottom: 0; }
 #license { max-width: 200px; }
 #version::before { content: 'v'; }
+
+/** For Touch Screen **/
+.touch #about > a[href="#main"],
+body.touch > nav > a[href="#main"] {
+	width: 40px; height: 40px; font-size: 44px; line-height: 40px;
+}
+.touch #shop > a[href="#main"] {
+	font-size: 1.3em;
+}
