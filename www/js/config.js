@@ -208,7 +208,6 @@ game.closeMenu = function(e,t) {
 		left:'-' + Z('body > nav').width() + 'px'
 	}, t, function() {
 		Z('body > nav').hide()
-		tapComplete()
 	})
 	var l = Z('#main').css('left')
 	Z('#main').css({
@@ -227,7 +226,7 @@ game.openMenu = function(e) {
 			left: '-' + Z('body > nav').width() + 'px'
 		}).animate({
 			left:'0px'
-		}, t, tapComplete)
+		}, t)
 		var l = Z('#main').css('left')
 		Z('#main').css({
 			left:(l && l != 'auto' ? l : '0px')
@@ -254,7 +253,7 @@ game.openShop = function(e) {
 		left:'100vw'
 	}).animate({
 		left:0
-	}, t, 'ease-out', tapComplete)
+	}, t, 'ease-out')
 }
 // Close the Country Store
 game.closeShop = function(e) {
@@ -267,7 +266,6 @@ game.closeShop = function(e) {
 		left:'-' + Z('#shop').width() + 'px'
 	}, t, 'ease-in', function() {
 		Z(this).hide()
-		tapComplete()
 	})
 }
 
@@ -330,7 +328,7 @@ game.openAbout = function(e) {
 		top:'100vh'
 	}).animate({
 		top:'calc(100vh - ' + Z('#about').height() + 'px)'
-	}, t, 'ease-out', tapComplete)
+	}, t, 'ease-out')
 }
 // Close About Screen
 game.closeAbout = function(e) {
@@ -342,7 +340,6 @@ game.closeAbout = function(e) {
 		top:'100vh'
 	}, t, function() {
 		Z('#about').hide()
-		tapComplete()
 	})
 }
 

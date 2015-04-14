@@ -25,12 +25,14 @@ if (!window.console) var console = {
 }
 
 // device, http://docs.phonegap.com/en/3.0.0/cordova_device_device.md.html#Device
-var device = {
+window.device = {
 	name:(function() {
-		return (navigator.userAgent.match(/\((.*?;)?\s*(.*?(windows|linux).*?)\)/i))[2].trim()
+		var a = navigator.userAgent.match(/\((.*?;)?\s*(.*?(windows|linux|iphone|mac os x).*?)\)/i)
+		if (a && a[2]) return a[2].trim()
+		else return 'unknown'
 	})(),
 	platform:(function() {
-		return (navigator.userAgent.match(/\w*(IE|Chrome|Safari|iPod|iPhone|Android)\w*/))[0].trim()
+		return (navigator.userAgent.match(/\w*(IE|Chrome|iPod|iPhone|iPad|Safari|Android)\w*/))[0].trim()
 	})(),
 	version:(function() {
 		return (navigator.userAgent.match(/(IE|Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()

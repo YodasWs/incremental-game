@@ -10,7 +10,7 @@
 <script src="phonegap.js"></script>
 <script>
 if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
-	document.write('<script type="text/javascript" src="res/phonegap.js"><\/script>');
+	document.write('<script src="res/phonegap.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
 var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
@@ -20,13 +20,6 @@ else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',
 };
 // Build Basic Game Object
 window.game={}
-// Load Android Polyfills and Plugins
-window.onReady(function(){
-	if(device.platform.indexOf('Android')==-1)return
-	var a,m,d=document,t='script'
-	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1
-	a.src='js/android.js';m.parentNode.insertBefore(a,m)
-})
 </script>
 <script src="res/zepto.min.js" async></script>
 <script src="res/polyfill.js" async></script>
@@ -36,6 +29,13 @@ window.onReady(function(){
 window.onReady(function() {
 	window.Z = Zepto
 	if (navigator.maxTouchPoints) Z('body').addClass('touch')
+})
+// Load Android Polyfills and Plugins
+window.onReady(function(){
+	if(device.platform.indexOf('Android')==-1)return
+	var a,m,d=document,t='script'
+	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1
+	a.src='js/android.js';m.parentNode.insertBefore(a,m)
 })
 window.onload = function() {
 	game.load()
@@ -56,8 +56,9 @@ window.onload = function() {
 </script>
 </head>
 <body>
-<div id="intro">
+<div id="intro" style="text-align: center">
 	<h1>Rabbit Farm</h1>
+	<img src="img/rabbit-150.png" alt="Play Now!" />
 </div>
 <nav id="menu">
 	<a href="#main">&#xd7;</a>
