@@ -324,11 +324,13 @@ game.openAbout = function(e) {
 	var t = 400
 	game.showModalBG(t)
 	game.closeMenu(e,t/2)
-	Z('#about').show().css({
+	Z('#about').trigger('revealstart').show().css({
 		top:'100vh'
 	}).animate({
 		top:'calc(100vh - ' + Z('#about').height() + 'px)'
-	}, t, 'ease-out')
+	}, t, 'ease-out', function() {
+		Z('#about').trigger('revealend')
+	})
 }
 // Close About Screen
 game.closeAbout = function(e) {
