@@ -10,10 +10,17 @@
  */
 window.onReady(function() {
 	if (device.platform.indexOf('Android') == -1) return;
-	// Padding for Shop Item Images
-	Z(document).on('update','#shop',function(){Z(this).children('ul').children('li').css({padding:'5px 10px 5px 2.5rem'})})
+	var h = Z(window).height()
+	// Placement of Shop Modal
+	Z(document).on('update','#shop',function(){
+		Z(this).css({height:h*.7+'px',top:h*.2+'px'})
+	})
 	// Menu Height
-	Z('body>nav').css({height:Z(window).height()})
+	Z('body>nav').css({height:h})
 	// Touch Screen
 	Z('body').addClass('touch')
+	// Placement of About Modal
+	Z(document).on('revealstart revealend','#about',function(){
+		Z(this).css({top:(h-200)+'px'})
+	})
 })
