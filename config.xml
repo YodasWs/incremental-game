@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="19" version="1.0.4a">
+	versionCode="20" version="1.0.4a">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
@@ -20,6 +20,7 @@
 
 	<!-- Android -->
 	<gap:platform name="android" />
+	<preference name="android-minSdkVersion" value="16" />
 	<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
 	<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
 	<icon src="icons/ic_launcher_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
