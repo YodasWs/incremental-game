@@ -93,7 +93,7 @@ game = Z.extend(game, {
 				// Get Int
 				a = '' + Math.floor(a)
 				// Add Commas
-				for (var i=a.length-2; i>0; i-=4)
+				for (var i=a.length-3; i>0; i-=4)
 					a = [a.slice(0,i), a.slice(i)].join(',')
 				return a
 			},
