@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="21" version="1.0.4a">
+	versionCode="22" version="1.0.4a">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
