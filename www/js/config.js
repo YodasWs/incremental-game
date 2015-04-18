@@ -401,14 +401,8 @@ Z(document).on(evtClick, '#modal-bg', game.hideModals)
 Z(document).on(evtClick, function(){ setTimeout(tapComplete, 200) })
 
 // Pause/Resume Game
-Z(document).on('pause', function() {
-	console.log('paused')
-	clearTimeout(game.toAuto)
-})
-Z(document).on('resume', function() {
-	console.log('resuming!')
-	game.autoClick()
-})
+Z(document).on('pause', function() { clearTimeout(game.toAuto) })
+Z(document).on('resume', game.autoClick)
 
 // Keyboard Support
 Z(document).on('keydown', function(e) {
@@ -421,14 +415,8 @@ Z(document).on('keydown', function(e) {
 })
 
 // Mobile Button Support
-Z(document).on('backbutton', function() {
-	console.log('backbutton pressed!')
-	return game.closeAll()
-})
-Z(document).on('menubutton', function() {
-	console.log('menubutton pressed!')
-	return game.openMenu()
-})
+Z(document).on('backbutton', game.closeAll)
+Z(document).on('menubutton', game.openMenu)
 
 })
 
