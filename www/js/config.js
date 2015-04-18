@@ -70,7 +70,7 @@ game = Z.extend(game, {
 		game.autoRate['rabbits'] = 0
 		game.items.forEach(function(i) {
 			if (!i.level) i.level = 0
-			game.autoRate['rabbits'] += i.bonus * i.level
+			game.autoRate['rabbits'] += i.bonus['rabbits'] * i.level
 		})
 		game.animals['rabbits'] += game.autoRate['rabbits']
 		game.showNums()
@@ -130,7 +130,7 @@ game = Z.extend(game, {
 	},
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
-		var cost = Math.ceil(i.baseCost * Math.pow(1.4, i.level))
+		var cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(1.4, i.level))
 		el.children().remove()
 		el.attr('data-cost', cost)
 		if (i.img) {
@@ -139,58 +139,59 @@ game = Z.extend(game, {
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
 		el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
-		el.append('<span class="bonus">' + game.format.rate(i.bonus) + '</span>')
+		el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
 		return el
 	},
 	enableShopItems: function() {
 		Z('#shop > ul > li').attr('disabled', null).each(function(i) {
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
+			if (Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
 		})
 	},
 	items:[
 		{
 			name:'Carrots',
-			baseCost:5,
-			bonus:.1,
+			baseCost:{ rabbits:5 },
+			bonus:{ rabbits:.1 },
 			img:'carrot.png'
 		},
 		{
 			name:'Nesting Hay',
-			baseCost:20,
-			bonus:.5,
+			baseCost:{ rabbits:20 },
+			bonus:{ rabbits:.5 },
 			img:'haybale.png'
 		},
 		{
 			img:'rabbits/cage.png',
 			name:'Rabbit Cages',
-			baseCost:50,
-			bonus:1
+			baseCost:{ rabbits:50 },
+			bonus:{ rabbits:1 }
 		},
 		{
 			img:'rabbits/breeder.png',
 			name:'Breeding Expert',
-			baseCost:200,
-			bonus:5
+			baseCost:{ rabbits:200 },
+			bonus:{ rabbits:5 }
 		},
 		{
 			name:'Rabbit Toys',
-			baseCost:500,
-			bonus:10
+			baseCost:{ rabbits:500 },
+			bonus:{ rabbits:10 }
 		},
 		{
 			name:'Rabbit Perfume',
-			baseCost:5000,
-			bonus:100
+			baseCost:{ rabbits:5000 },
+			bonus:{ rabbits:100 }
 		},
 		{
 			name:'Rabbit Hormones',
-			baseCost:15000,
-			bonus:200
+			baseCost:{ rabbits:15000 },
+			bonus:{ rabbits:200 }
 		},
 		{
 			name:'Rabbit Viagra',
-			baseCost:300000,
-			bonus:1000
+			baseCost:{ rabbits:300000 },
+			bonus:{ rabbits:1000 }
 		}
 	]
 })
