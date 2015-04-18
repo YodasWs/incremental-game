@@ -7,13 +7,13 @@
  */
 window.onReady(function() {
 // Prevent False Double Tap
-var c = false
+var c = false,
 tapComplete = function() {
 	c = false
 }
 
 game = Z.extend(game, {
-	v:'1.0.3',
+	v:'1.0.4',
 	animals:{
 		rabbits:0
 	},
@@ -70,10 +70,11 @@ game = Z.extend(game, {
 		game.autoRate['rabbits'] = 0
 		game.items.forEach(function(i) {
 			if (!i.level) i.level = 0
-			game.autoRate['rabbits'] += i.bonus * i.level
+			game.autoRate['rabbits'] += i.bonus['rabbits'] * i.level
 		})
 		game.animals['rabbits'] += game.autoRate['rabbits']
 		game.showNums()
+		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
 		game.enableShopItems()
 	},
@@ -85,23 +86,43 @@ game = Z.extend(game, {
 				rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
 			}
 		} catch (e) {
-			// Safari doesn't like Intl
-			game.format = false
 		}
-		if (game.format) {
-			str['rabbits'] = game.format.whole(game.animals['rabbits'])
-			str['rps'] = game.format.rate(game.autoRate['rabbits'])
-		} else {
-			str['rabbits'] = game.animals['rabbits']
-			str['rps'] = game.autoRate['rabbits']
+		// For browsers without Intl
+		if (!game.format) game.format = {
+			whole: function(a) {
+				// Get Int
+				a = '' + Math.floor(a)
+				// Add Commas
+				for (var i=a.length-3; i>0; i-=4)
+					a = [a.slice(0,i), a.slice(i)].join(',')
+				return a
+			},
+			rate: function(a) {
+				return Math.round(a * 10) / 10
+			}
 		}
+		str['rabbits'] = game.format.whole(game.animals['rabbits'])
+		str['rps'] = game.format.rate(game.autoRate['rabbits'])
 		game.save()
+		// Animate Fast Number Increase
 		if (game.autoRate['rabbits'] > 14) {
 			str['rabbits'] = str['rabbits'].slice(0, -1) + '<img src="img/nums.gif"/>'
+			// Replace Successive Digits with Animation
 			while ((m = game.autoRate['rabbits'] / Math.pow(10, i++)) && m > 1.5) {
-				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1)
+				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1).trim(',. ')
 					+ '<img src="img/nums.gif"/>'
 					+ str['rabbits'].substring(str['rabbits'].indexOf('<'))
+			}
+			// Add Commas
+			var j = str['rabbits'].length
+			if (str['rabbits'].split('<').length - 1 >= 3)
+			for (i=0; i<str['rabbits'].split('<').length - 1; i++) {
+				j = str['rabbits'].lastIndexOf('<', j - 1)
+				if (i % 3 == 2)
+				str['rabbits'] = [
+					str['rabbits'].slice(0, j),
+					str['rabbits'].slice(j)
+				].join(',')
 			}
 		}
 		Z('main > output').html(str['rabbits'])
@@ -109,7 +130,7 @@ game = Z.extend(game, {
 	},
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
-		var cost = Math.ceil(i.baseCost * Math.pow(1.4, i.level))
+		var cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(1.4, i.level))
 		el.children().remove()
 		el.attr('data-cost', cost)
 		if (i.img) {
@@ -117,58 +138,60 @@ game = Z.extend(game, {
 		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
-		el.append('<span class="cost">' + (game.format ? game.format.whole(cost) : cost) + '</span>')
-		el.append('<span class="bonus">' + (game.format ? game.format.rate(i.bonus) : i.bonus) + '</span>')
+		el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+		el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
 		return el
 	},
 	enableShopItems: function() {
 		Z('#shop > ul > li').attr('disabled', null).each(function(i) {
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
+			if (Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
 		})
 	},
 	items:[
 		{
 			name:'Carrots',
-			baseCost:5,
-			bonus:.1,
+			baseCost:{ rabbits:5 },
+			bonus:{ rabbits:.1 },
 			img:'carrot.png'
 		},
 		{
 			name:'Nesting Hay',
-			baseCost:20,
-			bonus:.5,
+			baseCost:{ rabbits:20 },
+			bonus:{ rabbits:.5 },
 			img:'haybale.png'
 		},
 		{
 			img:'rabbits/cage.png',
 			name:'Rabbit Cages',
-			baseCost:50,
-			bonus:1
+			baseCost:{ rabbits:50 },
+			bonus:{ rabbits:1 }
 		},
 		{
+			img:'rabbits/breeder.png',
 			name:'Breeding Expert',
-			baseCost:100,
-			bonus:5
+			baseCost:{ rabbits:200 },
+			bonus:{ rabbits:5 }
 		},
 		{
 			name:'Rabbit Toys',
-			baseCost:300,
-			bonus:10
+			baseCost:{ rabbits:500 },
+			bonus:{ rabbits:10 }
 		},
 		{
 			name:'Rabbit Perfume',
-			baseCost:5000,
-			bonus:100
+			baseCost:{ rabbits:5000 },
+			bonus:{ rabbits:100 }
 		},
 		{
 			name:'Rabbit Hormones',
-			baseCost:15000,
-			bonus:200
+			baseCost:{ rabbits:15000 },
+			bonus:{ rabbits:200 }
 		},
 		{
 			name:'Rabbit Viagra',
-			baseCost:300000,
-			bonus:1000
+			baseCost:{ rabbits:300000 },
+			bonus:{ rabbits:1000 }
 		}
 	]
 })
@@ -186,7 +209,6 @@ game.closeMenu = function(e,t) {
 		left:'-' + Z('body > nav').width() + 'px'
 	}, t, function() {
 		Z('body > nav').hide()
-		tapComplete()
 	})
 	var l = Z('#main').css('left')
 	Z('#main').css({
@@ -205,7 +227,7 @@ game.openMenu = function(e) {
 			left: '-' + Z('body > nav').width() + 'px'
 		}).animate({
 			left:'0px'
-		}, t, tapComplete)
+		}, t)
 		var l = Z('#main').css('left')
 		Z('#main').css({
 			left:(l && l != 'auto' ? l : '0px')
@@ -213,6 +235,7 @@ game.openMenu = function(e) {
 			left:Z('body > nav').width() + 'px'
 		}, t)
 	} else game.closeMenu()
+	return false
 }
 
 // Open the Country Store
@@ -227,11 +250,11 @@ game.openShop = function(e) {
 		Z('#shop > ul').append(el)
 	})
 	game.enableShopItems()
-	Z('#shop').show().css({
+	Z('#shop').trigger('update').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
-	}, t, 'ease-out', tapComplete)
+	}, t, 'ease-out')
 }
 // Close the Country Store
 game.closeShop = function(e) {
@@ -244,7 +267,6 @@ game.closeShop = function(e) {
 		left:'-' + Z('#shop').width() + 'px'
 	}, t, 'ease-in', function() {
 		Z(this).hide()
-		tapComplete()
 	})
 }
 
@@ -290,6 +312,11 @@ game.hideModals = function(e) {
 	if (Z('#shop').css('display') == 'block')
 		game.closeShop()
 }
+game.closeAll = function(e) {
+	game.closeMenu()
+	game.hideModals()
+	return false
+}
 
 // Open About Screen
 game.openAbout = function(e) {
@@ -298,11 +325,13 @@ game.openAbout = function(e) {
 	var t = 400
 	game.showModalBG(t)
 	game.closeMenu(e,t/2)
-	Z('#about').show().css({
+	Z('#about').trigger('revealstart').show().css({
 		top:'100vh'
 	}).animate({
 		top:'calc(100vh - ' + Z('#about').height() + 'px)'
-	}, t, 'ease-out', tapComplete)
+	}, t, 'ease-out', function() {
+		Z('#about').trigger('revealend')
+	})
 }
 // Close About Screen
 game.closeAbout = function(e) {
@@ -314,7 +343,6 @@ game.closeAbout = function(e) {
 		top:'100vh'
 	}, t, function() {
 		Z('#about').hide()
-		tapComplete()
 	})
 }
 
@@ -337,8 +365,6 @@ game.buyItem = function(e) {
 	el = game.updateShopItem(item, el)
 	game.enableShopItems()
 	game.showNums()
-	// Prevent False Double Tap
-	setTimeout(tapComplete, 200)
 }
 // Restart Game
 game.restart = function(e) {
@@ -359,27 +385,39 @@ game.restart = function(e) {
 	game.load()
 }
 
-Z(document).on('tap click', '#shop > ul > li:not([disabled])', game.buyItem)
-Z(document).on('tap click', 'body > nav a[href="#main"]', game.closeMenu)
-Z(document).on('tap click', '#about a[href="#main"]', game.closeAbout)
-Z(document).on('tap click', '#shop a[href="#main"]', game.closeShop)
-Z(document).on('tap click', 'a[href="#destroy"]', game.restart)
-Z(document).on('tap click', 'a[href="#about"]', game.openAbout)
-Z(document).on('tap click', 'a[href="#menu"]', game.openMenu)
-Z(document).on('tap click', 'a[href="#shop"]', game.openShop)
-Z(document).on('tap click', '#modal-bg', game.hideModals)
+var evtClick = 'tap click'
+if (device.platform.indexOf('Android') != -1) evtClick = 'tap'
 
-Z(document).on('tap click', function(){ setTimeout(tapComplete, 200) })
+// User Interaction Events
+Z(document).on(evtClick, '#shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
+Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
+Z(document).on(evtClick, '#shop a[href="#main"]', game.closeShop)
+Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
+Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
+Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
+Z(document).on(evtClick, 'a[href="#shop"]', game.openShop)
+Z(document).on(evtClick, '#modal-bg', game.hideModals)
 
+Z(document).on(evtClick, function(){ setTimeout(tapComplete, 200) })
+
+// Pause/Resume Game
+Z(document).on('pause', function() { clearTimeout(game.toAuto) })
+Z(document).on('resume', game.autoClick)
+
+// Keyboard Support
 Z(document).on('keydown', function(e) {
 	switch (e.keyCode) {
 		// ESC from modals
 		case 27:
-			game.closeMenu()
-			game.hideModals()
+			game.closeAll(e)
 			break;
 	}
 })
+
+// Mobile Button Support
+Z(document).on('backbutton', game.closeAll)
+Z(document).on('menubutton', game.openMenu)
 
 })
 
@@ -390,5 +428,5 @@ error_log = function(e) {
 		data:{'msg':e.message + '; browser: ' + device.platform}
 	})
 }
-if(Element.prototype.addEventListener)window.addEventListener('error',function(e){error_log(e)})
-else if(Element.prototype.attachEvent)window.attachEvent('error',function(e){error_log(e)})
+if(Element.prototype.addEventListener)window.addEventListener('error',error_log)
+else if(Element.prototype.attachEvent)window.attachEvent('error',error_log)
