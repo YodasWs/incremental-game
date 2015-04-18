@@ -23,4 +23,13 @@ window.onReady(function() {
 	Z(document).on('revealstart revealend','#about',function(){
 		Z(this).css({top:(h-200)+'px'})
 	})
+	// Error Handling (since there is no ErrorEvent)
+	window.removeEventListener('error',error_log,false)
+	window.onerror = function(msg, file, line) {
+		Z.ajax({
+			type:'POST',
+			url:'http://1feed.me/log.php',
+			data:{'msg':msg +  '; ' + file + ' line ' + line + '; browser: ' + device.platform}
+		})
+	}
 })

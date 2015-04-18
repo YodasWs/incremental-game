@@ -363,11 +363,19 @@ game.closeAbout = function(e) {
 	c = true
 	var t = 200
 	game.hideModalBG(t)
-	Z('#about').animate({
-		top:'100vh'
-	}, t, function() {
-		Z('#about').hide()
-	})
+	try {
+		Z('#about').animate({
+			top:'100vh'
+		}, t, function() {
+			Z('#about').hide()
+		})
+	} catch (er) {
+		Z('#about').animate({
+			top:'100%'
+		}, t, function() {
+			Z('#about').hide()
+		})
+	}
 }
 
 // Buy Item from Country Store
@@ -452,5 +460,5 @@ error_log = function(e) {
 		data:{'msg':e.message + '; browser: ' + device.platform}
 	})
 }
-if(Element.prototype.addEventListener)window.addEventListener('error',error_log)
+if(Element.prototype.addEventListener)window.addEventListener('error',error_log,false)
 else if(Element.prototype.attachEvent)window.attachEvent('error',error_log)
