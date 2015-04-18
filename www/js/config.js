@@ -43,6 +43,40 @@ game = Z.extend(game, {
 			}
 		}
 		game.autoClick()
+		// Add Background Images
+		game.items.forEach(function(i) {
+			if (!i.level || !i.img) return
+			console.log(i.name + ' is at lvl ' + i.level)
+			for (var j=0; j<i.level; j++) {
+				Z('<img src="img/' + i.img + '" style="display:none"/>').appendTo('#img-bg')
+			}
+		})
+		Z('#img-bg > img').each(function(j) {
+			var img = Z(this).hide()
+			setTimeout(function() {
+				game.rain(img)
+			}, (1 + j) * 1000 + Math.floor(Math.random() * 1000))
+		})
+	},
+	rain: function(el) {
+		el.show().css({
+			opacity: 0,
+			transform: 'rotate(' + Math.floor(Math.random() * 90 - 45) + 'deg)',
+			'webkit-transform': 'rotate(' + Math.floor(Math.random() * 360) + 'deg)',
+			top: Math.floor(Math.random() * 75) + '%',
+			left: Math.floor(Math.random() * 95) + '%'
+		}).animate({
+			opacity: 1
+		}, 1000, function() {
+			Z(this).animate({
+				top: '100%'
+			}, (100 - Number.parseInt(Z(this).css('top'))) * 50, function() {
+				Z(this).hide()
+				setTimeout(function() {
+					game.rain(el)
+				}, Math.floor(Math.random() * 12 - 4) * 1000)
+			})
+		})
 	},
 	save: function() {
 		// Copy Game Data
