@@ -453,12 +453,11 @@ Z(document).on('menubutton', game.openMenu)
 
 })
 
-error_log = function(e) {
+// Error Handling
+window.onerror = function(msg, file, line) {
 	Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':e.message + '; browser: ' + device.platform}
+		data:{'msg':msg +  '; ' + file + ' line ' + line + '; browser: ' + device.platform}
 	})
 }
-if(Element.prototype.addEventListener)window.addEventListener('error',error_log,false)
-else if(Element.prototype.attachEvent)window.attachEvent('error',error_log)
