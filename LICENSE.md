@@ -10,6 +10,10 @@ http://creativecommons.org/licenses/by-nc-sa/4.0/
 You may fork this repo and reuse all the JavaScript and CSS as you wish as long as you give credit to the author(s)
 and do not use in commercial products. All future work must also be licensed under the same CC BY-NC-SA 4.0 License.
 
+### Zepto.js
+
+[Zepto.js](http://zeptojs.com) is Copyright &copy; 2010-2015 Thomas Fuchs and used here under the MIT license.
+
 ## Public Domain Images
 
 The following images are in the public domain (or are reasonably expected to at least allow free, unfettered use)
