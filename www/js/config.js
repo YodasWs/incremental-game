@@ -13,12 +13,15 @@ tapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.4',
+	v:'1.0.5a',
 	animals:{
 		rabbits:0
 	},
 	autoRate:{
 		rabbits:0
+	},
+	clkRate:{
+		rabbits:[]
 	},
 	load: function() {
 		if (window.localStorage.game) {
@@ -52,6 +55,7 @@ game = Z.extend(game, {
 		})
 		;[
 			'autoRate',
+			'clkRate',
 			'format',
 			'toAuto'
 		].forEach(function(a) {
@@ -62,23 +66,33 @@ game = Z.extend(game, {
 	},
 	clkRabbit: function() {
 		game.animals['rabbits']++
-		game.autoRate['rabbits']++
-		game.showNums()
+		game.clkRate['rabbits'].push(Date.now())
+		game.showNums('rabbits')
 		return false
 	},
 	autoClick: function() {
-		game.autoRate['rabbits'] = 0
+		// Reset Auto Rates to Zero
+		Z.each(game.autoRate, function(k) {
+			game.autoRate[k] = 0
+		})
+		// Recalculate Auto Rates
 		game.items.forEach(function(i) {
 			if (!i.level) i.level = 0
-			game.autoRate['rabbits'] += i.bonus['rabbits'] * i.level
+			Z.each(i.bonus, function(k) {
+				game.autoRate[k] += i.bonus[k] * i.level
+			})
 		})
-		game.animals['rabbits'] += game.autoRate['rabbits']
-		game.showNums()
+		// Add Auto Clicked Animals
+		Z.each(game.autoRate, function(k) {
+			game.animals[k] += game.autoRate[k]
+		})
+		// Update Game State
+		game.showNums('rabbits')
 		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
 		game.enableShopItems()
 	},
-	showNums: function() {
+	showNums: function(animal) {
 		var str = {}, i = 2, m
 		try { if (!game.format && Intl && Intl.NumberFormat)
 			game.format = {
@@ -101,31 +115,41 @@ game = Z.extend(game, {
 				return Math.round(a * 10) / 10
 			}
 		}
-		str['rabbits'] = game.format.whole(game.animals['rabbits'])
-		str['rps'] = game.format.rate(game.autoRate['rabbits'])
+		// Initialise any missing elements
+		if (!game.autoRate[animal]) game.autoRate[animal] = 0
+		if (!game.clkRate[animal]) game.clkRate[animal] = []
+		if (!game.animals[animal]) game.animals[animal] = 0
+		// Count manual clicks only within past second
+		while (game.clkRate[animal].length && game.clkRate[animal][0] <= Date.now() - 1000) {
+				game.clkRate[animal].shift()
+		}
+		str[animal] = game.format.whole(game.animals[animal])
+		str['rps'] = game.format.rate(
+			game.autoRate[animal] + game.clkRate[animal].length
+		)
 		game.save()
 		// Animate Fast Number Increase
-		if (game.autoRate['rabbits'] > 14) {
-			str['rabbits'] = str['rabbits'].slice(0, -1) + '<img src="img/nums.gif"/>'
+		if (game.autoRate[animal] > 14) {
+			str[animal] = str[animal].slice(0, -1) + '<img src="img/nums.gif"/>'
 			// Replace Successive Digits with Animation
-			while ((m = game.autoRate['rabbits'] / Math.pow(10, i++)) && m > 1.5) {
-				str['rabbits'] = str['rabbits'].slice(0, str['rabbits'].indexOf('<') - 1).trim(',. ')
+			while ((m = game.autoRate[animal] / Math.pow(10, i++)) && m > 1.5) {
+				str[animal] = str[animal].slice(0, str[animal].indexOf('<') - 1).trim(',. ')
 					+ '<img src="img/nums.gif"/>'
-					+ str['rabbits'].substring(str['rabbits'].indexOf('<'))
+					+ str[animal].substring(str[animal].indexOf('<'))
 			}
 			// Add Commas
-			var j = str['rabbits'].length
-			if (str['rabbits'].split('<').length - 1 >= 3)
-			for (i=0; i<str['rabbits'].split('<').length - 1; i++) {
-				j = str['rabbits'].lastIndexOf('<', j - 1)
+			var j = str[animal].length
+			if (str[animal].split('<').length - 1 >= 3)
+			for (i=0; i<str[animal].split('<').length - 1; i++) {
+				j = str[animal].lastIndexOf('<', j - 1)
 				if (i % 3 == 2)
-				str['rabbits'] = [
-					str['rabbits'].slice(0, j),
-					str['rabbits'].slice(j)
+				str[animal] = [
+					str[animal].slice(0, j),
+					str[animal].slice(j)
 				].join(',')
 			}
 		}
-		Z('main > output').html(str['rabbits'])
+		Z('main > output').html(str[animal])
 		Z('main > small').text(str['rps'])
 	},
 	updateShopItem: function(i, el) {
@@ -364,7 +388,7 @@ game.buyItem = function(e) {
 	game.animals['rabbits'] -= cost
 	el = game.updateShopItem(item, el)
 	game.enableShopItems()
-	game.showNums()
+	game.showNums('rabbits')
 }
 // Restart Game
 game.restart = function(e) {
