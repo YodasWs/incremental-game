@@ -206,7 +206,7 @@ Z(document).on('tap click','a[href^="#"]',false)
 
 // Close the Game Menu
 game.closeMenu = function(e,t) {
-	if (Z('#menu').css('display') != 'block') return
+	if (Z('body > nav').css('display') != 'block') return
 	t=t?t:400
 	Z('body > nav').css({
 		left:0
@@ -221,6 +221,7 @@ game.closeMenu = function(e,t) {
 	}).animate({
 		left:0
 	}, t)
+	setTapComplete()
 }
 // Open the Game Menu
 game.openMenu = function(e) {
@@ -240,6 +241,7 @@ game.openMenu = function(e) {
 			left:Z('body > nav').width() + 'px'
 		}, t)
 	} else game.closeMenu()
+	setTapComplete()
 	return false
 }
 
@@ -450,10 +452,7 @@ Z(document).on('keydown', function(e) {
 
 // Mobile Button Support
 Z(document).on('backbutton', game.closeAll)
-Z(document).on('menubutton', function() {
-	game.openMenu()
-	setTapComplete()
-})
+Z(document).on('menubutton', game.openMenu)
 
 })
 
