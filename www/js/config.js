@@ -11,6 +11,9 @@ var c = false,
 tapComplete = function() {
 	c = false
 }
+setTapComplete = function() {
+	setTimeout(tapComplete, 200)
+}
 
 game = Z.extend(game, {
 	v:'1.0.5a',
@@ -137,7 +140,7 @@ game = Z.extend(game, {
 		str['rps'] = game.format.rate(
 			game.autoRate[animal] + game.clkRate[animal].length
 		)
-		game.save()
+		if (Math.floor(Date.now() / 1000) % 5 == 0) game.save()
 		// Animate Fast Number Increase
 		if (game.autoRate[animal] > 14) {
 			str[animal] = str[animal].slice(0, -1) + '<img src="img/nums.gif"/>'
@@ -190,6 +193,7 @@ Z(document).on('tap click','a[href^="#"]',false)
 
 // Close the Game Menu
 game.closeMenu = function(e,t) {
+	if (Z('#menu').css('display') != 'block') return
 	t=t?t:400
 	Z('body > nav').css({
 		left:0
@@ -234,7 +238,7 @@ game.openShop = function(e) {
 	game.showModalBG(t)
 	Z('#shop > ul').children().remove()
 	Z.each(game.items, function(j,i) {
-		el = game.updateShopItem(i, Z('<li></li>'))
+		var el = game.updateShopItem(i, Z('<li></li>'))
 		Z('#shop > ul').append(el)
 	})
 	game.enableShopItems()
@@ -275,7 +279,11 @@ game.showModalBG = function(t) {
 	}, t)
 }
 // Hide Modal Background Screen
-game.hideModalBG = function(t) {
+game.hideModalBG = function(t,cb) {
+	if (Z('#modal-bg').css('display') != 'block') {
+		if (Z.isFunction(cb)) cb()
+		return
+	}
 	t = t?t:400
 	Z('main').css({
 		'-webkit-filter':'blur(2px)',
@@ -290,6 +298,7 @@ game.hideModalBG = function(t) {
 		opacity:0
 	}, t, function() {
 		Z(this).hide()
+		if (Z.isFunction(cb)) cb()
 	})
 }
 
@@ -303,6 +312,7 @@ game.hideModals = function(e) {
 game.closeAll = function(e) {
 	game.closeMenu()
 	game.hideModals()
+	setTapComplete()
 	return false
 }
 
@@ -395,7 +405,7 @@ Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
 Z(document).on(evtClick, 'a[href="#shop"]', game.openShop)
 Z(document).on(evtClick, '#modal-bg', game.hideModals)
 
-Z(document).on(evtClick, function(){ setTimeout(tapComplete, 200) })
+Z(document).on(evtClick, setTapComplete)
 
 // Pause/Resume Game
 Z(document).on('pause', function() { clearTimeout(game.toAuto) })
@@ -413,13 +423,16 @@ Z(document).on('keydown', function(e) {
 
 // Mobile Button Support
 Z(document).on('backbutton', game.closeAll)
-Z(document).on('menubutton', game.openMenu)
+Z(document).on('menubutton', function() {
+	game.openMenu()
+	setTapComplete()
+})
 
 })
 
 // Error Handling
 window.onerror = function(msg, file, line) {
-	Z.ajax({
+	if (Z && Z.ajax) Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
 		data:{'msg':msg +  '; ' + file + ' line ' + line + '; browser: ' + device.platform}

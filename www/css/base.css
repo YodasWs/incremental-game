@@ -160,7 +160,7 @@ main > a[href="#shop"]::before {
 	background: -149px -5px url('../img/stores.png') no-repeat;
 	content: ''; margin: 0 auto;
 }
-a[href="#shop"], a[href="#menu"], a[href="#main"],
+a[href="#shop"], a[href="#menu"],
 nav > a, img#rabbit, #shop > a, #shop > ul > li {
 	-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
 }
