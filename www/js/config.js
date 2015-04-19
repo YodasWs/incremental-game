@@ -25,11 +25,21 @@ game = Z.extend(game, {
 	},
 	load: function() {
 		if (window.localStorage.game) {
+			var savedGame = JSON.parse(window.localStorage.game)
+			// Upgrade items Array to Object
+			if (Array.isArray(savedGame.items)) {
+				var items = {}
+				savedGame.items.forEach(function(i,j){
+					items[j] = i
+				})
+				delete savedGame.items
+				savedGame.items = items
+			}
 			// Merge Data
 			game = Z.extend(
 				true, // Merge Recursively
 				game, // Game object
-				JSON.parse(window.localStorage.game), // Saved Data
+				savedGame, // Saved Data
 				{
 					// Necessary Updated Game Data
 					v:game.v,
@@ -48,7 +58,7 @@ game = Z.extend(game, {
 		// Copy Game Data
 		var g = Z.extend(true, {}, game)
 		// Delete Unnecessary Data
-		g.items.forEach(function(i) {
+		Z.each(g.items, function(j,i) {
 			delete i.baseCost
 			delete i.bonus
 			delete i.img
@@ -76,7 +86,7 @@ game = Z.extend(game, {
 			game.autoRate[k] = 0
 		})
 		// Recalculate Auto Rates
-		game.items.forEach(function(i) {
+		Z.each(game.items, function(j,i) {
 			if (!i.level) i.level = 0
 			Z.each(i.bonus, function(k) {
 				game.autoRate[k] += i.bonus[k] * i.level
@@ -223,7 +233,7 @@ game.openShop = function(e) {
 	var t = 600
 	game.showModalBG(t)
 	Z('#shop > ul').children().remove()
-	game.items.forEach(function(i) {
+	Z.each(game.items, function(j,i) {
 		el = game.updateShopItem(i, Z('<li></li>'))
 		Z('#shop > ul').append(el)
 	})
@@ -341,7 +351,7 @@ game.buyItem = function(e) {
 		cost = el.attr('data-cost'),
 		item
 	if (game.animals['rabbits'] < cost) return
-	game.items.forEach(function(i) {
+	Z.each(game.items, function(j,i) {
 		if (i.name == name) item = i
 	})
 	if (!item) return
@@ -357,12 +367,12 @@ game.restart = function(e) {
 	if (c) return
 	c = true
 	var g = Z.extend(true, {}, game)
-	g.items.forEach(function(i) {
+	Z.each(g.items, function(j,i) {
 		delete i.baseCost
 		delete i.bonus
 		i.level = 0
 	})
-	game.items.forEach(function(i) {
+	Z.each(game.items, function(j,i) {
 		i.level = 0
 	})
 	g.animals['rabbits'] = 0
