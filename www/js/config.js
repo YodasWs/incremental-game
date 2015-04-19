@@ -62,9 +62,16 @@ game = Z.extend(game, {
 		var g = Z.extend(true, {}, game)
 		// Delete Unnecessary Data
 		Z.each(g.items, function(j,i) {
-			delete i.baseCost
-			delete i.bonus
-			delete i.img
+			for (k in i) {
+				if (Z.inArray(k, [
+					'multiplier',
+					'baseCost',
+					'bonus',
+					'img',
+				]) > -1) delete i[k]
+			}
+			if (!i.hidden)
+				delete i.hidden
 		})
 		;[
 			'autoRate',
@@ -91,6 +98,7 @@ game = Z.extend(game, {
 		// Recalculate Auto Rates
 		Z.each(game.items, function(j,i) {
 			if (!i.level) i.level = 0
+			if (!i.bonus) return true // continue
 			Z.each(i.bonus, function(k) {
 				game.autoRate[k] += i.bonus[k] * i.level
 			})
@@ -103,6 +111,7 @@ game = Z.extend(game, {
 		game.showNums('rabbits')
 		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
+		if (Math.floor(Date.now() / 1000) % 20 == Math.floor(Math.random() * 10)) Z(document).trigger('chkStory')
 		game.enableShopItems()
 	},
 	showNums: function(animal) {
@@ -167,7 +176,10 @@ game = Z.extend(game, {
 	},
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
-		var cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(1.4, i.level))
+		if (i.hidden) return ''
+		if (!i.baseCost || !i.baseCost['rabbits']) return ''
+		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0)
+			cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level))
 		el.children().remove()
 		el.attr('data-cost', cost)
 		if (i.img) {
@@ -176,13 +188,14 @@ game = Z.extend(game, {
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
 		el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
-		el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
+		if (i.bonus)
+			el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
 		return el
 	},
 	enableShopItems: function() {
 		Z('#shop > ul > li').attr('disabled', null).each(function(i) {
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
-			if (Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
+			if (Z(this).children('.bonus').length && Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
 		})
 	}
 })
@@ -306,6 +319,8 @@ game.hideModalBG = function(t,cb) {
 game.hideModals = function(e) {
 	if (Z('#about').css('display') == 'block')
 		game.closeAbout()
+	if (Z('#story').css('display') == 'block')
+		game.closeStory()
 	if (Z('#shop').css('display') == 'block')
 		game.closeShop()
 }
@@ -350,6 +365,17 @@ game.closeAbout = function(e) {
 			Z('#about').hide()
 		})
 	}
+}
+
+// Close Story Modal
+game.closeStory = function(e) {
+	var t = 400
+	game.hideModalBG(t)
+	Z('#story').animate({
+		opacity: 0
+	}, t, 'ease-in', function() {
+		Z(this).hide().children().remove()
+	})
 }
 
 // Buy Item from Country Store
@@ -398,6 +424,7 @@ if (device.platform.indexOf('Android') != -1) evtClick = 'tap'
 Z(document).on(evtClick, '#shop > ul > li:not([disabled])', game.buyItem)
 Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
+Z(document).on(evtClick, '#story a[href="#main"]', game.closeStory)
 Z(document).on(evtClick, '#shop a[href="#main"]', game.closeShop)
 Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
 Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)

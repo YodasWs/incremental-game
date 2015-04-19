@@ -77,12 +77,17 @@ body > nav > a:link, body > nav > a:visited {
 	color: black;
 }
 #about > a[href="#main"],
+#story > a[href="#main"],
 body > nav > a[href="#main"] {
 	display: block; color: red; text-decoration: none; text-align: center;
 	height: 20px; width: 20px; font-size: 24px; line-height: 20px;
-	position: absolute; top: 0px; right: 0px;
 	border: 0 none; padding: 0; margin: 0;
 	background: white; font-weight: bold;
+	position: absolute;
+}
+#about > a[href="#main"],
+body > nav > a[href="#main"] {
+	position: absolute; top: 0px; right: 0px;
 }
 
 /** Store **/
@@ -189,8 +194,27 @@ nav > a, img#rabbit, #shop > a, #shop > ul > li {
 #license { max-width: 200px; }
 #version::before { content: 'v'; }
 
+/** Story Text Modal **/
+#story {
+	position: absolute; z-index: 2;
+	height: 30vh; top: 30vh;
+	width: 60vw; left: 20vw;
+	background: white; color: #333333;
+	padding: 1rem; border: 4px solid dimgrey;
+	border-radius: 20px;
+}
+#story > h1 {
+	height: 1.5rem; font-size: 1.5rem; line-height: 1.5rem;
+	margin: 0; margin-bottom: 10px; text-align: center;
+	white-space: nowrap; color: red;
+}
+#story > a[href="#main"] {
+	top: 5px; right: 5px;
+}
+
 /** For Touch Screen **/
 .touch #about > a[href="#main"],
+.touch #story > a[href="#main"],
 body.touch > nav > a[href="#main"] {
 	width: 30px; height: 30px; font-size: 34px; line-height: 30px;
 }
