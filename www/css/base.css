@@ -27,7 +27,7 @@ div#intro { display: block; text-align: center; }
 
 /** Main Game Center **/
 main {
-	padding: 2em 5em; z-index: 0;
+	padding: 0; z-index: 0;
 }
 img#rabbit {
 	display: block;
@@ -40,6 +40,7 @@ main > output {
 	white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 	font-size: 3rem; font-weight: bold; font-family: monospace;
 	color: white; background: forestgreen;
+	max-width: 90vw; margin: 5px auto;
 }
 main > output > img {
 	display: inline-block;
@@ -52,16 +53,24 @@ main > small {
 }
 main > small::before { content: '+'; }
 main > small::after { content: ' rps'; }
-main > a[href="#menu"] {
-	position: absolute; left: 10px; top: 20px;
+
+/** Menu Bar **/
+#menubar { display: block; white-space: nowrap; overflow: hidden; }
+#menubar > h1 {
+	line-height: 3rem; margin: 0; color: white;
+	letter-spacing: 5px; word-spacing: 10px;
+	text-align: center; white-space: nowrap;
+}
+#menubar > a[href="#menu"] {
+	float: left; height: 3rem; width: 3rem; padding: 0.5rem;
 }
 
 /** Main Menu **/
 a[href="#menu"] {
 	display: block; text-indent: -10000px; overflow: hidden;
 	background: center center no-repeat url('../img/menu.png');
+	background-origin: content-box; background-size: contain;
 	width: 30px; height: 30px;
-	background-size: contain;
 }
 body > nav {
 	width: 200px; max-width: 80vw;
