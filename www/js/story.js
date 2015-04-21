@@ -6,26 +6,39 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
+	// Continue Story
 	Z(document).on('chkStory', function() {
 		if (Math.floor(Date.now() / 1000) % 10 == Math.floor(Math.random() * 4)) foxAttack()
+	})
+
+	/** Initialize Items **/
+
+	// Fencing
+	if (!game.items.fencing) game.items.fencing = {
+		name:'Fencing',
+		hidden: false,
+		level: 0
+	}
+	game.items.fencing = Z.extend(true, game.items.fencing, {
+		baseCost: { rabbits: 100 },
+		multiplier: { rabbits: .6 },
+		loc: 'carpenter'
 	})
 
 	var foxAttack = function() {
 		if (Z('#story').css('display') == 'block') return
 		if (game.animals.rabbits < 10) return
 		game.hideModals()
-		// Build Defense Item in Shop
-		if (!game.items.fencing) game.items.fencing = {
-			name:'Fencing',
-			hidden: false,
-			level: 0
-		}
-		game.items.fencing.baseCost = { rabbits: 100 }
-		game.items.fencing.multiplier = { rabbits: .6 }
 		var txt = '', num = 0
+		// Open Carpenter's Shop
+		if (!game.locs) {
+			game.locs = ['carpenter']
+			game.showShops()
+		}
+		// Attack!
 		if (game.items.fencing.level > Math.log10(game.animals.rabbits)) {
 			// Adequate Fencing Saved Rabbits
-			txt = 'A fox was spotted in the night! Thankfully he couldn\'t get through the fence.'
+			txt = 'A fox was spotted in the night! Try as he might, thankfully he didn\'t get through the fence.'
 			if (game.items.fencing.level > 1) game.items.fencing.level--
 			game.items.fencing.hidden = (game.items.fencing.level - Math.log10(game.animals.rabbits) > 2)
 		} else {

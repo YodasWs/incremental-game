@@ -31,12 +31,7 @@ game = Z.extend(game, {
 			var savedGame = JSON.parse(window.localStorage.game)
 			// Upgrade items Array to Object
 			if (Array.isArray(savedGame.items)) {
-				var items = {}
-				savedGame.items.forEach(function(i,j){
-					items[j] = i
-				})
-				delete savedGame.items
-				savedGame.items = items
+				savedGame.items = Z.extend(true, {}, Z.extend(true, {}, savedGame.items))
 			}
 			// Merge Data
 			game = Z.extend(
@@ -55,6 +50,7 @@ game = Z.extend(game, {
 				delete game.rabbits
 			}
 		}
+		game.showShops()
 		game.autoClick()
 	},
 	save: function() {
@@ -67,7 +63,9 @@ game = Z.extend(game, {
 					'multiplier',
 					'baseCost',
 					'bonus',
+					'name',
 					'img',
+					'loc'
 				]) > -1) delete i[k]
 			}
 			if (!i.hidden)
@@ -111,7 +109,7 @@ game = Z.extend(game, {
 		game.showNums('rabbits')
 		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
-		if (Math.floor(Date.now() / 1000) % 20 == Math.floor(Math.random() * 10)) Z(document).trigger('chkStory')
+		if (Math.floor(Date.now() / 1000) % 60 == Math.floor(Math.random() * 10)) Z(document).trigger('chkStory')
 		game.enableShopItems()
 	},
 	showNums: function(animal) {
@@ -193,7 +191,8 @@ game = Z.extend(game, {
 		return el
 	},
 	enableShopItems: function() {
-		Z('#shop > ul > li').attr('disabled', null).each(function(i) {
+		Z('.shop > ul > li').attr('disabled', null).each(function(i) {
+			if (!Z(this).children('.name').length) Z(this).attr('disabled', 'disabled')
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
 			if (Z(this).children('.bonus').length && Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
 		})
@@ -245,33 +244,57 @@ game.openMenu = function(e) {
 	return false
 }
 
-// Open the Country Store
+// Display Shop Buttons
+game.showShops = function() {
+	Z('#lnkShop').children('a').hide()
+	if (game.locs) Z('#lnkShop').children('a').each(function(i, l) {
+		var href = Z(this).attr('href').trim('#')
+		if (Z.inArray(href, game.locs) > -1) 
+			Z(this).show()
+	})
+	Z('#lnkShop > a[href="#shop"]').show()
+}
+
+// Open Shop
 game.openShop = function(e) {
 	if (c) return
 	c = true
-	var t = 600
+	var t = 600, href = Z(e.target).attr('href').trim('#')
 	game.showModalBG(t)
-	Z('#shop > ul').children().remove()
+	// Update Shop Items
+	Z('#' + href + ' > ul').children().remove()
 	Z.each(game.items, function(j,i) {
+		if (i.loc != href) return
 		var el = game.updateShopItem(i, Z('<li></li>'))
-		Z('#shop > ul').append(el)
+		Z('#' + href + ' > ul').append(el)
 	})
-	game.enableShopItems()
-	Z('#shop').trigger('update').show().css({
+	if (Z('#' + href + ' > ul').children('li').length) game.enableShopItems()
+	else Z('#' + href + ' > ul').append('<li disabled>No items available at this time')
+	// Slide Shop into View
+	Z('#' + href + '').trigger('update').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
 	}, t, 'ease-out')
 }
-// Close the Country Store
-game.closeShop = function(e) {
+
+// Close Open Shop
+game.closeShops = function(e) {
 	if (c) return
 	c = true
+	Z('#lnkShop').children('a').each(function() {
+		var href = Z(this).attr('href').trim('#')
+		if (Z('#' + href).css('display') == 'block')
+			game.closeShop(href)
+	})
+}
+// Close Open Shop
+game.closeShop = function(href) {
 	var t = 400
 	game.hideModalBG(t)
-	Z('#shop').css({
+	Z('#' + href).css({
 	}).animate({
-		left:'-' + Z('#shop').width() + 'px'
+		left:'-' + Z('#' + href).width() + 'px'
 	}, t, 'ease-in', function() {
 		Z(this).hide()
 	})
@@ -320,11 +343,10 @@ game.hideModalBG = function(t,cb) {
 // Hide Modals
 game.hideModals = function(e) {
 	if (Z('#about').css('display') == 'block')
-		game.closeAbout()
+		game.closeAbout(e)
 	if (Z('#story').css('display') == 'block')
-		game.closeStory()
-	if (Z('#shop').css('display') == 'block')
-		game.closeShop()
+		game.closeStory(e)
+	game.closeShops(e)
 }
 game.closeAll = function(e) {
 	game.closeMenu()
@@ -396,7 +418,7 @@ game.buyItem = function(e) {
 	if (!item.level) item.level = 0
 	item.level++
 	game.animals['rabbits'] -= cost
-	el = game.updateShopItem(item, el)
+	game.updateShopItem(item, el)
 	game.enableShopItems()
 	game.showNums('rabbits')
 }
@@ -423,15 +445,15 @@ var evtClick = 'tap click'
 if (device.platform.indexOf('Android') != -1) evtClick = 'tap'
 
 // User Interaction Events
-Z(document).on(evtClick, '#shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on(evtClick, '.shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on(evtClick, 'section.shop a[href="#main"]', game.closeShops)
 Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
 Z(document).on(evtClick, '#story a[href="#main"]', game.closeStory)
-Z(document).on(evtClick, '#shop a[href="#main"]', game.closeShop)
 Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
 Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
 Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
-Z(document).on(evtClick, 'a[href="#shop"]', game.openShop)
+Z(document).on(evtClick, '#lnkShop > a', game.openShop)
 Z(document).on(evtClick, '#modal-bg', game.hideModals)
 
 Z(document).on(evtClick, setTapComplete)
