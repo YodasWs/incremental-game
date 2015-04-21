@@ -31,7 +31,7 @@ game = Z.extend(game, {
 			var savedGame = JSON.parse(window.localStorage.game)
 			// Upgrade items Array to Object
 			if (Array.isArray(savedGame.items)) {
-				savedGame.items = Z.extend(true, {}, Z.extend(true, {}, savedGame.items))
+				savedGame.items = Z.extend(true, {}, savedGame.items)
 			}
 			// Merge Data
 			game = Z.extend(
@@ -431,14 +431,20 @@ game.restart = function(e) {
 		delete i.baseCost
 		delete i.bonus
 		i.level = 0
+		if (i.story) delete g.items[j]
 	})
-	Z.each(game.items, function(j,i) {
-		i.level = 0
+	if (g.locs) Z.each(g.locs, function(i) {
+		delete g.locs[i]
+	})
+	Z.each(g.animals, function(i) {
+		delete g.animals[i]
 	})
 	g.animals['rabbits'] = 0
 	window.localStorage.game = JSON.stringify(g)
 	game.closeMenu()
 	game.load()
+console.log(game.locs)
+	game.showShops()
 }
 
 var evtClick = 'tap click'

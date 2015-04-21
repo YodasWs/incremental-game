@@ -16,13 +16,14 @@ window.onReady(function() {
 	// Fencing
 	if (!game.items.fencing) game.items.fencing = {
 		name:'Fencing',
-		hidden: false,
+		hidden: true,
 		level: 0
 	}
 	game.items.fencing = Z.extend(true, game.items.fencing, {
 		baseCost: { rabbits: 100 },
 		multiplier: { rabbits: .6 },
-		loc: 'carpenter'
+		loc: 'carpenter',
+		story: true
 	})
 
 	var foxAttack = function() {
@@ -56,7 +57,7 @@ window.onReady(function() {
 		}).animate({
 			opacity: 1
 		}, 200, function() {
-		})
+		}).trigger('update')
 	},
 	episode1 = function() {
 		if (game.animals.rabbits < 20) return
