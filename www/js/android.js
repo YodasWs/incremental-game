@@ -12,7 +12,7 @@ window.onReady(function() {
 	if (device.platform.indexOf('Android') == -1) return;
 	var h = Z(window).height()
 	// Placement of Shop Modal
-	Z(document).on('update','#shop',function(){
+	Z(document).on('update','.shop',function(){
 		Z(this).css({height:h*.7+'px',top:h*.2+'px'})
 	})
 	// Menu Height
