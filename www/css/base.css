@@ -142,14 +142,20 @@ body > nav > a[href="#main"] {
 	z-index: 1;
 }
 .shop .name, .shop .cost { float: left; }
-.shop .level, .shop .bonus { float: right; }
+.shop .level, .shop .bonus, .shop .buildTime, .shop .wait { float: right; }
 .shop .cost { clear: left; }
-.shop .bonus { clear: right; }
+.shop .bonus, .shop .wait { clear: right; }
 .shop .level::before {
 	content: 'lvl ';
 }
 .shop .bonus::before {
 	content: '+';
+}
+.shop .wait, .shop .buildTime {
+	font-size: small;
+}
+.shop .wait::before, .shop .buildTime::before {
+	content: 'build time: ';
 }
 .shop > ul > li > img {
 	display: block; position: absolute;

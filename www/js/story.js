@@ -6,24 +6,26 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
-	// Continue Story
+	/** Continue Story **/
 	Z(document).on('chkStory', function() {
 		if (Math.floor(Date.now() / 1000) % 10 == Math.floor(Math.random() * 4)) foxAttack()
 	})
 
 	/** Initialize Items **/
-
-	// Fencing
-	if (!game.items.fencing) game.items.fencing = {
-		name:'Fencing',
-		hidden: true,
-		level: 0
-	}
-	game.items.fencing = Z.extend(true, game.items.fencing, {
-		baseCost: { rabbits: 100 },
-		multiplier: { rabbits: .6 },
-		loc: 'carpenter',
-		story: true
+	Z(document).on('gameLoaded', function() {
+		// Fencing
+		if (!game.items.fencing) game.items.fencing = {
+			hidden: true,
+			level: 0
+		}
+		game.items.fencing = Z.extend(true, game.items.fencing, {
+			name:'Fencing',
+			baseCost: { rabbits: 100 },
+			multiplier: { rabbits: .6 },
+			loc: 'carpenter',
+			buildTime: 60,
+			story: true
+		})
 	})
 
 	var foxAttack = function() {
@@ -32,8 +34,9 @@ window.onReady(function() {
 		game.hideModals()
 		var txt = '', num = 0
 		// Open Carpenter's Shop
-		if (!game.locs) {
-			game.locs = ['carpenter']
+		if (!game.locs) game.locs = []
+		if (Z.inArray('carpenter' , game.locs) == -1) {
+			game.locs.push('carpenter')
 			game.showShops()
 		}
 		// Attack!

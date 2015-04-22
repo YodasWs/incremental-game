@@ -49,6 +49,7 @@ game = Z.extend(game, {
 				game.animals['rabbits'] = game.rabbits
 				delete game.rabbits
 			}
+			$(document).trigger('gameLoaded')
 		}
 		game.showShops()
 		game.autoClick()
@@ -60,13 +61,11 @@ game = Z.extend(game, {
 		Z.each(g.items, function(j,i) {
 			for (k in i) {
 				if (Z.inArray(k, [
-					'multiplier',
-					'baseCost',
-					'bonus',
-					'name',
-					'img',
-					'loc'
-				]) > -1) delete i[k]
+					'finishTime',
+					'hidden',
+					'level'
+				]) > -1) continue
+				delete i[k]
 			}
 			if (!i.hidden)
 				delete i.hidden
@@ -105,11 +104,20 @@ game = Z.extend(game, {
 		Z.each(game.autoRate, function(k) {
 			game.animals[k] += game.autoRate[k]
 		})
+		// Build Pending Items
+		Z.each(game.items, function(j,i) {
+			if (i.finishTime && i.finishTime < Date.now()) {
+				delete i.finishTime
+				i.level++
+			}
+		})
 		// Update Game State
 		game.showNums('rabbits')
 		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
+		if (Math.floor(Date.now() / 1000) % 5 == 0) game.save()
 		if (Math.floor(Date.now() / 1000) % 60 == Math.floor(Math.random() * 10)) Z(document).trigger('chkStory')
+		if ((!game.locs || game.locs.length == 0) && game.animals['rabbits'] > 99) Z(document).trigger('chkStory')
 		game.enableShopItems()
 	},
 	showNums: function(animal) {
@@ -147,7 +155,6 @@ game = Z.extend(game, {
 		str['rps'] = game.format.rate(
 			game.autoRate[animal] + game.clkRate[animal].length
 		)
-		if (Math.floor(Date.now() / 1000) % 5 == 0) game.save()
 		// Animate Fast Number Increase
 		if (game.autoRate[animal] > 14) {
 			str[animal] = str[animal].slice(0, -1) + '<img src="img/nums.gif"/>'
@@ -185,16 +192,34 @@ game = Z.extend(game, {
 		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
-		el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
-		if (i.bonus)
-			el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
+		// Check if currently building item
+		if (!i.finishTime || i.finishTime < Date.now()) {
+			el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+			if (i.bonus)
+				el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
+			if (i.buildTime) {
+				mul = (i.multiplier && i.multiplier['buildTime']) ? i.multiplier['buildTime'] : 1.5
+				cost = Math.ceil(i.buildTime * Math.pow(mul, i.level))
+				el.attr('data-buildTime', cost)
+				el.append('<span class="buildTime">' + cost + ' sec</span>')
+			}
+		} else {
+			// Pending Item Completion
+			el.data('finishTime', i.finishTime).append('<span class="wait"></span>')
+		}
 		return el
 	},
 	enableShopItems: function() {
 		Z('.shop > ul > li').attr('disabled', null).each(function(i) {
+			var t = null
 			if (!Z(this).children('.name').length) Z(this).attr('disabled', 'disabled')
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
 			if (Z(this).children('.bonus').length && Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
+			if (Z(this).children('.wait').length) {
+				t = Math.floor((Number.parseInt(Z(this).data('finishTime')) - Date.now()) / 1000)
+				Z(this).attr('disabled', 'disabled').children('.wait').html(t)
+				if (t <= 0) game.updateShop(Z(this).parents('.shop').attr('id').trim('#'))
+			}
 		})
 	}
 })
@@ -261,7 +286,16 @@ game.openShop = function(e) {
 	c = true
 	var t = 600, href = Z(e.target).attr('href').trim('#')
 	game.showModalBG(t)
-	// Update Shop Items
+	game.updateShop(href)
+	// Slide Shop into View
+	Z('#' + href + '').trigger('update').show().css({
+		left:'100vw'
+	}).animate({
+		left:0
+	}, t, 'ease-out')
+}
+// Update Shop Items
+game.updateShop = function(href) {
 	Z('#' + href + ' > ul').children().remove()
 	Z.each(game.items, function(j,i) {
 		if (i.loc != href) return
@@ -270,12 +304,6 @@ game.openShop = function(e) {
 	})
 	if (Z('#' + href + ' > ul').children('li').length) game.enableShopItems()
 	else Z('#' + href + ' > ul').append('<li disabled>No items available at this time')
-	// Slide Shop into View
-	Z('#' + href + '').trigger('update').show().css({
-		left:'100vw'
-	}).animate({
-		left:0
-	}, t, 'ease-out')
 }
 
 // Close Open Shop
@@ -283,20 +311,16 @@ game.closeShops = function(e) {
 	if (c) return
 	c = true
 	Z('#lnkShop').children('a').each(function() {
-		var href = Z(this).attr('href').trim('#')
-		if (Z('#' + href).css('display') == 'block')
-			game.closeShop(href)
-	})
-}
-// Close Open Shop
-game.closeShop = function(href) {
-	var t = 400
-	game.hideModalBG(t)
-	Z('#' + href).css({
-	}).animate({
-		left:'-' + Z('#' + href).width() + 'px'
-	}, t, 'ease-in', function() {
-		Z(this).hide()
+		var href = Z(this).attr('href').trim('#'), t = 400
+		if (Z('#' + href).css('display') == 'block') {
+			game.hideModalBG(t)
+			Z('#' + href).css({
+			}).animate({
+				left:'-' + Z('#' + href).width() + 'px'
+			}, t, 'ease-in', function() {
+				Z(this).hide()
+			})
+		}
 	})
 }
 
@@ -416,8 +440,13 @@ game.buyItem = function(e) {
 	})
 	if (!item) return
 	if (!item.level) item.level = 0
-	item.level++
 	game.animals['rabbits'] -= cost
+	if (!item.buildTime) {
+		item.level++
+	} else {
+		item.finishTime = Date.now() + el.attr('data-buildTime') * 1000
+	}
+	game.save()
 	game.updateShopItem(item, el)
 	game.enableShopItems()
 	game.showNums('rabbits')
@@ -428,14 +457,14 @@ game.restart = function(e) {
 	c = true
 	var g = Z.extend(true, {}, game)
 	Z.each(g.items, function(j,i) {
+		delete i.finishTime
 		delete i.baseCost
 		delete i.bonus
 		i.level = 0
 		if (i.story) delete g.items[j]
 	})
-	if (g.locs) Z.each(g.locs, function(i) {
-		delete g.locs[i]
-	})
+	g.locs = []
+	game.locs = []
 	Z.each(g.animals, function(i) {
 		delete g.animals[i]
 	})
@@ -443,7 +472,6 @@ game.restart = function(e) {
 	window.localStorage.game = JSON.stringify(g)
 	game.closeMenu()
 	game.load()
-console.log(game.locs)
 	game.showShops()
 }
 
