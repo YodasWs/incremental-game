@@ -35,6 +35,7 @@ game.items = {
 		bonus:{ rabbits:5 }
 	},
 	4:{
+		img:'rabbits/toy.png',
 		name:'Rabbit Toys',
 		baseCost:{ rabbits:500 },
 		loc:'shop',
