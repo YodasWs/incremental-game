@@ -16,7 +16,7 @@ setTapComplete = function() {
 }
 
 game = Z.extend(game, {
-	v:'1.0.5a',
+	v:'1.1.0-beta',
 	animals:{
 		rabbits:0
 	},

@@ -40,6 +40,13 @@ window.onReady(function() {
 			game.locs.push('carpenter')
 			game.showShops()
 		}
+		if (!game.items.fencing || !game.items.fencing.level) {
+			$(document).trigger('gameLoaded')
+			game.items.fencing = {
+				hidden: true,
+				level: 0
+			}
+		}
 		// Attack!
 		if (game.items.fencing.level > Math.log10(game.animals.rabbits)) {
 			// Adequate Fencing Saved Rabbits
