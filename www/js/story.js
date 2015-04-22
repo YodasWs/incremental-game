@@ -20,6 +20,7 @@ window.onReady(function() {
 		}
 		game.items.fencing = Z.extend(true, game.items.fencing, {
 			name:'Fencing',
+			img: 'carpenter/picket-fence.png',
 			baseCost: { rabbits: 100 },
 			multiplier: { rabbits: .6 },
 			loc: 'carpenter',
