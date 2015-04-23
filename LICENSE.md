@@ -23,6 +23,7 @@ to assert your ownership.
 * www/img/carrot.png
 * www/img/hammer.png
 * www/img/menu.png
+* www/img/perfume.png
 * www/img/rabbit-1.png
 * www/img/rabbits/cage.png
 * www/img/rabbits/silhoutte.png
