@@ -41,7 +41,7 @@ window.onReady(function() {
 			game.showShops()
 		}
 		if (!game.items.fencing || !game.items.fencing.level) {
-			$(document).trigger('gameLoaded')
+			setTimeout(function() { $(document).trigger('gameLoaded') }, 500)
 			game.items.fencing = {
 				hidden: true,
 				level: 0
