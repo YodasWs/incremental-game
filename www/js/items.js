@@ -49,6 +49,7 @@ game.items = {
 		bonus:{ rabbits:100 }
 	},
 	6:{
+		img:'needle.png',
 		name:'Rabbit Hormones',
 		baseCost:{ rabbits:15000 },
 		loc:'shop',
