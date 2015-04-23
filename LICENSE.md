@@ -21,6 +21,7 @@ at time of inclusion within this project. If you are the owner of one of these i
 to assert your ownership.
 
 * carrot.png
+* hammer.png
 * menu.png
 * rabbit-1.png
 * rabbits/cage.png
