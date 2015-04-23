@@ -20,13 +20,14 @@ The following images are in the public domain (or are reasonably expected to at 
 at time of inclusion within this project. If you are the owner of one of these images, please contact me if you wish
 to assert your ownership.
 
-* carrot.png
-* hammer.png
-* menu.png
-* rabbit-1.png
-* rabbits/cage.png
-* rabbits/silhoutte.png
-* stores.png
+* www/img/carrot.png
+* www/img/hammer.png
+* www/img/menu.png
+* www/img/rabbit-1.png
+* www/img/rabbits/cage.png
+* www/img/rabbits/silhoutte.png
+* www/img/rabbits/toy.png
+* www/img/stores.png
 
 ## Copyrighted Images
 
