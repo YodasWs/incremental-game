@@ -35,11 +35,13 @@ window.onReady(function() {
 // Load Android Polyfills and Plugins
 window.onReady(function(){
 	if(device.platform.indexOf('Android')==-1)return
-	var a,m,d=document,t='script'
-	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1
+	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
+	a=d.createElement(t);a.async=1
 	a.src='js/android.js';m.parentNode.insertBefore(a,m)
 	a=d.createElement('link');a.rel="stylesheet"
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
+	a=d.createElement(t);a.async=1
+	a.src='inappbilling.js';m.parentNode.insertBefore(a,m)
 })
 window.onload = function() {
 	game.load()

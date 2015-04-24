@@ -511,12 +511,15 @@ Z(document).on('backbutton', game.closeAll)
 Z(document).on('menubutton', game.openMenu)
 
 })
-
-// Error Handling
-window.onerror = function(msg, file, line) {
+window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':msg +  '; ' + file + ' line ' + line + '; browser: ' + device.platform}
+		data:{'msg':msg + '; browser: ' + device.platform}
 	})
+}
+
+// Error Handling
+window.onerror = function(msg, file, line) {
+	error_log('msg':msg +  '; ' + file + ' line ' + line)
 }
