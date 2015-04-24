@@ -455,21 +455,18 @@ game.buyItem = function(e) {
 game.restart = function(e) {
 	if (c) return
 	c = true
-	var g = Z.extend(true, {}, game)
-	Z.each(g.items, function(j,i) {
+	Z.each(game.items, function(j,i) {
 		delete i.finishTime
-		delete i.baseCost
-		delete i.bonus
+		delete i.hidden
 		i.level = 0
-		if (i.story) delete g.items[j]
+		if (i.story) delete game.items[j]
 	})
-	g.locs = []
 	game.locs = []
-	Z.each(g.animals, function(i) {
-		delete g.animals[i]
+	Z.each(game.animals, function(i) {
+		delete game.animals[i]
 	})
-	g.animals['rabbits'] = 0
-	window.localStorage.game = JSON.stringify(g)
+	game.animals['rabbits'] = 0
+	window.localStorage.game = JSON.stringify(game)
 	game.closeMenu()
 	game.load()
 	game.showShops()

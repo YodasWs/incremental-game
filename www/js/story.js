@@ -29,6 +29,17 @@ window.onReady(function() {
 		})
 	})
 
+	game.showStory = function(cb) {
+		game.hideModalBG(0,function(){game.showModalBG(200)})
+		Z('#story').show().css({
+			opacity: 0
+		}).animate({
+			opacity: 1
+		}, 200, function() {
+			if (Z.isFunction(cb)) cb()
+		}).trigger('update')
+	}
+
 	var foxAttack = function() {
 		if (Z('#story').css('display') == 'block') return
 		if (game.animals.rabbits < 10) return
@@ -41,7 +52,7 @@ window.onReady(function() {
 			game.showShops()
 		}
 		if (!game.items.fencing || !game.items.fencing.level) {
-			$(document).trigger('gameLoaded')
+			setTimeout(function() { $(document).trigger('gameLoaded') }, 500)
 			game.items.fencing = {
 				hidden: true,
 				level: 0
@@ -62,13 +73,8 @@ window.onReady(function() {
 		}
 		// Display Event Modal
 		Z('#story').children().remove()
-		game.hideModalBG(0,function(){game.showModalBG(200)})
-		Z('#story').append('<h1>Fox Attack!</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt).show().css({
-			opacity: 0
-		}).animate({
-			opacity: 1
-		}, 200, function() {
-		}).trigger('update')
+		Z('#story').append('<h1>Fox Attack!</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+		game.showStory()
 	},
 	episode1 = function() {
 		if (game.animals.rabbits < 20) return
