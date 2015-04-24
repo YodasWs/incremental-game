@@ -23,4 +23,7 @@ window.onReady(function() {
 	Z(document).on('revealstart revealend','#about',function(){
 		Z(this).css({top:(h-200)+'px'})
 	})
+	// Build In-app Products
+	Z(document).on('gameLoaded', function() {
+	})
 })

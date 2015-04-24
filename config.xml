@@ -22,7 +22,9 @@
 	<!-- Android -->
 	<gap:platform name="android" />
 	<preference name="android-minSdkVersion" value="16" />
-	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6" />
+	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6">
+		<param name="BILLING_KEY" value="" />
+	</gap:plugin>
 	<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
 	<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
 	<icon src="icons/ic_launcher_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
