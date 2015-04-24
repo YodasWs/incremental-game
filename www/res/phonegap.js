@@ -25,12 +25,14 @@ if (!window.console) var console = {
 }
 
 // device, http://docs.phonegap.com/en/3.0.0/cordova_device_device.md.html#Device
-var device = {
+window.device = {
 	name:(function() {
-		return (navigator.userAgent.match(/\((.*?;)?\s*(.*?(windows|linux).*?)\)/i))[2].trim()
+		var a = navigator.userAgent.match(/\((.*?;)?\s*(.*?(windows|linux|iphone|mac os x).*?)\)/i)
+		if (a && a[2]) return a[2].trim()
+		else return 'unknown'
 	})(),
 	platform:(function() {
-		return (navigator.userAgent.match(/\w*(IE|Chrome|Safari|iPod|iPhone|Android)\w*/))[0].trim()
+		return (navigator.userAgent.match(/\w*(IE|Chrome|iPod|iPhone|iPad|Safari|Android)\w*/))[0].trim()
 	})(),
 	version:(function() {
 		return (navigator.userAgent.match(/(IE|Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()
@@ -40,8 +42,10 @@ var device = {
 }
 device.model = device.name
 
-// geolocation, http://docs.phonegap.com/en/2.9.0/cordova_geolocation_geolocation.md.html#Geolocation
 if (!navigator) var navigator = {}
+if (!navigator.maxTouchPoints) navigator.maxTouchPoints = 0
+
+// geolocation, http://docs.phonegap.com/en/2.9.0/cordova_geolocation_geolocation.md.html#Geolocation
 if (!navigator.geolocation)
 navigator.geolocation = {
 	getCurrentPosition:function(success,error,options) {
@@ -73,7 +77,6 @@ camera = {
 }
 
 // for desktop testing
-window.addEventListener('error', function(e) { console.error(e.message) })
 if (device.platform.indexOf('Win') > -1) device.platform = 'Win32NT'
 console.log('userAgent: ' + navigator.userAgent)
 console.log('device: ' + JSON.stringify(device))

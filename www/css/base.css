@@ -10,7 +10,7 @@
 * { -webkit-box-sizing: border-box; box-sizing: border-box; }
 :root { font-family: 'Trebuchet MS', 'Open San', sans-serif; font-size: 1em; }
 html,body { margin: 0; padding: 0; }
-body { position: relative; overflow-x: hidden; background: forestgreen; }
+body { position: relative; overflow-x: hidden; background: #4EA24E; }
 body > * {
 	height: 100vh; width: 100vw; max-width: 480px;
 	margin: 0 auto;
@@ -27,7 +27,7 @@ div#intro { display: block; text-align: center; }
 
 /** Main Game Center **/
 main {
-	padding: 2em 5em; z-index: 0;
+	padding: 0; z-index: 0;
 }
 img#rabbit {
 	display: block;
@@ -36,12 +36,11 @@ img#rabbit {
 	cursor: pointer;
 }
 main > output {
-	display: block;
-	font-size: 3rem;
-	color: white;
-	font-weight: bold;
-	font-family: monospace;
-	text-align: right;
+	display: block; padding: 0 5px; text-align: right;
+	white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+	font-size: 3rem; font-weight: bold; font-family: monospace;
+	color: white; background: forestgreen;
+	max-width: 90vw; margin: 5px auto;
 }
 main > output > img {
 	display: inline-block;
@@ -54,16 +53,24 @@ main > small {
 }
 main > small::before { content: '+'; }
 main > small::after { content: ' rps'; }
-main > a[href="#menu"] {
-	position: absolute; left: 10px; top: 20px;
+
+/** Menu Bar **/
+#menubar { display: block; white-space: nowrap; overflow: hidden; }
+#menubar > h1 {
+	line-height: 3rem; margin: 0; color: white;
+	letter-spacing: 5px; word-spacing: 10px;
+	text-align: center; white-space: nowrap;
+}
+#menubar > a[href="#menu"] {
+	float: left; height: 3rem; width: 3rem; padding: 0.5rem;
 }
 
 /** Main Menu **/
 a[href="#menu"] {
 	display: block; text-indent: -10000px; overflow: hidden;
 	background: center center no-repeat url('../img/menu.png');
+	background-origin: content-box; background-size: contain;
 	width: 30px; height: 30px;
-	background-size: contain;
 }
 body > nav {
 	width: 200px; max-width: 80vw;
@@ -79,39 +86,49 @@ body > nav > a:link, body > nav > a:visited {
 	color: black;
 }
 #about > a[href="#main"],
+#story > a[href="#main"],
 body > nav > a[href="#main"] {
 	display: block; color: red; text-decoration: none; text-align: center;
 	height: 20px; width: 20px; font-size: 24px; line-height: 20px;
-	position: absolute; top: 0px; right: 0px;
 	border: 0 none; padding: 0; margin: 0;
 	background: white; font-weight: bold;
+	position: absolute;
+}
+#about > a[href="#main"],
+body > nav > a[href="#main"] {
+	position: absolute; top: 0px; right: 0px;
 }
 
 /** Store **/
-#shop {
-	position: absolute; z-index: 2;
+.shop {
+	position: fixed; z-index: 2;
 	height: 70vh; top: 20vh;
 	background: rgba(245, 245, 245, .9); /* whitesmoke #F5F5F5 */
 	padding: 1rem;
 }
-#shop > ul {
-	list-style: none; margin: 0; padding: 0;
-	height: 100%; overflow-y: auto;
-	border: 1px solid black;
+.shop > h1 {
+	height: 1.5rem; font-size: 1.5rem; line-height: 1.5rem;
+	margin: 0; margin-bottom: 10px; text-indent: 1em;
+	white-space: nowrap;
 }
-#shop > ul > li {
+.shop > ul {
+	list-style: none; margin: 0; padding: 0;
+	max-height: calc(100% - 1.5rem - 10px);
+	overflow-y: auto; border: 1px solid black;
+}
+.shop > ul > li {
 	position: relative;
 	display: block; border-bottom: 1px solid black;
 	min-height: 50px; padding: 5px 10px 5px calc(2rem + 5px);
 	cursor: pointer; clear: both;
 	background: white;
 }
-#shop > ul > li:first-of-type { padding-right: 4rem; }
-#shop > ul > li[disabled] {
+.shop > ul > li:last-of-type { border-bottom: 0 none; }
+.shop > ul > li[disabled] {
 	cursor: default;
 	background: lightgrey;
 }
-#shop > a {
+.shop > a[href="#main"] {
 	display: block; float: right;
 	color: black; text-transform: uppercase;
 	text-decoration: none;
@@ -124,30 +141,64 @@ body > nav > a[href="#main"] {
 	position: absolute; top: 1rem; right: 1rem;
 	z-index: 1;
 }
-#shop .name, #shop .cost { float: left; }
-#shop .level, #shop .bonus { float: right; }
-#shop .cost { clear: left; }
-#shop .bonus { clear: right; }
-#shop .level::before {
+.shop .name, .shop .cost { float: left; }
+.shop .level, .shop .bonus, .shop .buildTime, .shop .wait { float: right; }
+.shop .cost { clear: left; }
+.shop .bonus, .shop .wait { clear: right; }
+.shop .level::before {
 	content: 'lvl ';
 }
-#shop .bonus::before {
+.shop .bonus::before {
 	content: '+';
 }
-#shop > ul > li > img {
+.shop .wait, .shop .buildTime {
+	font-size: small;
+}
+.shop .wait::before, .shop .buildTime::before {
+	content: 'build time: ';
+}
+.shop > ul > li > img {
 	display: block; position: absolute;
 	height: 2rem; width: 2rem;
 	top: 7px; left: 3px;
 }
 
 /** Buttons **/
-main > a[href="#shop"] {
-	display: block; text-indent: -1000px;
+main > #lnkShop {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+	align-items: flex-start;
+}
+main > #lnkShop > a { display: none; }
+main > #lnkShop > a:visited,
+main > #lnkShop > a:link {
+	color: #121110; font-weight: bold;
+	background: whitesmoke; border-radius: 10px;
+	letter-spacing: 1px; text-align: center;
+	padding: 2px 5px; border: 4px outset grey; margin: 0 auto;
+	white-space: nowrap; overflow: hidden;
+	flex: 0 0 auto;
+}
+main > #lnkShop > a:active {
+	padding: 3px 4px 1px 6px; border: 4px inset grey;
+}
+main > #lnkShop > a::before {
+	display: block; content: ''; margin: 0 auto;
+}
+main > #lnkShop > a[href="#shop"] {
+	display: block;
+}
+main > #lnkShop > a[href="#shop"]::before {
 	width: 122px; height: 90px;
 	background: -149px -5px url('../img/stores.png') no-repeat;
 }
-a[href="#shop"], a[href="#menu"], a[href="#main"],
-nav > a, img#rabbit, #shop > a, #shop > ul > li {
+main > #lnkShop > a[href="#carpenter"]::before {
+	width: 94px; height: 90px;
+	content: url('../img/hammer.png');
+}
+a[href="#shop"], a[href="#carpenter"], a[href="#menu"],
+nav > a, img#rabbit, .shop > a, .shop > ul > li {
 	-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
 }
 
@@ -157,6 +208,7 @@ nav > a, img#rabbit, #shop > a, #shop > ul > li {
 	background: black;
 	opacity: .4;
 	position: fixed; top: 0; left: 0;
+	width: 100%; height: 100%;
 	width: 100vw; height: 100vh;
 }
 
@@ -174,3 +226,31 @@ nav > a, img#rabbit, #shop > a, #shop > ul > li {
 #about > h1 { text-align: center; margin-bottom: 0; }
 #license { max-width: 200px; }
 #version::before { content: 'v'; }
+
+/** Story Text Modal **/
+#story {
+	position: fixed; z-index: 2;
+	height: 30vh; top: 30vh;
+	width: 60vw; left: 20vw;
+	background: white; color: #333333;
+	padding: 1rem; border: 4px solid dimgrey;
+	border-radius: 20px;
+}
+#story > h1 {
+	height: 1.5rem; font-size: 1.5rem; line-height: 1.5rem;
+	margin: 0; margin-bottom: 10px; text-align: center;
+	white-space: nowrap; color: red;
+}
+#story > a[href="#main"] {
+	top: 5px; right: 5px;
+}
+
+/** For Touch Screen **/
+.touch #about > a[href="#main"],
+.touch #story > a[href="#main"],
+body.touch > nav > a[href="#main"] {
+	width: 30px; height: 30px; font-size: 34px; line-height: 30px;
+}
+.touch .shop > a[href="#main"] {
+	font-size: 1.2em;
+}

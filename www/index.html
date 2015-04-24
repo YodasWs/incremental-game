@@ -3,18 +3,14 @@
 <head>
 <meta charset="utf-8"/>
 <title>Rabbit Farm</title>
+<link rel="icon" type="image/png" href="img/rabbit-1.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
 <link rel="stylesheet" href="css/base.css"/>
 <script src="phonegap.js"></script>
 <script>
 if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
-	document.write('<script type="text/javascript" src="res/phonegap.js"><\/script>');
-// Load Android Polyfills and Plugins
-;(function(d,t){if(device.platform.indexOf('Android')==-1)return;
-	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1;
-	a.src='js/android.js';m.parentNode.insertBefore(a,m)
-})(document,'script');
+	document.write('<script src="res/phonegap.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
 var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
@@ -28,10 +24,22 @@ window.game={}
 <script src="res/zepto.min.js" async></script>
 <script src="res/polyfill.js" async></script>
 <script src="js/config.js" async></script>
+<script src="js/items.js" async></script>
+<script src="js/story.js" async></script>
 <script>
 // Wait for document ready
 window.onReady(function() {
 	window.Z = Zepto
+	if (navigator.maxTouchPoints) Z('body').addClass('touch')
+})
+// Load Android Polyfills and Plugins
+window.onReady(function(){
+	if(device.platform.indexOf('Android')==-1)return
+	var a,m,d=document,t='script'
+	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1
+	a.src='js/android.js';m.parentNode.insertBefore(a,m)
+	a=d.createElement('link');a.rel="stylesheet"
+	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 })
 window.onload = function() {
 	game.load()
@@ -52,8 +60,9 @@ window.onload = function() {
 </script>
 </head>
 <body>
-<div id="intro">
+<div id="intro" style="text-align: center">
 	<h1>Rabbit Farm</h1>
+	<img src="img/rabbit-150.png" alt="Play Now!" />
 </div>
 <nav id="menu">
 	<a href="#main">&#xd7;</a>
@@ -61,28 +70,44 @@ window.onload = function() {
 	<a href="#destroy">Start Over</a>
 </nav>
 <main id="main">
+	<div id="menubar">
+		<a href="#menu">Menu</a>
+		<h1>Rabbit Farm</h1>
+	</div>
 	<output>0</output>
 	<small>0</small>
 	<img id="rabbit" src="img/rabbit-1.png" alt="&#x1f407;" />
-	<a href="#menu">Menu</a>
-	<a href="#shop">Shop</a>
+	<div id="lnkShop">
+		<a href="#shop">Country Store</a>
+		<a href="#carpenter">Carpenter's Shop</a>
+	</div>
 </main>
-<div id="shop">
+<section id="shop" class="shop">
+	<h1>Country Store</h1>
 	<a href="#main">Close</a>
 	<ul></ul>
-</div>
+</section>
+<section id="carpenter" class="shop">
+	<h1>Carpenter's Shop</h1>
+	<a href="#main">Close</a>
+	<ul></ul>
+</section>
+<section id="story"></section>
 <div id="modal-bg"></div>
 <small id="about">
 	<a href="#main">&#xd7;</a>
 	<h1>Rabbit Farm</h1>
 	<small id="version"></small>
 	<small rel="copyright">&copy;2015 Sam Grundman</small>
-	<div>All images in public domain</div>
 	<div id="license">
-		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
 			<img alt="Creative Commons License" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
 		</a><br />
-		This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+		The JavaScript code is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+			target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br/>
+		Many images are under public domain, others are under full copyright &copy;2015 Sam Grundman.<br/>
+		For full details, see <a rel="license" href="http://yodasws.github.io/incremental-game/LICENSE.md"
+			target="_blank">full license details</a>.
 	</div>
 </small>
 </body>
