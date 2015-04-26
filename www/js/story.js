@@ -41,11 +41,11 @@ window.onReady(function() {
 			game.showShops()
 		}
 		if (!game.items.fencing || !game.items.fencing.level) {
-			$(document).trigger('gameLoaded')
 			game.items.fencing = {
 				hidden: true,
 				level: 0
 			}
+			$(document).trigger('gameLoaded')
 		}
 		// Attack!
 		if (game.items.fencing.level > Math.log10(game.animals.rabbits)) {
@@ -53,6 +53,7 @@ window.onReady(function() {
 			txt = 'A fox was spotted in the night! Try as he might, thankfully he didn\'t get through the fence.'
 			if (game.items.fencing.level > 1) game.items.fencing.level--
 			game.items.fencing.hidden = (game.items.fencing.level - Math.log10(game.animals.rabbits) > 2)
+			if (!game.items.fencing.level) game.items.fencing.hidden = false
 		} else {
 			// Need more fencing, lost rabbits
 			num = Math.floor((Math.round(Math.random() * 5) + 5) / 100 * game.animals.rabbits)
