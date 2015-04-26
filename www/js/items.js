@@ -56,6 +56,7 @@ game.items = {
 		bonus:{ rabbits:200 }
 	},
 	7:{
+		img:'pill.png',
 		name:'Rabbit Viagra',
 		baseCost:{ rabbits:300000 },
 		loc:'shop',
