@@ -42,18 +42,21 @@ game.items = {
 		bonus:{ rabbits:10 }
 	},
 	5:{
+		img:'perfume.png',
 		name:'Rabbit Perfume',
 		baseCost:{ rabbits:5000 },
 		loc:'shop',
 		bonus:{ rabbits:100 }
 	},
 	6:{
+		img:'needle.png',
 		name:'Rabbit Hormones',
 		baseCost:{ rabbits:15000 },
 		loc:'shop',
 		bonus:{ rabbits:200 }
 	},
 	7:{
+		img:'pill.png',
 		name:'Rabbit Viagra',
 		baseCost:{ rabbits:300000 },
 		loc:'shop',
