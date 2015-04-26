@@ -31,6 +31,9 @@
 	<icon src="icons/ic_launcher_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
 	<icon src="icons/ic_launcher_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
 	<icon src="icons/ic_launcher_xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
+	<gap:config-file platform="android" parent="/manifest" mode="merge">
+		<!--<uses-permission android:name="com.android.vending.CHECK_LICENSE" />-->
+	</gap:config-file>
 	<!-- For future Android support
 	<gap:config-file platform="android" parent="/manifest" mode="merge">
 		<supports-screens android:xlargeScreens="false" android:largeScreens="false" />
