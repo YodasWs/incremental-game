@@ -143,6 +143,25 @@ game = Z.extend(game, {
 				return Math.round(a * 10) / 10
 			}
 		}
+		if (!game.format.time) game.format.time = function(sec) {
+			var min = 0, hr = 0, d = 0, time = []
+			if (sec > 60) {
+				min = Math.floor(sec / 60)
+				if (min > 60) {
+					hr = Math.floor(min / 60)
+					if (hr > 24)
+						d = Math.floor(hr / 24)
+					hr = hr % 24
+				}
+				min = min % 60
+			}
+			sec = sec % 60
+			if (d) time.push(d + 'd')
+			if (hr) time.push(hr + 'h')
+			if (min) time.push(min + 'm')
+			if (sec) time.push(sec + 's')
+			return time.length ? time.join(' ') : '0s'
+		}
 		// Initialise any missing elements
 		if (!game.autoRate[animal]) game.autoRate[animal] = 0
 		if (!game.clkRate[animal]) game.clkRate[animal] = []
@@ -184,7 +203,7 @@ game = Z.extend(game, {
 		if (i.hidden) return ''
 		if (!i.baseCost || !i.baseCost['rabbits']) return ''
 		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0)
-			cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level))
+			cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level)), time = 0
 		el.children().remove()
 		el.attr('data-cost', cost)
 		if (i.img) {
@@ -199,9 +218,9 @@ game = Z.extend(game, {
 				el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
 			if (i.buildTime) {
 				mul = (i.multiplier && i.multiplier['buildTime']) ? i.multiplier['buildTime'] : 1.5
-				cost = Math.ceil(i.buildTime * Math.pow(mul, i.level))
-				el.attr('data-buildTime', cost)
-				el.append('<span class="buildTime">' + cost + ' sec</span>')
+				time = Math.ceil(i.buildTime * Math.pow(mul, i.level))
+				el.attr('data-buildTime', time)
+				el.append('<span class="buildTime">' + game.format.time(time) + '</span>')
 			}
 		} else {
 			// Pending Item Completion
@@ -217,8 +236,8 @@ game = Z.extend(game, {
 			if (Z(this).children('.bonus').length && Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
 			if (Z(this).children('.wait').length) {
 				t = Math.floor((Number.parseInt(Z(this).data('finishTime')) - Date.now()) / 1000)
-				Z(this).attr('disabled', 'disabled').children('.wait').html(t)
-				if (t <= 0) game.updateShop(Z(this).parents('.shop').attr('id').trim('#'))
+				Z(this).attr('disabled', 'disabled').children('.wait').html(game.format.time(t))
+				if (t < 0) game.updateShop(Z(this).parents('.shop').attr('id').trim('#'))
 			}
 		})
 	}
