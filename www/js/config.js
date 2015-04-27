@@ -268,7 +268,7 @@ game.closeMenu = function(e,t) {
 }
 // Open the Game Menu
 game.openMenu = function(e) {
-	if (c) return
+//	if (c) return
 	c = true
 	if (Z('body > nav').css('display') != 'block') {
 		var t=400
@@ -301,7 +301,7 @@ game.showShops = function() {
 
 // Open Shop
 game.openShop = function(e) {
-	if (c) return
+//	if (c) return
 	c = true
 	var t = 600, href = Z(e.target).attr('href').trim('#')
 	game.showModalBG(t)
@@ -328,7 +328,7 @@ game.updateShop = function(href) {
 
 // Close Open Shop
 game.closeShops = function(e) {
-	if (c) return
+//	if (c) return
 	c = true
 	Z('#lnkShop').children('a').each(function() {
 		var href = Z(this).attr('href').trim('#'), t = 400
@@ -401,7 +401,7 @@ game.closeAll = function(e) {
 
 // Open About Screen
 game.openAbout = function(e) {
-	if (c) return
+//	if (c) return
 	c = true
 	var t = 400
 	game.showModalBG(t)
@@ -416,7 +416,7 @@ game.openAbout = function(e) {
 }
 // Close About Screen
 game.closeAbout = function(e) {
-	if (c) return
+//	if (c) return
 	c = true
 	var t = 200
 	game.hideModalBG(t)
@@ -448,7 +448,7 @@ game.closeStory = function(e) {
 
 // Buy Item from Country Store
 game.buyItem = function(e) {
-	if (c) return
+//	if (c) return
 	c = true
 	var el = Z(e.target),
 		name = el.find('.name').text(),
@@ -473,7 +473,7 @@ game.buyItem = function(e) {
 }
 // Restart Game
 game.restart = function(e) {
-	if (c) return
+//	if (c) return
 	c = true
 	Z.each(game.items, function(j,i) {
 		delete i.finishTime
