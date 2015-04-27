@@ -6,15 +6,6 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
-// Prevent False Double Tap
-var c = false,
-tapComplete = function() {
-	c = false
-}
-setTapComplete = function() {
-	setTimeout(tapComplete, 200)
-}
-
 game = Z.extend(game, {
 	v:'1.1.0-beta',
 	animals:{
@@ -264,12 +255,9 @@ game.closeMenu = function(e,t) {
 	}).animate({
 		left:0
 	}, t)
-	setTapComplete()
 }
 // Open the Game Menu
 game.openMenu = function(e) {
-//	if (c) return
-	c = true
 	if (Z('body > nav').css('display') != 'block') {
 		var t=400
 		Z('body > nav').show().css({
@@ -284,7 +272,6 @@ game.openMenu = function(e) {
 			left:Z('body > nav').width() + 'px'
 		}, t)
 	} else game.closeMenu()
-	setTapComplete()
 	return false
 }
 
@@ -301,8 +288,6 @@ game.showShops = function() {
 
 // Open Shop
 game.openShop = function(e) {
-//	if (c) return
-	c = true
 	var t = 600, href = Z(e.target).attr('href').trim('#')
 	game.showModalBG(t)
 	game.updateShop(href)
@@ -328,8 +313,6 @@ game.updateShop = function(href) {
 
 // Close Open Shop
 game.closeShops = function(e) {
-//	if (c) return
-	c = true
 	Z('#lnkShop').children('a').each(function() {
 		var href = Z(this).attr('href').trim('#'), t = 400
 		if (Z('#' + href).css('display') == 'block') {
@@ -395,14 +378,11 @@ game.hideModals = function(e) {
 game.closeAll = function(e) {
 	game.closeMenu()
 	game.hideModals()
-	setTapComplete()
 	return false
 }
 
 // Open About Screen
 game.openAbout = function(e) {
-//	if (c) return
-	c = true
 	var t = 400
 	game.showModalBG(t)
 	game.closeMenu(e,t/2)
@@ -416,8 +396,6 @@ game.openAbout = function(e) {
 }
 // Close About Screen
 game.closeAbout = function(e) {
-//	if (c) return
-	c = true
 	var t = 200
 	game.hideModalBG(t)
 	try {
@@ -448,8 +426,6 @@ game.closeStory = function(e) {
 
 // Buy Item from Country Store
 game.buyItem = function(e) {
-//	if (c) return
-	c = true
 	var el = Z(e.target),
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
@@ -473,8 +449,6 @@ game.buyItem = function(e) {
 }
 // Restart Game
 game.restart = function(e) {
-//	if (c) return
-	c = true
 	Z.each(game.items, function(j,i) {
 		delete i.finishTime
 		delete i.hidden
@@ -511,8 +485,6 @@ Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
 Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
 Z(document).on(evtClick, '#lnkShop > a', game.openShop)
 Z(document).on(evtClick, '#modal-bg', game.hideModals)
-
-Z(document).on(evtClick, setTapComplete)
 
 // Pause/Resume Game
 Z(document).on('pause', function() { clearTimeout(game.toAuto) })
