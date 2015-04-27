@@ -288,7 +288,7 @@ game.openShop = function(e) {
 	game.showModalBG(t)
 	game.updateShop(href)
 	// Slide Shop into View
-	Z('#' + href + '').trigger('update').show().css({
+	Z('#' + href + '').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
@@ -304,6 +304,7 @@ game.updateShop = function(href) {
 	})
 	if (Z('#' + href + ' > ul').children('li').length) game.enableShopItems()
 	else Z('#' + href + ' > ul').append('<li disabled>No items available at this time')
+	Z('#' + href).trigger('update')
 }
 
 // Close Open Shop
@@ -455,21 +456,23 @@ game.buyItem = function(e) {
 game.restart = function(e) {
 	if (c) return
 	c = true
-	var g = Z.extend(true, {}, game)
-	Z.each(g.items, function(j,i) {
+	Z.each(game.items, function(j,i) {
 		delete i.finishTime
-		delete i.baseCost
-		delete i.bonus
+		delete i.hidden
 		i.level = 0
-		if (i.story) delete g.items[j]
+		if (i.story) delete game.items[j]
 	})
-	g.locs = []
+	;[
+		'format',
+	].forEach(function(a) {
+		delete game[a]
+	})
 	game.locs = []
-	Z.each(g.animals, function(i) {
-		delete g.animals[i]
+	Z.each(game.animals, function(i) {
+		delete game.animals[i]
 	})
-	g.animals['rabbits'] = 0
-	window.localStorage.game = JSON.stringify(g)
+	game.animals['rabbits'] = 0
+	window.localStorage.game = JSON.stringify(game)
 	game.closeMenu()
 	game.load()
 	game.showShops()
@@ -509,6 +512,16 @@ Z(document).on('keydown', function(e) {
 // Mobile Button Support
 Z(document).on('backbutton', game.closeAll)
 Z(document).on('menubutton', game.openMenu)
+
+// Load Tutorial
+Z(document).one('gameLoaded', function(e) {
+	if (game.animals.rabbits) return
+	var a,m,d=document,t='script'
+	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1
+	a.src='js/tutorial.js';m.parentNode.insertBefore(a,m)
+	a=d.createElement('link');a.rel="stylesheet"
+	a.href='css/tutorial.css';m.parentNode.insertBefore(a,m)
+})
 
 })
 window.error_log = function(msg) {
