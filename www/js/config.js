@@ -525,5 +525,5 @@ window.error_log = function(msg) {
 
 // Error Handling
 window.onerror = function(msg, file, line) {
-	error_log('msg':msg +  '; ' + file + ' line ' + line)
+	error_log(msg +  '; ' + file + ' line ' + line)
 }
