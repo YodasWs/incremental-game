@@ -28,7 +28,7 @@ window.onReady(function() {
 		Z(this).css({top:(h-200)+'px'})
 	})
 	// Build In-app Products
-	Z(document).on('gameLoaded', function() {
+	Z(document).one('gameLoaded', function() {
 		if (!inappbilling) return true
 		inappbilling.init(function() {
 			// In-app Billing Initiated!
@@ -36,6 +36,28 @@ window.onReady(function() {
 				// TODO: Received list of prior purchases, now what?
 			}, function(e) {
 				error_log('Could not load purchase history: ' + e)
+			})
+			// Load Available Products
+			inappbilling.getAvailableProducts(function(r) {
+				if (typeof r == 'string') r = JSON.parse(r)
+				// Build String Formatting
+				game.format.money = function(s, c) {
+					switch (c) {
+						case 'USD': c = '$'; break;
+						case 'EUR': c = '&euro;'; break;
+						case 'GBP': c = '£'; break;
+						case 'KRW': c = '&#x20a9;'; break;
+						case 'CNY':
+						case 'JPY':
+							c = '&#xa5;'; break;
+						default: c = '&#xa4;';
+					}
+					return c + game.format.whole(s)
+				}
+				Z.each(r, function(i,p) {
+				})
+			}, function(e) {
+				error_log('Could not load product list: ' + e)
 			})
 		}, function(e) {
 			error_log('Could not start inappbilling: ' + e)
