@@ -113,46 +113,6 @@ game = Z.extend(game, {
 	},
 	showNums: function(animal) {
 		var str = {}, i = 2, m
-		try { if (!game.format && Intl && Intl.NumberFormat)
-			game.format = {
-				whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
-				rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
-			}
-		} catch (e) {
-		}
-		// For browsers without Intl
-		if (!game.format) game.format = {
-			whole: function(a) {
-				// Get Int
-				a = '' + Math.floor(a)
-				// Add Commas
-				for (var i=a.length-3; i>0; i-=4)
-					a = [a.slice(0,i), a.slice(i)].join(',')
-				return a
-			},
-			rate: function(a) {
-				return Math.round(a * 10) / 10
-			}
-		}
-		if (!game.format.time) game.format.time = function(sec) {
-			var min = 0, hr = 0, d = 0, time = []
-			if (sec > 60) {
-				min = Math.floor(sec / 60)
-				if (min > 60) {
-					hr = Math.floor(min / 60)
-					if (hr > 24)
-						d = Math.floor(hr / 24)
-					hr = hr % 24
-				}
-				min = min % 60
-			}
-			sec = sec % 60
-			if (d) time.push(d + 'd')
-			if (hr) time.push(hr + 'h')
-			if (min) time.push(min + 'm')
-			if (sec) time.push(sec + 's')
-			return time.length ? time.join(' ') : '0s'
-		}
 		// Initialise any missing elements
 		if (!game.autoRate[animal]) game.autoRate[animal] = 0
 		if (!game.clkRate[animal]) game.clkRate[animal] = []
@@ -160,6 +120,12 @@ game = Z.extend(game, {
 		// Count manual clicks only within past second
 		while (game.clkRate[animal].length && game.clkRate[animal][0] <= Date.now() - 1000) {
 				game.clkRate[animal].shift()
+		}
+		// Build Temporary Format Functions if not loaded
+		if (!game.format) game.format = {
+			whole: function(s) { return s },
+			rate: function(s) { return s },
+			time: function(s) { return s }
 		}
 		str[animal] = game.format.whole(game.animals[animal])
 		str['rps'] = game.format.rate(
@@ -449,6 +415,7 @@ game.buyItem = function(e) {
 }
 // Restart Game
 game.restart = function(e) {
+	game.closeMenu()
 	Z.each(game.items, function(j,i) {
 		delete i.finishTime
 		delete i.hidden
@@ -466,7 +433,6 @@ game.restart = function(e) {
 	})
 	game.animals['rabbits'] = 0
 	window.localStorage.game = JSON.stringify(game)
-	game.closeMenu()
 	game.load()
 	game.showShops()
 }
@@ -512,6 +478,51 @@ Z(document).one('gameLoaded', function(e) {
 	a.src='js/tutorial.js';m.parentNode.insertBefore(a,m)
 	a=d.createElement('link');a.rel="stylesheet"
 	a.href='css/tutorial.css';m.parentNode.insertBefore(a,m)
+})
+
+// Build Localization Rules
+Z(document).one('gameLoaded', function(e) {
+	try { if (Intl && Intl.NumberFormat)
+		game.format = {
+			whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
+			rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format,
+			money: (new Intl.Numberformat('en-US', { style: 'currency', currency: 'USD' })).format
+		}
+	} catch (e) {
+	}
+	// For browsers without Intl
+	if (!game.format) game.format = {
+		whole: function(a) {
+			// Get Int
+			a = '' + Math.floor(a)
+			// Add Commas
+			for (var i=a.length-3; i>0; i-=4)
+				a = [a.slice(0,i), a.slice(i)].join(',')
+			return a
+		},
+		rate: function(a) {
+			return Math.round(a * 10) / 10
+		}
+	}
+	game.format.time = function(sec) {
+		var min = 0, hr = 0, d = 0, time = []
+		if (sec >= 60) {
+			min = Math.floor(sec / 60)
+			if (min >= 60) {
+				hr = Math.floor(min / 60)
+				if (hr >= 24)
+					d = Math.floor(hr / 24)
+				hr = hr % 24
+			}
+			min = min % 60
+		}
+		sec = sec % 60
+		if (d) time.push(d + 'd')
+		if (hr) time.push(hr + 'h')
+		if (min) time.push(min + 'm')
+		if (sec) time.push(sec + 's')
+		return time.length ? time.join(' ') : '0s'
+	}
 })
 
 })

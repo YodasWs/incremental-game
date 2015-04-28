@@ -9,6 +9,7 @@
 // Important DOM Objects
 var tutorial = Z('<div id="tutorial">').text('Click the rabbit!'),
 	rabbit = Z('img#rabbit'), c = 1, lnkShop = Z('#lnkShop a[href="#shop"]')
+function rmTutorial() { tutorial.remove() }
 // Tell User to Visit Country Store
 function visitStore(e) {
 	if (++c > 4) {
@@ -27,9 +28,7 @@ function visitStore(e) {
 						left:100
 					}).text('Buy items to earn rabbits automatically!')
 					// Tutorial Finished
-					item.one('tap click', function() {
-						tutorial.remove()
-					})
+					item.one('tap click', rmTutorial)
 				}, 1000)
 			})
 		})
@@ -52,4 +51,13 @@ rabbit.after(tutorial).one('tap click', function(e) {
 	tutorial.text('Click for more rabbits!')
 	rabbit.on('tap click', visitStore)
 })
+// Finish Tutorial
+function checkPurchases() {
+	Z.each(game.items, function(j,i) {
+		if (!i.level) return
+		rmTutorial()
+		Z('#shop').off('update', checkPurchases)
+	})
+}
+Z('#shop').on('update', checkPurchases)
 })();
