@@ -217,6 +217,7 @@ nav > a, img#rabbit, .shop > a, .shop > ul > li {
 	background: white; height: 200px;
 	padding: 0 1rem; z-index: 2;
 	position: fixed;
+	overflow-y: auto;
 }
 #about > small {
 	display: block; text-align: center;
