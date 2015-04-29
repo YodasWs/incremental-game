@@ -67,7 +67,9 @@ window.onReady(function() {
 			if (!game.items.fencing.level) game.items.fencing.hidden = false
 		} else {
 			// Need more fencing, lost rabbits
-			num = Math.floor((Math.round(Math.random() * 5) + 5) / 100 * game.animals.rabbits)
+			num = Math.floor((Math.round(Math.random() * 10) + 10) / 100 * game.animals.rabbits)
+			num = Math.max(num, game.autoRate.rabbits * 60)
+			num = Math.min(game.animals.rabbits, num)
 			txt = 'A fox came and carried away ' + game.format.whole(num) + ' rabbits in the night! We should build some fences&hellip;'
 			game.items.fencing.hidden = false
 			game.animals.rabbits -= num
