@@ -63,6 +63,7 @@ game = Z.extend(game, {
 		})
 		;[
 			'autoRate',
+			'itemSort',
 			'clkRate',
 			'format',
 			'toAuto'
@@ -158,6 +159,7 @@ game = Z.extend(game, {
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
 		if (i.hidden) return ''
+		if (game.story && game.story.episode && item.episode && item.episode > game.story.episode) return ''
 		if (!i.baseCost || !i.baseCost['rabbits']) return ''
 		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0)
 			cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level)), time = 0
@@ -266,12 +268,14 @@ game.openShop = function(e) {
 }
 // Update Shop Items
 game.updateShop = function(href) {
+	var el, i=0, k=0
 	Z('#' + href + ' > ul').children().remove()
-	Z.each(game.items, function(j,i) {
-		if (i.loc != href) return
-		var el = game.updateShopItem(i, Z('<li></li>'))
+	for (i=0; i<game.itemSort.length; i++) {
+		k = game.itemSort[i]
+		if (game.items[k].loc != href) return
+		el = game.updateShopItem(game.items[k], Z('<li></li>'))
 		Z('#' + href + ' > ul').append(el)
-	})
+	}
 	if (Z('#' + href + ' > ul').children('li').length) game.enableShopItems()
 	else Z('#' + href + ' > ul').append('<li disabled>No items available at this time')
 	Z('#' + href).trigger('update')
