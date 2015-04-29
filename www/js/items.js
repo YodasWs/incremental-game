@@ -74,7 +74,10 @@ game.items = {
 		name:'Nesting Box',
 		loc:'shop',
 		order:1,
-		bonus:{ rabbits:500 }
+		bonus:{ rabbits:500 },
+		buildTime:120,
+		price:0.99,
+		price_currency_code:'USD'
 	}
 }
 window.onReady(function() {
@@ -93,6 +96,5 @@ window.onReady(function() {
 			}
 			return 0
 		})
-		console.log(game.itemSort)
 	})
 })

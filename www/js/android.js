@@ -40,20 +40,6 @@ window.onReady(function() {
 			// Load Available Products
 			inappbilling.getAvailableProducts(function(r) {
 				if (typeof r == 'string') r = JSON.parse(r)
-				// Build String Formatting
-				game.format.money = function(s, c) {
-					switch (c) {
-						case 'USD': c = '$'; break;
-						case 'EUR': c = '&euro;'; break;
-						case 'GBP': c = '£'; break;
-						case 'KRW': c = '&#x20a9;'; break;
-						case 'CNY':
-						case 'JPY':
-							c = '&#xa5;'; break;
-						default: c = '&#xa4;';
-					}
-					return c + game.format.whole(s)
-				}
 				// Merge Item Listings
 				var prods = {}
 				Z.each(r, function(i,p) {

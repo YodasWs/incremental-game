@@ -160,11 +160,10 @@ game = Z.extend(game, {
 		if (!i.level) i.level = 0
 		if (i.hidden) return ''
 		if (game.story && game.story.episode && item.episode && item.episode > game.story.episode) return ''
-		if (!i.baseCost || !i.baseCost['rabbits']) return ''
-		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0)
-			cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level)), time = 0
+		if ((!i.baseCost || !i.baseCost['rabbits']) && (!i.price || !i.price_currency_code)) return ''
+		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0),
+			cost, price, time = 0
 		el.children().remove()
-		el.attr('data-cost', cost)
 		if (i.img) {
 			el.append('<img src="img/' + i.img + '" alt="&#x2327;" />')
 		}
@@ -172,7 +171,13 @@ game = Z.extend(game, {
 		el.append('<span class="level">' + i.level + '</span>')
 		// Check if currently building item
 		if (!i.finishTime || i.finishTime < Date.now()) {
-			el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+			if (i.baseCost && i.baseCost['rabbits']) {
+				cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level))
+				el.attr('data-cost', cost)
+				el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+			}
+			if (i.price && i.price_currency_code)
+				el.append('<span class="cost price">' + game.format.money(i.price, i.price_currency_code) + '</span>')
 			if (i.bonus)
 				el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
 			if (i.buildTime) {
@@ -272,7 +277,7 @@ game.updateShop = function(href) {
 	Z('#' + href + ' > ul').children().remove()
 	for (i=0; i<game.itemSort.length; i++) {
 		k = game.itemSort[i]
-		if (game.items[k].loc != href) return
+		if (game.items[k].loc != href) continue
 		el = game.updateShopItem(game.items[k], Z('<li></li>'))
 		Z('#' + href + ' > ul').append(el)
 	}
@@ -400,7 +405,7 @@ game.buyItem = function(e) {
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
 		item
-	if (game.animals['rabbits'] < cost) return
+	if (!cost || game.animals['rabbits'] < cost) return
 	Z.each(game.items, function(j,i) {
 		if (i.name == name) item = i
 	})
@@ -424,7 +429,7 @@ game.restart = function(e) {
 		delete i.finishTime
 		delete i.hidden
 		i.level = 0
-		if (i.story) delete game.items[j]
+		if (i.story || i.episode) delete game.items[j]
 	})
 	;[
 		'format',
@@ -489,8 +494,7 @@ Z(document).one('gameLoaded', function(e) {
 	try { if (Intl && Intl.NumberFormat)
 		game.format = {
 			whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
-			rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format,
-			money: (new Intl.Numberformat('en-US', { style: 'currency', currency: 'USD' })).format
+			rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
 		}
 	} catch (e) {
 	}
@@ -527,6 +531,28 @@ Z(document).one('gameLoaded', function(e) {
 		if (sec) time.push(sec + 's')
 		return time.length ? time.join(' ') : '0s'
 	}
+	game.format.money = (function() {
+		/*
+		try { if (Intl && Intl.NumberFormat)
+			return function(s,c) {
+				return (new Intl.Numberformat('en-US', { style: 'currency', currency: c })).format(s)
+			}
+		} catch (e) {
+		}
+		/**/
+		return function(s,c) {
+			var d = '.00'
+			switch (c) {
+				case 'USD':c='$';break
+				case 'GBP':c='£';break
+				case 'EUR':c='&euro;';d=',00';break
+				case 'KRW':c='&#x20a9;';d='';break
+				case 'CNY':case'JPY':c='&#xa5;';d='';break
+				default:c='&#xa4;'
+			}
+			return c + game.format.whole(s) + d
+		}
+	})()
 })
 
 })
