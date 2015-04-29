@@ -202,7 +202,7 @@ game = Z.extend(game, {
 Z('#version').text(game.v)
 Z('img#rabbit').on('tap click', game.clkRabbit)
 Z('img#rabbit').on('selectstart contextmenu MSHoldVisual',false)
-Z(document).on('tap click','a[href^="#"]',false)
+Z(document).on('tap click','a[href^="#"]',function(e){e.preventDefault()})
 
 // Close the Game Menu
 game.closeMenu = function(e,t) {
