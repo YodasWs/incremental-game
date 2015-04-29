@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150428',
+	v:'1.1.0-beta+20150429',
 	animals:{
 		rabbits:0
 	},
@@ -158,7 +158,7 @@ game = Z.extend(game, {
 	},
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
-		if (i.hidden) return ''
+		if (i.hidden || !i.name) return ''
 		if (game.story && game.story.episode && item.episode && item.episode > game.story.episode) return ''
 		if ((!i.baseCost || !i.baseCost['rabbits']) && (!i.price || !i.price_currency_code)) return ''
 		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0),
@@ -176,10 +176,10 @@ game = Z.extend(game, {
 				el.attr('data-cost', cost)
 				el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
 			}
-			if (i.price && i.price_currency_code)
-				el.append('<span class="cost price">' + game.format.money(i.price, i.price_currency_code) + '</span>')
 			if (i.bonus)
 				el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
+			if (i.price && i.price_currency_code)
+				el.append('<span class="cost price">' + game.format.money(i.price, i.price_currency_code) + '</span>')
 			if (i.buildTime) {
 				mul = (i.multiplier && i.multiplier['buildTime']) ? i.multiplier['buildTime'] : 1.5
 				time = Math.ceil(i.buildTime * Math.pow(mul, i.level))
@@ -425,14 +425,15 @@ game.buyItem = function(e) {
 // Restart Game
 game.restart = function(e) {
 	game.closeMenu()
+	// Reset Items
 	Z.each(game.items, function(j,i) {
 		delete i.finishTime
 		delete i.hidden
 		i.level = 0
 		if (i.story || i.episode) delete game.items[j]
 	})
+	// Reset Game State
 	;[
-		'format',
 	].forEach(function(a) {
 		delete game[a]
 	})
@@ -441,6 +442,7 @@ game.restart = function(e) {
 		delete game.animals[i]
 	})
 	game.animals['rabbits'] = 0
+	// Save and Load
 	window.localStorage.game = JSON.stringify(game)
 	game.load()
 	game.showShops()
@@ -541,16 +543,17 @@ Z(document).one('gameLoaded', function(e) {
 		}
 		/**/
 		return function(s,c) {
-			var d = '.00'
+			var d = 2, p = '.'
 			switch (c) {
 				case 'USD':c='$';break
 				case 'GBP':c='£';break
-				case 'EUR':c='&euro;';d=',00';break
-				case 'KRW':c='&#x20a9;';d='';break
-				case 'CNY':case'JPY':c='&#xa5;';d='';break
-				default:c='&#xa4;'
+				case 'EUR':c='&euro;';p=',';break
+				case 'KRW':c='&#x20a9;';d=0;break
+				case 'CNY':case'JPY':c='&#xa5;';d=0;break
+				default:c+=' '
 			}
-			return c + game.format.whole(s) + d
+			return c+ game.format.whole(Math.floor(s)) +
+				(d? p + (Math.floor((s - Math.floor(s)) * Math.pow(10, d)) / Math.pow(10, d) + '').substr(-1 * d) : '')
 		}
 	})()
 })

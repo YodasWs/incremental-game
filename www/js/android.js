@@ -28,7 +28,7 @@ window.onReady(function() {
 		Z(this).css({top:(h-200)+'px'})
 	})
 	// Build In-app Products
-	Z(document).one('gameLoaded', function() {
+	Z(document).on('gameLoaded', function() {
 		if (!inappbilling) return true
 		inappbilling.init(function() {
 			// In-app Billing Initiated!
