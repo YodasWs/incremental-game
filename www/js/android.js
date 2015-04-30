@@ -54,4 +54,20 @@ window.onReady(function() {
 			error_log('Could not start inappbilling: ' + e)
 		}, {})
 	})
+	// Purchase In-app Product
+	Z(document).on('buyitem', function(e) {
+		inappbilling.buy(function(r) {
+			Z(document).trigger(Z.Event('consumeitem', e))
+		}, function(e) {
+			error_log('Failed to make purchase: ' + e)
+		}, e.itemId)
+	})
+	// Consume In-app Product
+	Z(document).on('consumeitem', function(e) {
+		inappbilling.consumePurchase(function(r) {
+			Z(document).trigger(Z.Event('itemconsumed', e))
+		}, function(e) {
+			error_log('Failed to consume product: ' + e)
+		}, e.itemId)
+	})
 })

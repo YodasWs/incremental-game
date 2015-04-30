@@ -99,8 +99,7 @@ game = Z.extend(game, {
 		// Build Pending Items
 		Z.each(game.items, function(j,i) {
 			if (i.finishTime && i.finishTime < Date.now()) {
-				delete i.finishTime
-				i.level++
+				Z(document).trigger(Z.Event('itembuilt', { itemName:i.name }))
 			}
 		})
 		// Update Game State
@@ -163,6 +162,11 @@ game = Z.extend(game, {
 		if ((!i.baseCost || !i.baseCost['rabbits']) && (!i.price || !i.price_currency_code)) return ''
 		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0),
 			cost, price, time = 0
+		if (!el) Z('.shop li').each(function() {
+			var z = Z(this)
+			if (z.find('.name').text() == i.name && z.parents('.shop').attr('id') == i.loc) el = z
+		})
+		if (!el) return ''
 		el.children().remove()
 		if (i.img) {
 			el.append('<img src="img/' + i.img + '" alt="&#x2327;" />')
@@ -193,16 +197,22 @@ game = Z.extend(game, {
 		return el
 	},
 	enableShopItems: function() {
-		Z('.shop > ul > li').attr('disabled', null).each(function(i) {
+		var li = []
+		Z('.shop > ul > li').each(function(i) {
 			var t = null
-			if (!Z(this).children('.name').length) Z(this).attr('disabled', 'disabled')
-			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
+			if (!Z(this).children('.name').length) li.push(i)
+			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) li.push(i)
 			if (Z(this).children('.bonus').length && Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
 			if (Z(this).children('.wait').length) {
 				t = Math.floor((Number.parseInt(Z(this).data('finishTime')) - Date.now()) / 1000)
-				Z(this).attr('disabled', 'disabled').children('.wait').html(game.format.time(t))
+				Z(this).children('.wait').html(game.format.time(t))
 				if (t < 0) game.updateShop(Z(this).parents('.shop').attr('id').trim('#'))
+				li.push(i)
 			}
+		})
+		Z('.shop > ul > li').each(function(i) {
+			if (li.indexOf(i) == -1) Z(this).removeAttr('disabled')
+			else Z(this).attr('disabled', 'disabled')
 		})
 	}
 })
@@ -253,7 +263,7 @@ game.showShops = function() {
 	Z('#lnkShop').children('a').hide()
 	if (game.locs) Z('#lnkShop').children('a').each(function(i, l) {
 		var href = Z(this).attr('href').trim('#')
-		if (Z.inArray(href, game.locs) > -1) 
+		if (Z.inArray(href, game.locs) > -1)
 			Z(this).show()
 	})
 	Z('#lnkShop > a[href="#shop"]').show()
@@ -399,29 +409,67 @@ game.closeStory = function(e) {
 	})
 }
 
-// Buy Item from Country Store
+// Buy Item from Shop
 game.buyItem = function(e) {
 	var el = Z(e.target),
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
-		item
-	if (!cost || game.animals['rabbits'] < cost) return
+		item, data, k
+	// Validate Purchase
+	if (cost && game.animals['rabbits'] < cost) return
 	Z.each(game.items, function(j,i) {
-		if (i.name == name) item = i
+		if (i.name == name) {
+			item = i
+			k = j
+		}
 	})
 	if (!item) return
 	if (!item.level) item.level = 0
-	game.animals['rabbits'] -= cost
-	if (!item.buildTime) {
-		item.level++
+	// Consolidate Item Data for Purchase/Consume
+	data = { itemName:item.name, itemId:k }
+	if (cost) data.cost = cost
+	if (el.attr('data-buildTime'))
+		data.buildTime = el.attr('data-buildTime')
+	// Finalize Purchase
+	if (item.price)
+		Z(document).trigger(Z.Event('buyitem', Z.extend(data, {price:item.price})))
+	else
+		Z(document).trigger(Z.Event('itemconsumed', data))
+}
+
+// Consume Bought Item
+Z(document).on('itemconsumed', function(e) {
+	var item
+	Z.each(game.items, function(j,i) {
+		if (i.name == e.itemName) item = i
+	})
+	if (!item) return false
+	// Buy Item and Update Game State
+	if (e.cost) game.animals['rabbits'] -= e.cost
+	if (!e.buildTime) {
+		Z(document).trigger(Z.Event('itembuilt', { itemName:item.name }))
 	} else {
-		item.finishTime = Date.now() + el.attr('data-buildTime') * 1000
+		item.finishTime = Date.now() + e.buildTime * 1000
 	}
+})
+
+// Finish Building Item
+Z(document).on('itembuilt', function(e) {
+	if (!e.itemName && !e.itemId) return false
+	var item
+	Z.each(game.items, function(j,i) {
+		if (i.name == e.itemName || j == e.itemId) item = i
+	})
+	if (!item) return false
+	if (item.finishTime && item.finishTime >= Date.now()) return false
+	delete item.finishTime
+	item.level++
 	game.save()
-	game.updateShopItem(item, el)
+	game.updateShopItem(item)
 	game.enableShopItems()
 	game.showNums('rabbits')
-}
+})
+
 // Restart Game
 game.restart = function(e) {
 	game.closeMenu()
