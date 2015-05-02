@@ -10,16 +10,17 @@
 <script src="phonegap.js"></script>
 <script src="../phonegap.js"></script>
 <script>
-if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
-;//	document.write('<script src="res/phonegap-shim.js"><\/script>');
+//if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
+//	document.write('<script src="res/phonegap-shim.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
-var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
+//var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
+var c=0,b=function(){if(!c){cb();c=true}}
 if(document.readyState=='complete')b()
-else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
-else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 else if(Element.prototype.addEventListener)document.addEventListener('deviceready',b)
 else if(Element.prototype.attachEvent)document.attachEvent('ondeviceready',b)
+//else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
+//else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 };
 // Build Basic Game Object
 window.game={}
