@@ -26,10 +26,6 @@ function visitStore(e) {
 						top:item.offset().top + item.height(),
 						left:100
 					}).text('Buy items to earn rabbits automatically!')
-					// Tutorial Finished
-					item.one('tap click', function() {
-						tutorial.remove()
-					})
 				}, 1000)
 			})
 		})
@@ -52,4 +48,6 @@ rabbit.after(tutorial).one('tap click', function(e) {
 	tutorial.text('Click for more rabbits!')
 	rabbit.on('tap click', visitStore)
 })
+// Finish Tutorial
+Z(document).one('itemconsumed',function(){tutorial.animate({opacity:0},100,function(){tutorial.remove()})})
 })();

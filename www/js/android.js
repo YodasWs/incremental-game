@@ -27,4 +27,47 @@ window.onReady(function() {
 	Z(document).on('revealstart revealend','#about',function(){
 		Z(this).css({top:(h-200)+'px'})
 	})
+	// Build In-app Products
+	Z(document).on('gameLoaded', function() {
+		if (!inappbilling) return true
+		inappbilling.init(function() {
+			// In-app Billing Initiated!
+			inappbilling.getPurchases(function(r) {
+				// TODO: Received list of prior purchases, now what?
+			}, function(e) {
+				error_log('Could not load purchase history: ' + e)
+			})
+			// Load Available Products
+			inappbilling.getAvailableProducts(function(r) {
+				if (typeof r == 'string') r = JSON.parse(r)
+				// Merge Item Listings
+				var prods = {}
+				Z.each(r, function(i,p) {
+					prod[p.productId] = p
+					prod[p.productId].hidden = false
+				})
+				game.items = Z.extend(true, game.items, prods)
+			}, function(e) {
+				error_log('Could not load product list: ' + e)
+			})
+		}, function(e) {
+			error_log('Could not start inappbilling: ' + e)
+		}, {})
+	})
+	// Purchase In-app Product
+	Z(document).on('buyitem', function(e) {
+		inappbilling.buy(function(r) {
+			Z(document).trigger(Z.Event('consumeitem', e))
+		}, function(e) {
+			error_log('Failed to make purchase: ' + e)
+		}, e.itemId)
+	})
+	// Consume In-app Product
+	Z(document).on('consumeitem', function(e) {
+		inappbilling.consumePurchase(function(r) {
+			Z(document).trigger(Z.Event('itemconsumed', e))
+		}, function(e) {
+			error_log('Failed to consume product: ' + e)
+		}, e.itemId)
+	})
 })

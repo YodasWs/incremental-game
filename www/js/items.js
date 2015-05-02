@@ -29,7 +29,7 @@ game.items = {
 	},
 	3:{
 		img:'rabbits/breeder.png',
-		name:'Breeding Expert',
+		name:'Rabbit Care Books',
 		baseCost:{ rabbits:200 },
 		loc:'shop',
 		bonus:{ rabbits:5 }
@@ -59,7 +59,33 @@ game.items = {
 		img:'pill.png',
 		name:'Rabbit Viagra',
 		baseCost:{ rabbits:300000 },
-		loc:'shop',
+		loc:'shop',order:2,
 		bonus:{ rabbits:1000 }
+	},
+	nesting_box:{
+		order: 1,
+		name:'Nesting Box',
+		loc:'shop',
+		bonus:{ rabbits:500 },
+		buildTime:120
 	}
 }
+window.onReady(function() {
+	// Sort Items in Shops
+	Z(document).on('gameLoaded', function() {
+		game.itemSort = []
+		Z.each(game.items, function(k,i) {
+			game.itemSort.push(k)
+		})
+		game.itemSort.sort(function(a,b) {
+			var r = 0
+			if (game.items[a].order != null && game.items[b].order != null && game.items[a].order != game.items[b].order)
+				r = Math.sign(game.items[a].order - game.items[b].order)
+			if (r == 0 && game.items[a].baseCost && game.items[b].baseCost) {
+				if (game.items[a].baseCost.rabbits && game.items[b].baseCost.rabbits)
+					r = Math.sign(game.items[a].baseCost.rabbits - game.items[b].baseCost.rabbits)
+			}
+			return r
+		})
+	})
+})

@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
 <link rel="stylesheet" href="css/base.css"/>
 <script src="phonegap.js"></script>
+<script src="../phonegap.js"></script>
 <script>
 if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
 	document.write('<script src="res/phonegap.js"><\/script>');
@@ -15,9 +16,17 @@ if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser
 window.onReady = function(cb){
 var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
 if(document.readyState=='complete')b()
+else if(Element.prototype.addEventListener)document.addEventListener('deviceready',b)
+else if(Element.prototype.attachEvent)document.attachEvent('ondeviceready',b)
+};
+/*
+window.onReady = function(cb){
+var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
+if(document.readyState=='complete')b()
 else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
 else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 };
+/**/
 // Build Basic Game Object
 window.game={}
 </script>
@@ -35,8 +44,8 @@ window.onReady(function() {
 // Load Android Polyfills and Plugins
 window.onReady(function(){
 	if(device.platform.indexOf('Android')==-1)return
-	var a,m,d=document,t='script'
-	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1
+	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
+	a=d.createElement(t);a.async=1
 	a.src='js/android.js';m.parentNode.insertBefore(a,m)
 	a=d.createElement('link');a.rel="stylesheet"
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)

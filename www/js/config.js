@@ -6,17 +6,8 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
-// Prevent False Double Tap
-var c = false,
-tapComplete = function() {
-	c = false
-}
-setTapComplete = function() {
-	setTimeout(tapComplete, 200)
-}
-
 game = Z.extend(game, {
-	v:'1.1.0-beta',
+	v:'1.1.0-beta+20150502',
 	animals:{
 		rabbits:0
 	},
@@ -72,6 +63,7 @@ game = Z.extend(game, {
 		})
 		;[
 			'autoRate',
+			'itemSort',
 			'clkRate',
 			'format',
 			'toAuto'
@@ -107,8 +99,7 @@ game = Z.extend(game, {
 		// Build Pending Items
 		Z.each(game.items, function(j,i) {
 			if (i.finishTime && i.finishTime < Date.now()) {
-				delete i.finishTime
-				i.level++
+				Z(document).trigger(Z.Event('itembuilt', { itemName:i.name }))
 			}
 		})
 		// Update Game State
@@ -122,27 +113,6 @@ game = Z.extend(game, {
 	},
 	showNums: function(animal) {
 		var str = {}, i = 2, m
-		try { if (!game.format && Intl && Intl.NumberFormat)
-			game.format = {
-				whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
-				rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
-			}
-		} catch (e) {
-		}
-		// For browsers without Intl
-		if (!game.format) game.format = {
-			whole: function(a) {
-				// Get Int
-				a = '' + Math.floor(a)
-				// Add Commas
-				for (var i=a.length-3; i>0; i-=4)
-					a = [a.slice(0,i), a.slice(i)].join(',')
-				return a
-			},
-			rate: function(a) {
-				return Math.round(a * 10) / 10
-			}
-		}
 		// Initialise any missing elements
 		if (!game.autoRate[animal]) game.autoRate[animal] = 0
 		if (!game.clkRate[animal]) game.clkRate[animal] = []
@@ -150,6 +120,12 @@ game = Z.extend(game, {
 		// Count manual clicks only within past second
 		while (game.clkRate[animal].length && game.clkRate[animal][0] <= Date.now() - 1000) {
 				game.clkRate[animal].shift()
+		}
+		// Build Temporary Format Functions if not loaded
+		if (!game.format) game.format = {
+			whole: function(s) { return s },
+			rate: function(s) { return s },
+			time: function(s) { return s }
 		}
 		str[animal] = game.format.whole(game.animals[animal])
 		str['rps'] = game.format.rate(
@@ -181,12 +157,17 @@ game = Z.extend(game, {
 	},
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
-		if (i.hidden) return ''
-		if (!i.baseCost || !i.baseCost['rabbits']) return ''
-		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0)
-			cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level))
+		if (i.hidden || !i.name) return ''
+		if (game.story && game.story.episode && item.episode && item.episode > game.story.episode) return ''
+		if ((!i.baseCost || !i.baseCost['rabbits']) && (!i.price || !i.price_currency_code)) return ''
+		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0),
+			cost, price, time = 0
+		if (!el) Z('.shop li').each(function() {
+			var z = Z(this)
+			if (z.find('.name').text() == i.name && z.parents('.shop').attr('id') == i.loc) el = z
+		})
+		if (!el) return ''
 		el.children().remove()
-		el.attr('data-cost', cost)
 		if (i.img) {
 			el.append('<img src="img/' + i.img + '" alt="&#x2327;" />')
 		}
@@ -194,14 +175,20 @@ game = Z.extend(game, {
 		el.append('<span class="level">' + i.level + '</span>')
 		// Check if currently building item
 		if (!i.finishTime || i.finishTime < Date.now()) {
-			el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+			if (i.baseCost && i.baseCost['rabbits']) {
+				cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level))
+				el.attr('data-cost', cost)
+				el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+			}
 			if (i.bonus)
 				el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
+			if (i.price && i.price_currency_code)
+				el.append('<span class="cost price">' + game.format.money(i.price, i.price_currency_code) + '</span>')
 			if (i.buildTime) {
 				mul = (i.multiplier && i.multiplier['buildTime']) ? i.multiplier['buildTime'] : 1.5
-				cost = Math.ceil(i.buildTime * Math.pow(mul, i.level))
-				el.attr('data-buildTime', cost)
-				el.append('<span class="buildTime">' + cost + ' sec</span>')
+				time = Math.ceil(i.buildTime * Math.pow(mul, i.level))
+				el.attr('data-buildTime', time)
+				el.append('<span class="buildTime">' + game.format.time(time) + '</span>')
 			}
 		} else {
 			// Pending Item Completion
@@ -210,23 +197,29 @@ game = Z.extend(game, {
 		return el
 	},
 	enableShopItems: function() {
-		Z('.shop > ul > li').attr('disabled', null).each(function(i) {
+		var li = []
+		Z('.shop > ul > li').each(function(i) {
 			var t = null
-			if (!Z(this).children('.name').length) Z(this).attr('disabled', 'disabled')
-			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
+			if (!Z(this).children('.name').length) li.push(i)
+			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) li.push(i)
 			if (Z(this).children('.bonus').length && Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
 			if (Z(this).children('.wait').length) {
 				t = Math.floor((Number.parseInt(Z(this).data('finishTime')) - Date.now()) / 1000)
-				Z(this).attr('disabled', 'disabled').children('.wait').html(t)
-				if (t <= 0) game.updateShop(Z(this).parents('.shop').attr('id').trim('#'))
+				Z(this).children('.wait').html(game.format.time(t))
+				if (t < 0) game.updateShop(Z(this).parents('.shop').attr('id').trim('#'))
+				li.push(i)
 			}
+		})
+		Z('.shop > ul > li').each(function(i) {
+			if (li.indexOf(i) == -1) Z(this).removeAttr('disabled')
+			else Z(this).attr('disabled', 'disabled')
 		})
 	}
 })
 Z('#version').text(game.v)
 Z('img#rabbit').on('tap click', game.clkRabbit)
 Z('img#rabbit').on('selectstart contextmenu MSHoldVisual',false)
-Z(document).on('tap click','a[href^="#"]',false)
+Z(document).on('tap click','a[href^="#"]',function(e){e.preventDefault()})
 
 // Close the Game Menu
 game.closeMenu = function(e,t) {
@@ -245,12 +238,9 @@ game.closeMenu = function(e,t) {
 	}).animate({
 		left:0
 	}, t)
-	setTapComplete()
 }
 // Open the Game Menu
 game.openMenu = function(e) {
-	if (c) return
-	c = true
 	if (Z('body > nav').css('display') != 'block') {
 		var t=400
 		Z('body > nav').show().css({
@@ -265,7 +255,6 @@ game.openMenu = function(e) {
 			left:Z('body > nav').width() + 'px'
 		}, t)
 	} else game.closeMenu()
-	setTapComplete()
 	return false
 }
 
@@ -274,7 +263,7 @@ game.showShops = function() {
 	Z('#lnkShop').children('a').hide()
 	if (game.locs) Z('#lnkShop').children('a').each(function(i, l) {
 		var href = Z(this).attr('href').trim('#')
-		if (Z.inArray(href, game.locs) > -1) 
+		if (Z.inArray(href, game.locs) > -1)
 			Z(this).show()
 	})
 	Z('#lnkShop > a[href="#shop"]').show()
@@ -282,8 +271,6 @@ game.showShops = function() {
 
 // Open Shop
 game.openShop = function(e) {
-	if (c) return
-	c = true
 	var t = 600, href = Z(e.target).attr('href').trim('#')
 	game.showModalBG(t)
 	game.updateShop(href)
@@ -296,12 +283,14 @@ game.openShop = function(e) {
 }
 // Update Shop Items
 game.updateShop = function(href) {
+	var el, i=0, k=0
 	Z('#' + href + ' > ul').children().remove()
-	Z.each(game.items, function(j,i) {
-		if (i.loc != href) return
-		var el = game.updateShopItem(i, Z('<li></li>'))
+	for (i=0; i<game.itemSort.length; i++) {
+		k = game.itemSort[i]
+		if (game.items[k].loc != href) continue
+		el = game.updateShopItem(game.items[k], Z('<li></li>'))
 		Z('#' + href + ' > ul').append(el)
-	})
+	}
 	if (Z('#' + href + ' > ul').children('li').length) game.enableShopItems()
 	else Z('#' + href + ' > ul').append('<li disabled>No items available at this time')
 	Z('#' + href).trigger('update')
@@ -309,8 +298,6 @@ game.updateShop = function(href) {
 
 // Close Open Shop
 game.closeShops = function(e) {
-	if (c) return
-	c = true
 	Z('#lnkShop').children('a').each(function() {
 		var href = Z(this).attr('href').trim('#'), t = 400
 		if (Z('#' + href).css('display') == 'block') {
@@ -376,14 +363,11 @@ game.hideModals = function(e) {
 game.closeAll = function(e) {
 	game.closeMenu()
 	game.hideModals()
-	setTapComplete()
 	return false
 }
 
 // Open About Screen
 game.openAbout = function(e) {
-	if (c) return
-	c = true
 	var t = 400
 	game.showModalBG(t)
 	game.closeMenu(e,t/2)
@@ -397,8 +381,6 @@ game.openAbout = function(e) {
 }
 // Close About Screen
 game.closeAbout = function(e) {
-	if (c) return
-	c = true
 	var t = 200
 	game.hideModalBG(t)
 	try {
@@ -427,43 +409,79 @@ game.closeStory = function(e) {
 	})
 }
 
-// Buy Item from Country Store
+// Buy Item from Shop
 game.buyItem = function(e) {
-	if (c) return
-	c = true
 	var el = Z(e.target),
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
-		item
-	if (game.animals['rabbits'] < cost) return
+		item, data, k
+	// Validate Purchase
+	if (cost && game.animals['rabbits'] < cost) return
 	Z.each(game.items, function(j,i) {
-		if (i.name == name) item = i
+		if (i.name == name) {
+			item = i
+			k = j
+		}
 	})
 	if (!item) return
 	if (!item.level) item.level = 0
-	game.animals['rabbits'] -= cost
-	if (!item.buildTime) {
-		item.level++
+	// Consolidate Item Data for Purchase/Consume
+	data = { itemName:item.name, itemId:k }
+	if (cost) data.cost = cost
+	if (el.attr('data-buildTime'))
+		data.buildTime = el.attr('data-buildTime')
+	// Finalize Purchase
+	if (item.price)
+		Z(document).trigger(Z.Event('buyitem', Z.extend(data, {price:item.price})))
+	else
+		Z(document).trigger(Z.Event('itemconsumed', data))
+}
+
+// Consume Bought Item
+Z(document).on('itemconsumed', function(e) {
+	var item
+	Z.each(game.items, function(j,i) {
+		if (i.name == e.itemName) item = i
+	})
+	if (!item) return false
+	// Buy Item and Update Game State
+	if (e.cost) game.animals['rabbits'] -= e.cost
+	if (!e.buildTime) {
+		Z(document).trigger(Z.Event('itembuilt', { itemName:item.name }))
 	} else {
-		item.finishTime = Date.now() + el.attr('data-buildTime') * 1000
+		item.finishTime = Date.now() + e.buildTime * 1000
 	}
+})
+
+// Finish Building Item
+Z(document).on('itembuilt', function(e) {
+	if (!e.itemName && !e.itemId) return false
+	var item
+	Z.each(game.items, function(j,i) {
+		if (i.name == e.itemName || j == e.itemId) item = i
+	})
+	if (!item) return false
+	if (item.finishTime && item.finishTime >= Date.now()) return false
+	delete item.finishTime
+	item.level++
 	game.save()
-	game.updateShopItem(item, el)
+	game.updateShopItem(item)
 	game.enableShopItems()
 	game.showNums('rabbits')
-}
+})
+
 // Restart Game
 game.restart = function(e) {
-	if (c) return
-	c = true
+	game.closeMenu()
+	// Reset Items
 	Z.each(game.items, function(j,i) {
 		delete i.finishTime
 		delete i.hidden
 		i.level = 0
-		if (i.story) delete game.items[j]
+		if (i.story || i.episode) delete game.items[j]
 	})
+	// Reset Game State
 	;[
-		'format',
 	].forEach(function(a) {
 		delete game[a]
 	})
@@ -472,8 +490,8 @@ game.restart = function(e) {
 		delete game.animals[i]
 	})
 	game.animals['rabbits'] = 0
+	// Save and Load
 	window.localStorage.game = JSON.stringify(game)
-	game.closeMenu()
 	game.load()
 	game.showShops()
 }
@@ -492,8 +510,6 @@ Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
 Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
 Z(document).on(evtClick, '#lnkShop > a', game.openShop)
 Z(document).on(evtClick, '#modal-bg', game.hideModals)
-
-Z(document).on(evtClick, setTapComplete)
 
 // Pause/Resume Game
 Z(document).on('pause', function() { clearTimeout(game.toAuto) })
@@ -523,13 +539,83 @@ Z(document).one('gameLoaded', function(e) {
 	a.href='css/tutorial.css';m.parentNode.insertBefore(a,m)
 })
 
+// Build Localization Rules
+Z(document).one('gameLoaded', function(e) {
+	try { if (Intl && Intl.NumberFormat)
+		game.format = {
+			whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
+			rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
+		}
+	} catch (e) {
+	}
+	// For browsers without Intl
+	if (!game.format) game.format = {
+		whole: function(a) {
+			// Get Int
+			a = '' + Math.floor(a)
+			// Add Commas
+			for (var i=a.length-3; i>0; i-=4)
+				a = [a.slice(0,i), a.slice(i)].join(',')
+			return a
+		},
+		rate: function(a) {
+			return Math.round(a * 10) / 10
+		}
+	}
+	game.format.time = function(sec) {
+		var min = 0, hr = 0, d = 0, time = []
+		if (sec >= 60) {
+			min = Math.floor(sec / 60)
+			if (min >= 60) {
+				hr = Math.floor(min / 60)
+				if (hr >= 24)
+					d = Math.floor(hr / 24)
+				hr = hr % 24
+			}
+			min = min % 60
+		}
+		sec = sec % 60
+		if (d) time.push(d + 'd')
+		if (hr) time.push(hr + 'h')
+		if (min) time.push(min + 'm')
+		if (sec) time.push(sec + 's')
+		return time.length ? time.join(' ') : '0s'
+	}
+	game.format.money = (function() {
+		/*
+		try { if (Intl && Intl.NumberFormat)
+			return function(s,c) {
+				return (new Intl.Numberformat('en-US', { style: 'currency', currency: c })).format(s)
+			}
+		} catch (e) {
+		}
+		/**/
+		return function(s,c) {
+			var d = 2, p = '.'
+			switch (c) {
+				case 'USD':c='$';break
+				case 'GBP':c='£';break
+				case 'EUR':c='&euro;';p=',';break
+				case 'KRW':c='&#x20a9;';d=0;break
+				case 'CNY':case'JPY':c='&#xa5;';d=0;break
+				default:c+=' '
+			}
+			return c+ game.format.whole(Math.floor(s)) +
+				(d? p + (Math.floor((s - Math.floor(s)) * Math.pow(10, d)) / Math.pow(10, d) + '').substr(-1 * d) : '')
+		}
+	})()
 })
 
-// Error Handling
-window.onerror = function(msg, file, line) {
+})
+window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':msg +  '; ' + file + ' line ' + line + '; browser: ' + device.platform}
+		data:{'msg':msg + '; browser: ' + device.platform}
 	})
+}
+
+// Error Handling
+window.onerror = function(msg, file, line) {
+	error_log(msg +  '; ' + file + ' line ' + line)
 }
