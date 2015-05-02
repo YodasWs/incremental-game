@@ -11,7 +11,7 @@
 <script src="../phonegap.js"></script>
 <script>
 if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
-;//	document.write('<script src="res/phonegap.js"><\/script>');
+;//	document.write('<script src="res/phonegap-shim.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
 var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
