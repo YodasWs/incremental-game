@@ -20,26 +20,27 @@
 	-->
 
 	<!-- Android -->
-	<gap:platform name="android" />
-	<preference name="android-minSdkVersion" value="16" />
-	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6">
-		<!--<param name="BILLING_KEY" value="" />-->
-	</gap:plugin>
-	<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
-	<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
-	<icon src="icons/ic_launcher_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
-	<icon src="icons/ic_launcher_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
-	<icon src="icons/ic_launcher_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
-	<icon src="icons/ic_launcher_xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
-	<gap:config-file platform="android" parent="/manifest" mode="merge">
-		<uses-permission android:name="com.android.vending.BILLING" />
-		<!--<uses-permission android:name="com.android.vending.CHECK_LICENSE" />-->
-	</gap:config-file>
-	<!-- For future Android support
-	<gap:config-file platform="android" parent="/manifest" mode="merge">
-		<supports-screens android:xlargeScreens="false" android:largeScreens="false" />
-	</gap:config-file>
-	-->
+	<gap:platform name="android">
+		<preference name="android-minSdkVersion" value="16" />
+		<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6">
+			<!--<param name="BILLING_KEY" value="" />-->
+		</gap:plugin>
+		<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+		<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+		<icon src="icons/ic_launcher_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+		<icon src="icons/ic_launcher_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+		<icon src="icons/ic_launcher_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
+		<icon src="icons/ic_launcher_xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
+		<gap:config-file platform="android" parent="/manifest" mode="merge">
+			<uses-permission android:name="com.android.vending.BILLING" />
+			<!--<uses-permission android:name="com.android.vending.CHECK_LICENSE" />-->
+		</gap:config-file>
+		<!-- For future Android support
+		<gap:config-file platform="android" parent="/manifest" mode="merge">
+			<supports-screens android:xlargeScreens="false" android:largeScreens="false" />
+		</gap:config-file>
+		-->
+	</gap:platform>
 
 	<!-- For future iOS support
 	<gap:platform name="ios" />
