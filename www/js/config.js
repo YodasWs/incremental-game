@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150502',
+	v:'1.1.0-beta+20150503',
 	animals:{
 		rabbits:0
 	},
@@ -611,7 +611,7 @@ window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':msg + '; browser: ' + device.platform}
+		data:{'msg':msg + '; browser: ' + (device ? device.platform : '')}
 	})
 }
 

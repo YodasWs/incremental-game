@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="41" version="1.1.0-beta+20150502">
+	versionCode="42" version="1.1.0-beta+20150503">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
@@ -9,6 +9,7 @@
 	<preference name="orientation" value="portrait" />
 	<preference name="fullscreen" value="true" />
 	<icon src="icons/ic_launcher_xxhdpi.png" />
+	<gap:plugin name="org.apache.cordova.device" />
 
 	<!-- For future game development
 	<gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1" />
@@ -20,27 +21,26 @@
 	-->
 
 	<!-- Android -->
-	<gap:platform name="android">
-		<preference name="android-minSdkVersion" value="16" />
-		<!--<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6">
-			<param name="BILLING_KEY" value="" />
-		</gap:plugin>-->
-		<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
-		<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
-		<icon src="icons/ic_launcher_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
-		<icon src="icons/ic_launcher_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
-		<icon src="icons/ic_launcher_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
-		<icon src="icons/ic_launcher_xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
-		<gap:config-file platform="android" parent="/manifest" mode="merge">
-			<uses-permission android:name="com.android.vending.BILLING" />
-			<!--<uses-permission android:name="com.android.vending.CHECK_LICENSE" />-->
-		</gap:config-file>
-		<!-- For future Android support
-		<gap:config-file platform="android" parent="/manifest" mode="merge">
-			<supports-screens android:xlargeScreens="false" android:largeScreens="false" />
-		</gap:config-file>
-		-->
-	</gap:platform>
+	<gap:platform name="android"/>
+	<preference name="android-minSdkVersion" value="16" />
+	<!--<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6">
+		<param name="BILLING_KEY" value="" />
+	</gap:plugin>-->
+	<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+	<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+	<icon src="icons/ic_launcher_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+	<icon src="icons/ic_launcher_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+	<icon src="icons/ic_launcher_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
+	<icon src="icons/ic_launcher_xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
+	<gap:config-file platform="android" parent="/manifest" mode="merge">
+		<uses-permission android:name="com.android.vending.BILLING" />
+		<!--<uses-permission android:name="com.android.vending.CHECK_LICENSE" />-->
+	</gap:config-file>
+	<!-- For future Android support
+	<gap:config-file platform="android" parent="/manifest" mode="merge">
+		<supports-screens android:xlargeScreens="false" android:largeScreens="false" />
+	</gap:config-file>
+	-->
 
 	<!-- For future iOS support
 	<gap:platform name="ios" />
