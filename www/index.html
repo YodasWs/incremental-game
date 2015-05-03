@@ -51,6 +51,8 @@ window.deviceReady(function(){
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 })
 window.onload = function() {
+	Z('#intro > h3').text(device.platform)
+	return
 	game.load()
 	Z('body > #intro').css({
 		opacity:1
