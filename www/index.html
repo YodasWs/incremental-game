@@ -16,10 +16,15 @@ window.onReady = function(cb){
 //var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
 var c=0,b=function(){if(!c){cb();c=true}}
 if(document.readyState=='complete')b()
-//else if(Element.prototype.addEventListener)document.addEventListener('deviceready',b)
-//else if(Element.prototype.attachEvent)document.attachEvent('ondeviceready',b)
 else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
 else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
+};
+window.deviceReady = function(cb){
+//var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
+var c=0,b=function(){if(!c){cb();c=true}}
+if(document.readyState=='complete')b()
+else if(Element.prototype.addEventListener)document.addEventListener('deviceready',b)
+else if(Element.prototype.attachEvent)document.attachEvent('ondeviceready',b)
 };
 // Build Basic Game Object
 window.game={}
@@ -37,7 +42,7 @@ window.onReady(function() {
 	Z('#intro > h3').text('deviceready')
 })
 // Load Android Polyfills and Plugins
-window.onReady(function(){
+window.deviceReady(function(){
 	if(device.platform.indexOf('Android')==-1)return
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
@@ -65,7 +70,7 @@ window.onload = function() {
 <body>
 <div id="intro" style="text-align: center">
 	<h1>Rabbit Farm</h1>
-	<img src="www/img/rabbit-1.png" alt="Loading&hellip;" style="margin: 1em auto" width="150"/>
+	<img src="rabbit-150.png" alt="Loading&hellip;" style="margin: 1em auto"/>
 	<h3 style="color: whitesmoke">Loading&hellip;</h3>
 </div>
 <nav id="menu">
