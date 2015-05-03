@@ -34,7 +34,7 @@ window.game={}
 window.onReady(function() {
 	window.Z = Zepto
 	if (navigator.maxTouchPoints) Z('body').addClass('touch')
-	Z('main').append('<p>' + JSON.stringify(device) + '</p>')
+	Z('#intro > h3').text('deviceready')
 })
 // Load Android Polyfills and Plugins
 window.onReady(function(){
@@ -59,14 +59,13 @@ window.onload = function() {
 			opacity:1
 		}, 600, 'ease-out')
 	})
-	/**/
 }
 </script>
 </head>
 <body>
 <div id="intro" style="text-align: center">
 	<h1>Rabbit Farm</h1>
-	<img src="img/rabbit-1.png" alt="Loading&hellip;" style="margin: 1em auto"/>
+	<img src="img/rabbit-1.png" alt="Loading&hellip;" style="margin: 1em auto" width="150"/>
 	<h3 style="color: whitesmoke">Loading&hellip;</h3>
 </div>
 <nav id="menu">
