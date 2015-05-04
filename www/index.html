@@ -13,14 +13,13 @@
 //	document.write('<script src="res/phonegap-shim.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
-//var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
-var c=0,b=function(){if(!c){cb();c=true}}
+var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
 if(document.readyState=='complete')b()
 else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
 else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 };
+// For anything requiring the device object
 window.deviceReady = function(cb){
-//var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
 var c=0,b=function(){if(!c){cb();c=true}}
 if(document.readyState=='complete')b()
 else if(Element.prototype.addEventListener)document.addEventListener('deviceready',b)
@@ -39,11 +38,11 @@ window.game={}
 window.onReady(function() {
 	window.Z = Zepto
 	if (navigator.maxTouchPoints) Z('body').addClass('touch')
-	Z('#intro > h3').text('readyState, platform: ' + device.platform)
+	alert('readyState, platform: ' + device.platform)
 })
 // Load Android Polyfills and Plugins
 window.deviceReady(function(){
-	Z('#intro > h3').text('deviceready, platform: ' + device.platform)
+	alert('deviceready, platform: ' + device.platform)
 	if(device.platform.indexOf('Android')==-1)return
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
@@ -52,7 +51,7 @@ window.deviceReady(function(){
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 })
 window.onload = function() {
-	Z('#intro > h3').text('load, platform: ' + device.platform)
+	alert('load, platform: ' + device.platform)
 	return
 	game.load()
 	Z('body > #intro').css({

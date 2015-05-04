@@ -14,7 +14,8 @@
 		event.initEvent('deviceready', true, true);event.eventName = 'deviceready';event.memo = {}
 		document.dispatchEvent(event)
 	},c=0,b=function(){if(!c){if(document.readyState=='complete'){a();c=true}}}
-	if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
+	if(document.readyState=='complete')b()
+	else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
 	else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 })();
 
