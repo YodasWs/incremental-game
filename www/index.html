@@ -38,7 +38,7 @@ window.game={}
 window.onReady(function() {
 	window.Z = Zepto
 	if (navigator.maxTouchPoints) Z('body').addClass('touch')
-	alert('readyState, platform: ' + device.platform)
+	alert('readyState')
 })
 // Load Android Polyfills and Plugins
 window.deviceReady(function(){
@@ -51,7 +51,7 @@ window.deviceReady(function(){
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 })
 window.onload = function() {
-	alert('load, platform: ' + device.platform)
+	alert('load')
 	return
 	game.load()
 	Z('body > #intro').css({
