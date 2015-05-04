@@ -33,6 +33,9 @@ window.game={}
 <script src="js/items.js" async></script>
 <script src="js/story.js" async></script>
 <script>
+try{
+	window.platform=navigator.userAgent.match(/\w*(Win|iPod|iPhone|iPad|Mac|Android)\w*/))[0].trim()
+}catch(e){window.platform='unknown'}
 // Wait for document ready
 window.onReady(function() {
 	window.Z = Zepto
@@ -42,8 +45,8 @@ window.onReady(function() {
 // Load Android Polyfills and Plugins
 window.deviceReady(function(){
 	alert('deviceready')
-	alert(device.platform)
-	if(device.platform.indexOf('Android')==-1)return
+	alert(platform)
+	if(platform.indexOf('Android')==-1)return
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
 	a.src='js/android.js';m.parentNode.insertBefore(a,m)

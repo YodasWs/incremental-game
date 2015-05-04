@@ -9,7 +9,7 @@
  * Polyfills and Plugins for Android
  */
 window.onReady(function() {
-	if (device.platform.indexOf('Android') == -1) return;
+	if (platform.indexOf('Android') == -1) return;
 	var h = Z(window).height(), w = Z(window).width()
 	// Placement of Shop Modal
 	Z(document).on('update','.shop',function(){

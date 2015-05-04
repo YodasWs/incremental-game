@@ -33,7 +33,7 @@ window.device = {
 		else return 'unknown'
 	})(),
 	platform:(function() {
-		return (navigator.userAgent.match(/\w*(IE|Chrome|iPod|iPhone|iPad|Safari|Android)\w*/))[0].trim()
+		return (navigator.userAgent.match(/\w*(Win|iPod|iPhone|iPad|Mac|Android)\w*/))[0].trim()
 	})(),
 	version:(function() {
 		return (navigator.userAgent.match(/(IE|Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()
@@ -78,6 +78,7 @@ camera = {
 }
 
 // for desktop testing
-if (device.platform.indexOf('Win') > -1) device.platform = 'Win32NT'
+if (device.platform.indexOf('Win') > -1) device.platform = 'Win32'
+if (device.platform.indexOf('Mac') > -1) device.platform = 'MacIntel'
 console.log('userAgent: ' + navigator.userAgent)
 console.log('device: ' + JSON.stringify(device))

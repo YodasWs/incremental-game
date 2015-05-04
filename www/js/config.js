@@ -497,7 +497,7 @@ game.restart = function(e) {
 }
 
 var evtClick = 'tap click'
-if (device.platform.indexOf('Android') != -1) evtClick = 'tap'
+if (platform.indexOf('Android') != -1) evtClick = 'tap'
 
 // User Interaction Events
 Z(document).on(evtClick, '.shop > ul > li:not([disabled])', game.buyItem)
@@ -611,7 +611,7 @@ window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':msg + '; browser: ' + (device ? device.platform : '')}
+		data:{'msg':msg + '; browser: ' + platform}
 	})
 }
 
