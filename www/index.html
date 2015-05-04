@@ -39,10 +39,11 @@ window.game={}
 window.onReady(function() {
 	window.Z = Zepto
 	if (navigator.maxTouchPoints) Z('body').addClass('touch')
-	Z('#intro > h3').text('deviceready')
+	Z('#intro > h3').text('readyState, platform: ' + device.platform)
 })
 // Load Android Polyfills and Plugins
 window.deviceReady(function(){
+	Z('#intro > h3').text('deviceready, platform: ' + device.platform)
 	if(device.platform.indexOf('Android')==-1)return
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
@@ -51,7 +52,7 @@ window.deviceReady(function(){
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 })
 window.onload = function() {
-	Z('#intro > h3').text(device.platform)
+	Z('#intro > h3').text('load, platform: ' + device.platform)
 	return
 	game.load()
 	Z('body > #intro').css({
