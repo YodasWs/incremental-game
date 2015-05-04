@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="css/base.css"/>
 <script src="phonegap.js"></script>
 <script>
-//if (!window.cordova && !window.PhoneGap && !window.phonegap) // Shim for browser testing
+//if (!window.cordova) // Shim for browser testing
 //	document.write('<script src="res/phonegap-shim.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
@@ -34,7 +34,9 @@ window.game={}
 <script src="js/story.js" async></script>
 <script>
 try{
-	window.platform=navigator.userAgent.match(/\w*(Win|iPod|iPhone|iPad|Mac|Android)\w*/))[0].trim()
+	window.platform=navigator.userAgent.match(/\w*(Android|Win|iPod|iPhone|iPad|Mac)\w*/)[0].trim()
+	if (platform.indexOf('Mac') > -1) platform = 'MacIntel'
+	if (platform.indexOf('Win') > -1) platform = 'Win32'
 }catch(e){window.platform='unknown'}
 // Wait for document ready
 window.onReady(function() {
@@ -43,8 +45,7 @@ window.onReady(function() {
 	alert('readyState')
 })
 // Load Android Polyfills and Plugins
-window.deviceReady(function(){
-	alert('deviceready')
+window.onReady(function(){
 	alert(platform)
 	if(platform.indexOf('Android')==-1)return
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
