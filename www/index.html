@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="css/base.css"/>
 <script src="phonegap.js"></script>
 <script>
-//if (!window.cordova) // Shim for browser testing
-//	document.write('<script src="res/phonegap-shim.js"><\/script>');
+if (!window.cordova) // Load shim for browser testing
+	document.write('<script src="res/phonegap-shim.js"><\/script>');
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
 var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
@@ -18,13 +18,7 @@ if(document.readyState=='complete')b()
 else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
 else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 };
-// For anything requiring the device object
-window.deviceReady = function(cb){
-var c=0,b=function(){if(!c){cb();c=true}}
-if(Element.prototype.addEventListener)document.addEventListener('deviceready',b)
-else if(Element.prototype.attachEvent)document.attachEvent('ondeviceready',b)
-};
-// Build Basic Game Object
+// Game Object
 window.game={}
 </script>
 <script src="res/zepto.min.js" async></script>
@@ -42,11 +36,9 @@ try{
 window.onReady(function() {
 	window.Z = Zepto
 	if (navigator.maxTouchPoints) Z('body').addClass('touch')
-	alert('readyState')
 })
 // Load Android Polyfills and Plugins
 window.onReady(function(){
-	alert(platform)
 	if(platform.indexOf('Android')==-1)return
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
@@ -55,8 +47,6 @@ window.onReady(function(){
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 })
 window.onload = function() {
-	alert('load')
-	return
 	game.load()
 	Z('body > #intro').css({
 		opacity:1
