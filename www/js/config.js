@@ -435,6 +435,10 @@ game.buyItem = function(e) {
 		Z(document).trigger(Z.Event('buyitem', Z.extend(data, {price:item.price})))
 	else
 		Z(document).trigger(Z.Event('itemconsumed', data))
+	game.save()
+	game.enableShopItems()
+	game.updateShopItem(item)
+	game.showNums('rabbits')
 }
 
 // Consume Bought Item
@@ -446,11 +450,14 @@ Z(document).on('itemconsumed', function(e) {
 	if (!item) return false
 	// Buy Item and Update Game State
 	if (e.cost) game.animals['rabbits'] -= e.cost
-	if (!e.buildTime) {
+	if (!e.buildTime)
 		Z(document).trigger(Z.Event('itembuilt', { itemName:item.name }))
-	} else {
+	else
 		item.finishTime = Date.now() + e.buildTime * 1000
-	}
+	game.save()
+	game.enableShopItems()
+	game.updateShopItem(item)
+	game.showNums('rabbits')
 })
 
 // Finish Building Item
@@ -466,7 +473,6 @@ Z(document).on('itembuilt', function(e) {
 	item.level++
 	game.save()
 	game.updateShopItem(item)
-	game.enableShopItems()
 	game.showNums('rabbits')
 })
 
