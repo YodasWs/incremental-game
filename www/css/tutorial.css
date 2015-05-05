@@ -28,10 +28,10 @@
 	border-left: 5px solid white;
 }
 #tutorial.down::before {
-	border-top: 5px solid black; top: 24px;
-	border-bottom: 5px solid transparent;
+	border-top: 6px solid black; top: auto; bottom: -13px;
+	border-bottom: 6px solid transparent;
 }
 #tutorial.down::after {
-	border-top: 6px solid white; top: 19px;
-	border-bottom: 6px solid transparent;
+	border-top: 5px solid white; top: auto; bottom: -9px;
+	border-bottom: 5px solid transparent;
 }
