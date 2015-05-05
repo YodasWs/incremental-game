@@ -177,6 +177,7 @@ game = Z.extend(game, {
 		if (!i.finishTime || i.finishTime < Date.now()) {
 			if (i.baseCost && i.baseCost['rabbits']) {
 				cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level))
+				if (cost > game.animals['rabbits']) Z(el).attr('disabled', 'disabled')
 				el.attr('data-cost', cost)
 				el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
 			}
@@ -193,6 +194,7 @@ game = Z.extend(game, {
 		} else {
 			// Pending Item Completion
 			el.data('finishTime', i.finishTime).append('<span class="wait"></span>')
+			Z(el).attr('disabled', 'disabled')
 		}
 		return el
 	},
@@ -436,8 +438,8 @@ game.buyItem = function(e) {
 	else
 		Z(document).trigger(Z.Event('itemconsumed', data))
 	game.save()
-	game.enableShopItems()
 	game.updateShopItem(item)
+	game.enableShopItems()
 	game.showNums('rabbits')
 }
 
@@ -455,8 +457,8 @@ Z(document).on('itemconsumed', function(e) {
 	else
 		item.finishTime = Date.now() + e.buildTime * 1000
 	game.save()
-	game.enableShopItems()
 	game.updateShopItem(item)
+	game.enableShopItems()
 	game.showNums('rabbits')
 })
 
@@ -473,6 +475,7 @@ Z(document).on('itembuilt', function(e) {
 	item.level++
 	game.save()
 	game.updateShopItem(item)
+	game.enableShopItems()
 	game.showNums('rabbits')
 })
 
