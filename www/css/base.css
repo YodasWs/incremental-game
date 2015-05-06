@@ -35,24 +35,31 @@ img#rabbit {
 	margin: 2rem auto;
 	cursor: pointer;
 }
-main > output {
+main > header {
+	display: block; width: 100%;
+	top: 0; left: 0;
+	background: #4ea24e;
+	padding: 0; padding-bottom: 10px;
+	border-bottom: 2px solid transparent;
+}
+main > header > output {
 	display: block; padding: 0 5px; text-align: right;
 	white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 	font-size: 3rem; font-weight: bold; font-family: monospace;
 	color: white; background: forestgreen;
 	max-width: 90vw; margin: 5px auto;
 }
-main > output > img {
+main > header > output > img {
 	display: inline-block;
 	height: .65em;
 }
-main > small {
+main > header > small {
 	display: block;
 	color: white;
 	text-align: center;
 }
-main > small::before { content: '+'; }
-main > small::after { content: ' rps'; }
+main > header > small::before { content: '+'; }
+main > header > small::after { content: ' rps'; }
 
 /** Menu Bar **/
 #menubar { display: block; white-space: nowrap; overflow: hidden; }

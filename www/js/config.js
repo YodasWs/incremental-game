@@ -152,8 +152,8 @@ game = Z.extend(game, {
 				].join(',')
 			}
 		}
-		Z('main > output').html(str[animal])
-		Z('main > small').text(str['rps'])
+		Z('main > header > output').html(str[animal])
+		Z('main > header > small').text(str['rps'])
 	},
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
@@ -235,7 +235,7 @@ game.closeMenu = function(e,t) {
 		Z('body > nav').hide()
 	})
 	var l = Z('#main').css('left')
-	Z('#main').css({
+	Z('#main, main > header').css({
 		left:(l && l != 'auto' ? l : '0px')
 	}).animate({
 		left:0
@@ -251,7 +251,7 @@ game.openMenu = function(e) {
 			left:'0px'
 		}, t)
 		var l = Z('#main').css('left')
-		Z('#main').css({
+		Z('#main, main > header').css({
 			left:(l && l != 'auto' ? l : '0px')
 		}).animate({
 			left:Z('body > nav').width() + 'px'
@@ -613,6 +613,20 @@ Z(document).one('gameLoaded', function(e) {
 				(d? p + (Math.floor((s - Math.floor(s)) * Math.pow(10, d)) / Math.pow(10, d) + '').substr(-1 * d) : '')
 		}
 	})()
+})
+
+// Styling Touchups
+Z(document).one('scroll', function(e) {
+	Z('main > header').after(Z('<div>').css({height:Z('main > header').height()+'px'})).css({position:'fixed'})
+})
+Z(document).on('scroll', function(){
+	var b,c=Z('main > header').css('border-bottom-color')
+	if (Z('body').scrollTop() <= 2 && c == 'black') b='transparent'
+	else if (c != 'black') b='black'
+	if (b) Z('main > header').animate({
+			'border-bottom-color':b,
+			background:b=='black'?'#4b9c4b':'#4ea24e'
+		}, 200)
 })
 
 })
