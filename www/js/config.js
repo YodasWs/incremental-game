@@ -159,7 +159,8 @@ game = Z.extend(game, {
 	},
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
-		if (i.hidden || !i.name) return ''
+		if (!i.name) return ''
+		if (i.hidden && (!i.finishTime || i.finishTime < Date.now())) return ''
 		if (game.story && game.story.episode && item.episode && item.episode > game.story.episode) return ''
 		if ((!i.baseCost || !i.baseCost['rabbits']) && (!i.price || !i.price_currency_code)) return ''
 		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0),
@@ -441,7 +442,7 @@ game.findItem = function() {
 
 // Buy Item from Shop
 game.buyItem = function(e) {
-	var el = Z(e.target),
+	var el = Z(e.target).attr('disabled','disabled'),
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
 		item, data, k

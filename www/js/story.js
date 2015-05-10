@@ -29,6 +29,16 @@ window.onReady(function() {
 		})
 	})
 
+	// Prevent too many upgrades between story
+	Z(document).on('itemconsumed', function(e) {
+		switch (e.itemId) {
+		case 'fencing':
+			if (game.items.fencing.level > Math.log10(game.animals.rabbits))
+				game.items.fencing.hidden = true
+			break;
+		}
+	})
+
 	game.showStory = function(cb) {
 		game.hideModalBG(0,function(){game.showModalBG(200)})
 		Z('#story').show().css({
