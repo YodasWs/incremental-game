@@ -75,7 +75,8 @@ main > header > small::after { content: ' rps'; }
 /** Main Menu **/
 a[href="#menu"] {
 	display: block; text-indent: -10000px; overflow: hidden;
-	background: center center no-repeat url('../www/img/menu.png');
+	background: center center no-repeat url('../www/img/menu.png'),
+	center center no-repeat url('../img/menu.png');
 	background-origin: content-box; background-size: contain;
 	width: 30px; height: 30px;
 }
@@ -206,11 +207,13 @@ main > #lnkShop > a[href="#shop"] {
 }
 main > #lnkShop > a[href="#shop"]::before {
 	width: 122px; height: 90px;
-	background: -149px -5px url('../www/img/stores.png') no-repeat;
+	background: -149px -5px url('../www/img/stores.png') no-repeat,
+	-149px -5px url('../img/stores.png') no-repeat;
 }
 main > #lnkShop > a[href="#carpenter"]::before {
 	width: 94px; height: 90px;
-	content: url('../www/img/hammer.png');
+	background: url('../www/img/hammer.png'),
+	url('../img/hammer.png');
 }
 a[href="#shop"], a[href="#carpenter"], a[href="#menu"],
 nav > a, img#rabbit, .shop > a, .shop > ul > li {

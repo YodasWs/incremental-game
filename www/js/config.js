@@ -133,11 +133,11 @@ game = Z.extend(game, {
 		)
 		// Animate Fast Number Increase
 		if (game.autoRate[animal] > 14) {
-			str[animal] = str[animal].slice(0, -1) + '<img src="www/img/nums.gif"/>'
+			str[animal] = str[animal].slice(0, -1) + '<img src="' + window.dir + 'img/nums.gif"/>'
 			// Replace Successive Digits with Animation
 			while ((m = game.autoRate[animal] / Math.pow(10, i++)) && m > 1.5) {
 				str[animal] = str[animal].slice(0, str[animal].indexOf('<') - 1).trim(',. ')
-					+ '<img src="www/img/nums.gif"/>'
+					+ '<img src="' + window.dir + 'img/nums.gif"/>'
 					+ str[animal].substring(str[animal].indexOf('<'))
 			}
 			// Add Commas
@@ -169,7 +169,7 @@ game = Z.extend(game, {
 		if (!el) return ''
 		el.children().remove()
 		if (i.img) {
-			el.append('<img src="www/img/' + i.img + '" alt="&#x2327;" />')
+			el.append('<img src="' + window.dir + 'img/' + i.img + '" alt="&#x2327;" />')
 		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')

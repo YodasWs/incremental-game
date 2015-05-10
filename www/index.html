@@ -7,10 +7,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
 <link rel="stylesheet" href="css/base.css"/>
-<script src="phonegap.js"></script>
+<script src="cordova.js"></script>
+<script src="cordova_plugins.js"></script>
+<script src="res/zepto.min.js" async></script>
 <script>
-if (!window.cordova) // Load shim for browser testing
-	document.write('<script src="res/phonegap-shim.js"><\/script>');
+window.dir = 'www/' // asset directory
 // For anything requiring a loaded dependency
 window.onReady = function(cb){
 var c=0,b=function(){if(!c){if(document.readyState=='complete'){cb();c=true}}}
@@ -18,10 +19,19 @@ if(document.readyState=='complete')b()
 else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
 else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 };
+// Wait for document ready
+window.onReady(function() {
+	window.Z = Zepto
+	if (navigator.maxTouchPoints) Z('body').addClass('touch')
+})
+// Load shim for browser testing
+if (!window.cordova) {
+	document.write('<script src="res/phonegap-shim.js"><\/script>');
+	document.write('<script src="js/web.js"><\/script>');
+}
 // Game Object
 window.game={}
 </script>
-<script src="res/zepto.min.js" async></script>
 <script src="res/polyfill.js" async></script>
 <script src="js/config.js" async></script>
 <script src="js/items.js" async></script>
@@ -32,11 +42,6 @@ try{
 	if (platform.indexOf('Mac') > -1) platform = 'MacIntel'
 	if (platform.indexOf('Win') > -1) platform = 'Win32'
 }catch(e){window.platform='unknown'}
-// Wait for document ready
-window.onReady(function() {
-	window.Z = Zepto
-	if (navigator.maxTouchPoints) Z('body').addClass('touch')
-})
 // Load Android Polyfills and Plugins
 window.onReady(function(){
 	if(platform.indexOf('Android')==-1)return
@@ -108,7 +113,7 @@ window.onload = function() {
 	<small rel="copyright">&copy;2015 Sam Grundman</small>
 	<div id="license">
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-			<img alt="Creative Commons License" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+			<img alt="Creative Commons License" src="www/img/cc-by-nc-sa.png" />
 		</a><br />
 		The JavaScript code is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
 			target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br/>

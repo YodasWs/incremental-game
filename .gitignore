@@ -1,6 +1,7 @@
 # .gitignore
 *.bak
 *.swp
+*.swo
 *~
 Thumbs.db
 *.Spp
