@@ -524,7 +524,7 @@ game.restart = function(e) {
 }
 
 var evtClick = 'tap click'
-if (platform.indexOf('Android') != -1) evtClick = 'tap longtap'
+if (platform.indexOf('Android') != -1) evtClick = 'singleTap'
 
 // User Interaction Events
 Z(document).on(evtClick, '.shop > ul > li:not([disabled])', game.buyItem)
