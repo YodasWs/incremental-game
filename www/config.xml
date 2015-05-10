@@ -30,8 +30,10 @@
 	<icon src="icons/ic_launcher_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
 	<icon src="icons/ic_launcher_xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
 	<gap:config-file platform="android" parent="/manifest" mode="merge">
-		<uses-permission android:name="com.android.vending.BILLING" />
-		<!--<uses-permission android:name="com.android.vending.CHECK_LICENSE" />-->
+		<uses-permission android:name="com.android.vending.CHECK_LICENSE" />
+		<uses-permission android:name="com.android.vending.BILLING">
+			<param name="BILLING_KEY" value="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlfQeEBfNKfa/e3mzq/xDvBhSqMvt5PjO9VfTL2EdainlD28DtLtFyD/cht7MgpAa22DoDkj3Zi8yY4FMGpgaW8p3syEoWUl2fy38Qw3scpWg+GGnftZtsnktU8kRVBAKgP1HxrMZ0P3Z8OpV+Pe47EH0NBnaAjKxGm1yTm8FkHXrLeNKuT6yBV9Me+w6ql3Z+kHKiXUJyJ212jBfL4EwXVLPWzR+aP6LKKbrULmK1PD5tOVhxcOQHt9T+d48FBQlBb5pwE4bwngvh+QDik50u4bsy8eCLDmGhI9i/Ovoz1NewhyqS1BkmnI47m/RNwLPeGkH+/2Y1QSZZlFWdcI/JQIDAQAB"/>
+		</uses-permission>
 	</gap:config-file>
 	<!-- For future Android support
 	<gap:config-file platform="android" parent="/manifest" mode="merge">
