@@ -206,7 +206,6 @@ game = Z.extend(game, {
 			var t = null
 			if (!Z(this).children('.name').length) li.push(i)
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) li.push(i)
-			if (Z(this).children('.bonus').length && Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
 			if (Z(this).children('.wait').length) {
 				t = Math.floor((Number.parseInt(Z(this).data('finishTime')) - Date.now()) / 1000)
 				Z(this).children('.wait').html(game.format.time(t))
