@@ -32,11 +32,6 @@ window.onReady(function() {
 		if (!inappbilling) return true
 		inappbilling.init(function() {
 			// In-app Billing Initiated!
-			inappbilling.getPurchases(function(r) {
-				// TODO: Received list of prior purchases, now what?
-			}, function(e) {
-				error_log('Could not load purchase history: ' + e)
-			})
 			// Load Available Products
 			inappbilling.getAvailableProducts(function(r) {
 				if (typeof r == 'string') r = JSON.parse(r)

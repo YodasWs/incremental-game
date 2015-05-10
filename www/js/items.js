@@ -30,44 +30,43 @@ game.items = {
 	3:{
 		img:'rabbits/breeder.png',
 		name:'Rabbit Care Books',
-		baseCost:{ rabbits:200 },
+		baseCost:{ rabbits:500 },
 		loc:'shop',
 		bonus:{ rabbits:5 }
 	},
 	4:{
 		img:'rabbits/toy.png',
 		name:'Rabbit Toys',
-		baseCost:{ rabbits:500 },
+		baseCost:{ rabbits:3000 },
 		loc:'shop',
 		bonus:{ rabbits:10 }
 	},
 	5:{
 		img:'perfume.png',
 		name:'Rabbit Perfume',
-		baseCost:{ rabbits:5000 },
+		baseCost:{ rabbits:10000 },
 		loc:'shop',
 		bonus:{ rabbits:100 }
 	},
 	6:{
 		img:'needle.png',
 		name:'Rabbit Hormones',
-		baseCost:{ rabbits:15000 },
+		baseCost:{ rabbits:25000 },
 		loc:'shop',
 		bonus:{ rabbits:200 }
+	},
+	nesting_box:{
+		name:'Nesting Box',
+		loc:'shop',
+		bonus:{ rabbits:500 },
+		buildTime:120
 	},
 	7:{
 		img:'pill.png',
 		name:'Rabbit Viagra',
 		baseCost:{ rabbits:300000 },
-		loc:'shop',order:2,
-		bonus:{ rabbits:1000 }
-	},
-	nesting_box:{
-		order: 1,
-		name:'Nesting Box',
 		loc:'shop',
-		bonus:{ rabbits:500 },
-		buildTime:120
+		bonus:{ rabbits:1000 }
 	}
 }
 window.onReady(function() {
