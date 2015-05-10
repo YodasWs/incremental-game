@@ -40,6 +40,8 @@ game = Z.extend(game, {
 				game.animals['rabbits'] = game.rabbits
 				delete game.rabbits
 			}
+			if (!game.animals.rabbits) game.animals.rabbits = 0
+			game.save()
 			$(document).trigger('gameLoaded')
 		}
 		game.showShops()
