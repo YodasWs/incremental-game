@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150505',
+	v:'1.1.0-beta+20150509',
 	animals:{
 		rabbits:0
 	},
@@ -276,12 +276,13 @@ game.openShop = function(e) {
 	var t = 600, href = Z(e.target).attr('href').trim('#')
 	game.showModalBG(t)
 	game.updateShop(href)
+	Z('#' + href + '').find('li').attr('disabled','disabled')
 	// Slide Shop into View
 	Z('#' + href + '').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
-	}, t, 'ease-out')
+	}, t, 'ease-out', game.enableShopItems)
 }
 // Update Shop Items
 game.updateShop = function(href) {
@@ -411,6 +412,32 @@ game.closeStory = function(e) {
 	})
 }
 
+game.updateState = function(animal, item) {
+	game.save()
+	if (item) {
+		game.updateShopItem(item)
+		game.enableShopItems()
+	}
+	if (animal) game.showNums(animal)
+}
+
+// Quickly find an item given its name or id
+game.findItem = function() {
+	var item, id, name
+	if (!arguments[0]) return false
+	else if (Number.isInteger(arguments[0])) id = arguments[0]
+	else if (typeof arguments[0] == 'string') name = arguments[0]
+	else if (typeof arguments[0] == 'object') {
+		name = arguments[0].itemName
+		id = arguments[0].itemId
+	} else return false
+	if (!name && !id) return false
+	Z.each(game.items, function(j,i) {
+		if (i.name == name || j == id) item = i
+	})
+	return item ? item : false
+}
+
 // Buy Item from Shop
 game.buyItem = function(e) {
 	var el = Z(e.target),
@@ -437,18 +464,12 @@ game.buyItem = function(e) {
 		Z(document).trigger(Z.Event('buyitem', Z.extend(data, {price:item.price})))
 	else
 		Z(document).trigger(Z.Event('itemconsumed', data))
-	game.save()
-	game.updateShopItem(item)
-	game.enableShopItems()
-	game.showNums('rabbits')
+	game.updateState('rabbits', item)
 }
 
 // Consume Bought Item
 Z(document).on('itemconsumed', function(e) {
-	var item
-	Z.each(game.items, function(j,i) {
-		if (i.name == e.itemName) item = i
-	})
+	var item = game.findItem(e)
 	if (!item) return false
 	// Buy Item and Update Game State
 	if (e.cost) game.animals['rabbits'] -= e.cost
@@ -456,27 +477,23 @@ Z(document).on('itemconsumed', function(e) {
 		Z(document).trigger(Z.Event('itembuilt', { itemName:item.name }))
 	else
 		item.finishTime = Date.now() + e.buildTime * 1000
-	game.save()
-	game.updateShopItem(item)
-	game.enableShopItems()
-	game.showNums('rabbits')
 })
 
 // Finish Building Item
 Z(document).on('itembuilt', function(e) {
-	if (!e.itemName && !e.itemId) return false
-	var item
-	Z.each(game.items, function(j,i) {
-		if (i.name == e.itemName || j == e.itemId) item = i
-	})
+	var item = game.findItem(e)
 	if (!item) return false
 	if (item.finishTime && item.finishTime >= Date.now()) return false
 	delete item.finishTime
 	item.level++
-	game.save()
-	game.updateShopItem(item)
-	game.enableShopItems()
-	game.showNums('rabbits')
+	game.updateState('rabbits', item)
+})
+
+// Refund Item
+Z(document).on('refunditem', function(e) {
+	var item = game.findItem(e)
+	if (!item) return false
+	game.updateState('rabbits', item)
 })
 
 // Restart Game
@@ -506,7 +523,7 @@ game.restart = function(e) {
 }
 
 var evtClick = 'tap click'
-if (platform.indexOf('Android') != -1) evtClick = 'tap'
+if (platform.indexOf('Android') != -1) evtClick = 'tap longtap'
 
 // User Interaction Events
 Z(document).on(evtClick, '.shop > ul > li:not([disabled])', game.buyItem)

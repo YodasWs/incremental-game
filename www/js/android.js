@@ -13,11 +13,11 @@ window.onReady(function() {
 	var h = Z(window).height(), w = Z(window).width()
 	// Placement of Shop Modal
 	Z(document).on('update','.shop',function(){
-		Z(this).css({position:'absolute',height:h*.7+'px',top:h*.2+'px'})
+		Z(this).css({position:'absolute',height:'auto','min-height':h*.7+'px',top:h*.2+'px'})
 	})
 	// Placement of Story Modal
 	Z(document).on('update','#story',function(){
-		Z(this).css({position:'absolute',height:h*.5+'px',top:h*.3+'px',width:w*.8+'px',left:w*.1+'px'})
+		Z(this).css({position:'absolute',height:'auto','min-height':h*.5+'px',top:h*.3+'px',width:w*.8+'px',left:w*.1+'px'})
 	})
 	// Menu Height
 	Z('body>nav').css({height:h})
@@ -60,6 +60,7 @@ window.onReady(function() {
 			Z(document).trigger(Z.Event('consumeitem', e))
 		}, function(e) {
 			error_log('Failed to make purchase: ' + e)
+			Z(document).trigger(Z.Event('refunditem', e))
 		}, e.itemId)
 	})
 	// Consume In-app Product
@@ -68,6 +69,7 @@ window.onReady(function() {
 			Z(document).trigger(Z.Event('itemconsumed', e))
 		}, function(e) {
 			error_log('Failed to consume product: ' + e)
+			Z(document).trigger(Z.Event('refunditem', e))
 		}, e.itemId)
 	})
 })
