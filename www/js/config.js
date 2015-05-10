@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150509',
+	v:'1.1.0-beta+20150510',
 	animals:{
 		rabbits:0
 	},
@@ -360,7 +360,7 @@ game.hideModalBG = function(t,cb) {
 game.hideModals = function(e) {
 	if (Z('#about').css('display') == 'block')
 		game.closeAbout(e)
-	if (Z('#story').css('display') == 'block')
+	if (Z('#story').css('display') == 'block' && Z('#story a[href="#main"]').length)
 		game.closeStory(e)
 	game.closeShops(e)
 }
