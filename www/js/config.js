@@ -647,6 +647,10 @@ Z(document).on('scroll', function(){
 		}, 200)
 })
 
+// Keep Phone Awake
+if (window.plugins && window.plugins.insomnia)
+	window.plugins.insomnia.keepAwake()
+
 })
 window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
