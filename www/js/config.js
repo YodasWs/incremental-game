@@ -165,9 +165,9 @@ game = Z.extend(game, {
 		if ((!i.baseCost || !i.baseCost['rabbits']) && (!i.price || !i.price_currency_code)) return ''
 		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0),
 			cost, price, time = 0
-		if (!el) Z('.shop li').each(function() {
+		if (!el) Z('section.shop li').each(function() {
 			var z = Z(this)
-			if (z.find('.name').text() == i.name && z.parents('.shop').attr('id') == i.loc) el = z
+			if (z.find('.name').text() == i.name && z.parents('section.shop').attr('id') == i.loc) el = z
 		})
 		if (!el) return ''
 		el.children().remove()
@@ -203,18 +203,18 @@ game = Z.extend(game, {
 	},
 	enableShopItems: function() {
 		var li = []
-		Z('.shop > ul > li').each(function(i) {
+		Z('section.shop > ul > li').each(function(i) {
 			var t = null
 			if (!Z(this).children('.name').length) li.push(i)
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) li.push(i)
 			if (Z(this).children('.wait').length) {
 				t = Math.floor((Number.parseInt(Z(this).data('finishTime')) - Date.now()) / 1000)
 				Z(this).children('.wait').html(game.format.time(t))
-				if (t < 0) game.updateShop(Z(this).parents('.shop').attr('id').trim('#'))
+				if (t < 0) game.updateShop(Z(this).parents('section.shop').attr('id').trim('#'))
 				li.push(i)
 			}
 		})
-		Z('.shop > ul > li').each(function(i) {
+		Z('section.shop > ul > li').each(function(i) {
 			if (li.indexOf(i) == -1) Z(this).removeAttr('disabled')
 			else Z(this).attr('disabled', 'disabled')
 		})
@@ -265,13 +265,13 @@ game.openMenu = function(e) {
 
 // Display Shop Buttons
 game.showShops = function() {
-	Z('#lnkShop').children('a').hide()
-	if (game.locs) Z('#lnkShop').children('a').each(function(i, l) {
+	Z('#lnkShop > a, body > nav > a.shop').hide()
+	if (game.locs) Z('#lnkShop > a, body > nav > a.shop').each(function(i, l) {
 		var href = Z(this).attr('href').trim('#')
 		if (Z.inArray(href, game.locs) > -1)
 			Z(this).show()
 	})
-	Z('#lnkShop > a[href="#shop"]').show()
+	Z('#lnkShop > a[href="#shop"], body > nav > a[href="#shop"]').show()
 }
 
 // Open Shop
@@ -530,7 +530,7 @@ var evtClick = 'tap click'
 if (platform.indexOf('Android') != -1) evtClick = 'singleTap'
 
 // User Interaction Events
-Z(document).on(evtClick, '.shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on(evtClick, 'section.shop > ul > li:not([disabled])', game.buyItem)
 Z(document).on(evtClick, 'section.shop a[href="#main"]', game.closeShops)
 Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)

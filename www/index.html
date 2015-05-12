@@ -36,6 +36,7 @@ window.game={}
 <script src="js/config.js" async></script>
 <script src="js/items.js" async></script>
 <script src="js/story.js" async></script>
+<script src="js/locs.js" async></script>
 <script>
 try{
 	window.platform=navigator.userAgent.match(/\w*(Android|Win|iPod|iPhone|iPad|Mac)\w*/)[0].trim()
@@ -77,8 +78,6 @@ window.onload = function() {
 <nav id="menu">
 	<a href="#main">&#xd7;</a>
 	<a href="#about">About</a>
-	<a href="#shop" class="shop">Country Store</a>
-	<a href="#carpenter" class="shop">Carpenter's Shop</a>
 	<a href="#destroy">Start Over</a>
 </nav>
 <main id="main">
@@ -91,10 +90,7 @@ window.onload = function() {
 		<small>0</small>
 	</header>
 	<img id="rabbit" src="www/img/rabbit-1.png" alt="&#x1f407;" />
-	<div id="lnkShop">
-		<a href="#shop">Country Store</a>
-		<a href="#carpenter">Carpenter's Shop</a>
-	</div>
+	<div id="lnkShop"></div>
 </main>
 <section id="shop" class="shop">
 	<h1>Country Store</h1>
