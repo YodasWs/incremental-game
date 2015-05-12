@@ -33,7 +33,7 @@ window.onReady(function() {
 	Z(document).on('itemconsumed', function(e) {
 		switch (e.itemId) {
 		case 'fencing':
-			if (game.items.fencing.level > Math.log10(game.animals.rabbits))
+			if (game.items.fencing.level > Math.log10(game.animals.rabbits) + 1)
 				game.items.fencing.hidden = true
 			break;
 		}

@@ -247,6 +247,7 @@ game.closeMenu = function(e,t) {
 game.openMenu = function(e) {
 	if (Z('body > nav').css('display') != 'block') {
 		var t=400
+		game.hideModals()
 		Z('body > nav').show().css({
 			left: '-' + Z('body > nav').width() + 'px'
 		}).animate({
@@ -275,6 +276,7 @@ game.showShops = function() {
 
 // Open Shop
 game.openShop = function(e) {
+	game.closeMenu()
 	var t = 600, href = Z(e.target).attr('href').trim('#')
 	game.showModalBG(t)
 	game.updateShop(href)
@@ -534,6 +536,7 @@ Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
 Z(document).on(evtClick, '#story a[href="#main"]', game.closeStory)
 Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
+Z(document).on(evtClick, 'body > nav a.shop', game.openShop)
 Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
 Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
 Z(document).on(evtClick, '#lnkShop > a', game.openShop)
