@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150513',
+	v:'1.1.0-beta+20150514',
 	animals:{
 		rabbits:0
 	},
@@ -109,8 +109,11 @@ game = Z.extend(game, {
 		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
 		if (Math.floor(Date.now() / 1000) % 5 == 0) game.save()
-		if (Math.floor(Date.now() / 1000) % 60 == Math.floor(Math.random() * 10)) Z(document).trigger('chkStory')
-		if ((!game.locs || game.locs.length == 0) && game.animals['rabbits'] > 99) Z(document).trigger('chkStory')
+		if (
+			(Math.floor(Date.now() / 1000) % 60 == Math.floor(Math.random() * 10)) ||
+			((!game.locs || game.locs.length == 0) && game.animals['rabbits'] > 49) ||
+			(Z.inArray('carpenter', game.locs) == -1 && game.animals['rabbits'] > 99)
+		) Z(document).trigger('chkStory')
 		game.enableShopItems()
 	},
 	showNums: function(animal) {
