@@ -269,7 +269,8 @@ game.openMenu = function(e) {
 // Display Shop Buttons
 game.showShops = function() {
 	Z('#lnkShop > a, body > nav > a.shop').hide()
-	if (game.locs) Z('#lnkShop > a, body > nav > a.shop').each(function(i, l) {
+	if (!game.locs) game.locs = []
+	Z('#lnkShop > a, body > nav > a.shop').each(function(i, l) {
 		var href = Z(this).attr('href').trim('#')
 		if (Z.inArray(href, game.locs) > -1)
 			Z(this).show()
