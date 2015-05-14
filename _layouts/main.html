@@ -2,16 +2,10 @@
 <html lang="en-us">
 <head>
 <meta charset="utf-8"/>
-<title>Rabbit Farm</title>
+<title>{{ site.title }}</title>
 <link rel="icon" type="image/png" href="img/rabbit-1.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans"/>
-<script>
-// If App, Start Game
-// http://stackoverflow.com/questions/10347539/detect-between-a-mobile-browser-or-a-phonegap-application
-if(document.URL.indexOf('http://')==-1&&document.URL.indexOf('https://')==-1)
-	this.location='www/index.html'
-</script>
 <style>
 /** CSS Reset **/
 :root { font-size: 1em; line-height: 1.3em; font-family: 'Open Sans', 'Trebuchet MS', sans-serif; }
@@ -44,12 +38,8 @@ footer::after { display: block; content: ''; float: none; clear: both; }
 </head>
 <body>
 <main>
-	<h1>Rabbit Farm</h1>
-	<div id="description">Experience the fun and excitement of running and managing your own rabbit farm!</div>
-	<div id="link"><a href="www/index.html" title="Play Now!"><img src="www/img/rabbit-150.png"
-		alt="Play Now!" /><br/>Play Now!</a></div>
-	<div>This game is currently working in <u>Chrome</u> and <u>Android</u>. My focus is currently on building the
-		game as an Android App with a release date of TBD. Sorry for the inconvenience.</div>
+<h1>{{ site.title }}</h1>
+{{ content }}
 </main>
 <footer>
 	<small rel="copyright">&copy;2015 Sam Grundman</small>
@@ -57,7 +47,7 @@ footer::after { display: block; content: ''; float: none; clear: both; }
 		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
 			<img alt="Creative Commons License" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
 		</a><br />
-		Please check full license information <a rel="license" href="LICENSE.md" target="_blank">here</a>.
+		Please check full license information <a rel="license" href="LICENSE.html">here</a>.
 	</small>
 </footer>
 </body>

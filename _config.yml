@@ -1,0 +1,12 @@
+---
+include: ['www/','www/css/','www/img/','www/js/']
+exclude: ['README.md','Thumbs.db','Start Command Prompt with Ruby.lnk','icons','screenshots','splashscreens','debug','license.keystore','config.xml','zepto-license.txt','RabbitFarm.apk']
+encoding: 'UTF-8'
+future: false
+excerpt_separator: "\n"
+title: 'Rabbit Farm'
+description: 'Experience the fun and excitement of running and managing your own rabbit farm!'
+copyright: '&copy;2015 Samuel B Grundman'
+email: 'rabbit-farm@yodas.ws'
+timezone: 'America/Detroit'
+---

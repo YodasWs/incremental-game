@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150428',
+	v:'1.1.0-beta+20150514',
 	animals:{
 		rabbits:0
 	},
@@ -40,6 +40,8 @@ game = Z.extend(game, {
 				game.animals['rabbits'] = game.rabbits
 				delete game.rabbits
 			}
+			if (!game.animals.rabbits) game.animals.rabbits = 0
+			game.save()
 			$(document).trigger('gameLoaded')
 		}
 		game.showShops()
@@ -63,6 +65,7 @@ game = Z.extend(game, {
 		})
 		;[
 			'autoRate',
+			'itemSort',
 			'clkRate',
 			'format',
 			'toAuto'
@@ -98,8 +101,7 @@ game = Z.extend(game, {
 		// Build Pending Items
 		Z.each(game.items, function(j,i) {
 			if (i.finishTime && i.finishTime < Date.now()) {
-				delete i.finishTime
-				i.level++
+				Z(document).trigger(Z.Event('itembuilt', { itemName:i.name }))
 			}
 		})
 		// Update Game State
@@ -107,8 +109,11 @@ game = Z.extend(game, {
 		clearTimeout(game.toAuto)
 		game.toAuto = setTimeout(game.autoClick, 1000)
 		if (Math.floor(Date.now() / 1000) % 5 == 0) game.save()
-		if (Math.floor(Date.now() / 1000) % 60 == Math.floor(Math.random() * 10)) Z(document).trigger('chkStory')
-		if ((!game.locs || game.locs.length == 0) && game.animals['rabbits'] > 99) Z(document).trigger('chkStory')
+		if (
+			(Math.floor(Date.now() / 1000) % 60 == Math.floor(Math.random() * 10)) ||
+			((!game.locs || game.locs.length == 0) && game.animals['rabbits'] > 49) ||
+			(Z.inArray('carpenter', game.locs) == -1 && game.animals['rabbits'] > 99)
+		) Z(document).trigger('chkStory')
 		game.enableShopItems()
 	},
 	showNums: function(animal) {
@@ -133,11 +138,11 @@ game = Z.extend(game, {
 		)
 		// Animate Fast Number Increase
 		if (game.autoRate[animal] > 14) {
-			str[animal] = str[animal].slice(0, -1) + '<img src="img/nums.gif"/>'
+			str[animal] = str[animal].slice(0, -1) + '<img src="' + window.dir + 'img/nums.gif"/>'
 			// Replace Successive Digits with Animation
 			while ((m = game.autoRate[animal] / Math.pow(10, i++)) && m > 1.5) {
 				str[animal] = str[animal].slice(0, str[animal].indexOf('<') - 1).trim(',. ')
-					+ '<img src="img/nums.gif"/>'
+					+ '<img src="' + window.dir + 'img/nums.gif"/>'
 					+ str[animal].substring(str[animal].indexOf('<'))
 			}
 			// Add Commas
@@ -152,27 +157,40 @@ game = Z.extend(game, {
 				].join(',')
 			}
 		}
-		Z('main > output').html(str[animal])
-		Z('main > small').text(str['rps'])
+		Z('main > header > output').html(str[animal])
+		Z('main > header > small').text(str['rps'])
 	},
 	updateShopItem: function(i, el) {
 		if (!i.level) i.level = 0
-		if (i.hidden) return ''
-		if (!i.baseCost || !i.baseCost['rabbits']) return ''
-		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0)
-			cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level)), time = 0
+		if (!i.name) return ''
+		if (i.hidden && (!i.finishTime || i.finishTime < Date.now())) return ''
+		if (game.story && game.story.episode && item.episode && item.episode > game.story.episode) return ''
+		if ((!i.baseCost || !i.baseCost['rabbits']) && (!i.price || !i.price_currency_code)) return ''
+		var mul = 1.4 + ((i.multiplier && i.multiplier['rabbits']) ? i.multiplier['rabbits'] : 0),
+			cost, price, time = 0
+		if (!el) Z('section.shop li').each(function() {
+			var z = Z(this)
+			if (z.find('.name').text() == i.name && z.parents('section.shop').attr('id') == i.loc) el = z
+		})
+		if (!el) return ''
 		el.children().remove()
-		el.attr('data-cost', cost)
 		if (i.img) {
-			el.append('<img src="img/' + i.img + '" alt="&#x2327;" />')
+			el.append('<img src="' + window.dir + 'img/' + i.img + '" alt="&#x2327;" />')
 		}
 		el.append('<span class="name">' + i.name + '</span>')
 		el.append('<span class="level">' + i.level + '</span>')
 		// Check if currently building item
 		if (!i.finishTime || i.finishTime < Date.now()) {
-			el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+			if (i.baseCost && i.baseCost['rabbits']) {
+				cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level))
+				if (cost > game.animals['rabbits']) Z(el).attr('disabled', 'disabled')
+				el.attr('data-cost', cost)
+				el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+			}
 			if (i.bonus)
 				el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
+			if (i.price && i.price_currency_code)
+				el.append('<span class="cost price">' + game.format.money(i.price, i.price_currency_code) + '</span>')
 			if (i.buildTime) {
 				mul = (i.multiplier && i.multiplier['buildTime']) ? i.multiplier['buildTime'] : 1.5
 				time = Math.ceil(i.buildTime * Math.pow(mul, i.level))
@@ -182,20 +200,26 @@ game = Z.extend(game, {
 		} else {
 			// Pending Item Completion
 			el.data('finishTime', i.finishTime).append('<span class="wait"></span>')
+			Z(el).attr('disabled', 'disabled')
 		}
 		return el
 	},
 	enableShopItems: function() {
-		Z('.shop > ul > li').attr('disabled', null).each(function(i) {
+		var li = []
+		Z('section.shop > ul > li').each(function(i) {
 			var t = null
-			if (!Z(this).children('.name').length) Z(this).attr('disabled', 'disabled')
-			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) Z(this).attr('disabled', 'disabled')
-			if (Z(this).children('.bonus').length && Number.parseInt(Z(this).attr('data-cost')) < game.autoRate['rabbits']) Z(this).remove()
+			if (!Z(this).children('.name').length) li.push(i)
+			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) li.push(i)
 			if (Z(this).children('.wait').length) {
 				t = Math.floor((Number.parseInt(Z(this).data('finishTime')) - Date.now()) / 1000)
-				Z(this).attr('disabled', 'disabled').children('.wait').html(game.format.time(t))
-				if (t < 0) game.updateShop(Z(this).parents('.shop').attr('id').trim('#'))
+				Z(this).children('.wait').html(game.format.time(t))
+				if (t < 0) game.updateShop(Z(this).parents('section.shop').attr('id').trim('#'))
+				li.push(i)
 			}
+		})
+		Z('section.shop > ul > li').each(function(i) {
+			if (li.indexOf(i) == -1) Z(this).removeAttr('disabled')
+			else Z(this).attr('disabled', 'disabled')
 		})
 	}
 })
@@ -216,7 +240,7 @@ game.closeMenu = function(e,t) {
 		Z('body > nav').hide()
 	})
 	var l = Z('#main').css('left')
-	Z('#main').css({
+	Z('#main, main > header').css({
 		left:(l && l != 'auto' ? l : '0px')
 	}).animate({
 		left:0
@@ -226,13 +250,14 @@ game.closeMenu = function(e,t) {
 game.openMenu = function(e) {
 	if (Z('body > nav').css('display') != 'block') {
 		var t=400
+		game.hideModals()
 		Z('body > nav').show().css({
 			left: '-' + Z('body > nav').width() + 'px'
 		}).animate({
 			left:'0px'
 		}, t)
 		var l = Z('#main').css('left')
-		Z('#main').css({
+		Z('#main, main > header').css({
 			left:(l && l != 'auto' ? l : '0px')
 		}).animate({
 			left:Z('body > nav').width() + 'px'
@@ -243,35 +268,40 @@ game.openMenu = function(e) {
 
 // Display Shop Buttons
 game.showShops = function() {
-	Z('#lnkShop').children('a').hide()
-	if (game.locs) Z('#lnkShop').children('a').each(function(i, l) {
+	Z('#lnkShop > a, body > nav > a.shop').hide()
+	if (!game.locs) game.locs = []
+	Z('#lnkShop > a, body > nav > a.shop').each(function(i, l) {
 		var href = Z(this).attr('href').trim('#')
-		if (Z.inArray(href, game.locs) > -1) 
+		if (Z.inArray(href, game.locs) > -1)
 			Z(this).show()
 	})
-	Z('#lnkShop > a[href="#shop"]').show()
+	Z('#lnkShop > a[href="#shop"], body > nav > a[href="#shop"]').show()
 }
 
 // Open Shop
 game.openShop = function(e) {
+	game.closeMenu()
 	var t = 600, href = Z(e.target).attr('href').trim('#')
 	game.showModalBG(t)
 	game.updateShop(href)
+	Z('#' + href + '').find('li').attr('disabled','disabled')
 	// Slide Shop into View
 	Z('#' + href + '').show().css({
 		left:'100vw'
 	}).animate({
 		left:0
-	}, t, 'ease-out')
+	}, t, 'ease-out', game.enableShopItems)
 }
 // Update Shop Items
 game.updateShop = function(href) {
+	var el, i=0, k=0
 	Z('#' + href + ' > ul').children().remove()
-	Z.each(game.items, function(j,i) {
-		if (i.loc != href) return
-		var el = game.updateShopItem(i, Z('<li></li>'))
+	for (i=0; i<game.itemSort.length; i++) {
+		k = game.itemSort[i]
+		if (game.items[k].loc != href) continue
+		el = game.updateShopItem(game.items[k], Z('<li></li>'))
 		Z('#' + href + ' > ul').append(el)
-	})
+	}
 	if (Z('#' + href + ' > ul').children('li').length) game.enableShopItems()
 	else Z('#' + href + ' > ul').append('<li disabled>No items available at this time')
 	Z('#' + href).trigger('update')
@@ -337,7 +367,7 @@ game.hideModalBG = function(t,cb) {
 game.hideModals = function(e) {
 	if (Z('#about').css('display') == 'block')
 		game.closeAbout(e)
-	if (Z('#story').css('display') == 'block')
+	if (Z('#story').css('display') == 'block' && Z('#story a[href="#main"]').length)
 		game.closeStory(e)
 	game.closeShops(e)
 }
@@ -390,40 +420,102 @@ game.closeStory = function(e) {
 	})
 }
 
-// Buy Item from Country Store
+game.updateState = function(animal, item) {
+	game.save()
+	if (item) {
+		game.updateShopItem(item)
+		game.enableShopItems()
+	}
+	if (animal) game.showNums(animal)
+}
+
+// Quickly find an item given its name or id
+game.findItem = function() {
+	var item, id, name
+	if (!arguments[0]) return false
+	else if (Number.isInteger(arguments[0])) id = arguments[0]
+	else if (typeof arguments[0] == 'string') name = arguments[0]
+	else if (typeof arguments[0] == 'object') {
+		name = arguments[0].itemName
+		id = arguments[0].itemId
+	} else return false
+	if (!name && !id) return false
+	Z.each(game.items, function(j,i) {
+		if (i.name == name || j == id) item = i
+	})
+	return item ? item : false
+}
+
+// Buy Item from Shop
 game.buyItem = function(e) {
-	var el = Z(e.target),
+	var el = Z(e.target).attr('disabled','disabled'),
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
-		item
-	if (game.animals['rabbits'] < cost) return
+		item, data, k
+	// Validate Purchase
+	if (cost && game.animals['rabbits'] < cost) return
 	Z.each(game.items, function(j,i) {
-		if (i.name == name) item = i
+		if (i.name == name) {
+			item = i
+			k = j
+		}
 	})
 	if (!item) return
 	if (!item.level) item.level = 0
-	game.animals['rabbits'] -= cost
-	if (!item.buildTime) {
-		item.level++
-	} else {
-		item.finishTime = Date.now() + el.attr('data-buildTime') * 1000
-	}
-	game.save()
-	game.updateShopItem(item, el)
-	game.enableShopItems()
-	game.showNums('rabbits')
+	// Consolidate Item Data for Purchase/Consume
+	data = { itemName:item.name, itemId:k }
+	if (cost) data.cost = cost
+	if (el.attr('data-buildTime'))
+		data.buildTime = el.attr('data-buildTime')
+	// Finalize Purchase
+	if (item.price)
+		Z(document).trigger(Z.Event('buyitem', Z.extend(data, {price:item.price})))
+	else
+		Z(document).trigger(Z.Event('itemconsumed', data))
+	game.updateState('rabbits', item)
 }
+
+// Consume Bought Item
+Z(document).on('itemconsumed', function(e) {
+	var item = game.findItem(e)
+	if (!item) return false
+	// Buy Item and Update Game State
+	if (e.cost) game.animals['rabbits'] -= e.cost
+	if (!e.buildTime)
+		Z(document).trigger(Z.Event('itembuilt', { itemName:item.name }))
+	else
+		item.finishTime = Date.now() + e.buildTime * 1000
+})
+
+// Finish Building Item
+Z(document).on('itembuilt', function(e) {
+	var item = game.findItem(e)
+	if (!item) return false
+	if (item.finishTime && item.finishTime >= Date.now()) return false
+	delete item.finishTime
+	item.level++
+	game.updateState('rabbits', item)
+})
+
+// Refund Item
+Z(document).on('refunditem', function(e) {
+	var item = game.findItem(e)
+	if (!item) return false
+	game.updateState('rabbits', item)
+})
+
 // Restart Game
 game.restart = function(e) {
 	game.closeMenu()
+	// Reset Items
 	Z.each(game.items, function(j,i) {
 		delete i.finishTime
 		delete i.hidden
 		i.level = 0
-		if (i.story) delete game.items[j]
+		if (i.story || i.episode) delete game.items[j]
 	})
+	// Reset Game State
 	;[
-		'format',
 	].forEach(function(a) {
 		delete game[a]
 	})
@@ -432,21 +524,23 @@ game.restart = function(e) {
 		delete game.animals[i]
 	})
 	game.animals['rabbits'] = 0
+	// Save and Load
 	window.localStorage.game = JSON.stringify(game)
 	game.load()
 	game.showShops()
 }
 
 var evtClick = 'tap click'
-if (device.platform.indexOf('Android') != -1) evtClick = 'tap'
+if (platform.indexOf('Android') != -1) evtClick = 'singleTap'
 
 // User Interaction Events
-Z(document).on(evtClick, '.shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on(evtClick, 'section.shop > ul > li:not([disabled])', game.buyItem)
 Z(document).on(evtClick, 'section.shop a[href="#main"]', game.closeShops)
 Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
 Z(document).on(evtClick, '#story a[href="#main"]', game.closeStory)
 Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
+Z(document).on(evtClick, 'body > nav a.shop', game.openShop)
 Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
 Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
 Z(document).on(evtClick, '#lnkShop > a', game.openShop)
@@ -485,8 +579,7 @@ Z(document).one('gameLoaded', function(e) {
 	try { if (Intl && Intl.NumberFormat)
 		game.format = {
 			whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
-			rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format,
-			money: (new Intl.Numberformat('en-US', { style: 'currency', currency: 'USD' })).format
+			rate: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 1})).format
 		}
 	} catch (e) {
 	}
@@ -523,15 +616,59 @@ Z(document).one('gameLoaded', function(e) {
 		if (sec) time.push(sec + 's')
 		return time.length ? time.join(' ') : '0s'
 	}
+	game.format.money = (function() {
+		/*
+		try { if (Intl && Intl.NumberFormat)
+			return function(s,c) {
+				return (new Intl.Numberformat('en-US', { style: 'currency', currency: c })).format(s)
+			}
+		} catch (e) {
+		}
+		/**/
+		return function(s,c) {
+			var d = 2, p = '.'
+			switch (c) {
+				case 'USD':c='$';break
+				case 'GBP':c='£';break
+				case 'EUR':c='&euro;';p=',';break
+				case 'KRW':c='&#x20a9;';d=0;break
+				case 'CNY':case'JPY':c='&#xa5;';d=0;break
+				default:c+=' '
+			}
+			return c+ game.format.whole(Math.floor(s)) +
+				(d? p + (Math.floor((s - Math.floor(s)) * Math.pow(10, d)) / Math.pow(10, d) + '').substr(-1 * d) : '')
+		}
+	})()
 })
 
+// Styling Touchups
+Z(document).one('scroll', function(e) {
+	Z('main > header').after(Z('<div>').css({height:Z('main > header').height()+'px'})).css({position:'fixed'})
+})
+Z(document).on('scroll', function(){
+	var b,c=Z('main > header').css('border-bottom-color')
+	if (Z('body').scrollTop() <= 2 && c == 'black') b='transparent'
+	else if (c != 'black') b='black'
+	if (b) Z('main > header').animate({
+			'border-bottom-color':b,
+			background:b=='black'?'#4b9c4b':'#4ea24e'
+		}, 200)
 })
 
-// Error Handling
-window.onerror = function(msg, file, line) {
+// Keep Phone Awake
+if (window.plugins && window.plugins.insomnia)
+	window.plugins.insomnia.keepAwake()
+
+})
+window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':msg +  '; ' + file + ' line ' + line + '; browser: ' + device.platform}
+		data:{'msg':msg + '; browser: ' + platform}
 	})
+}
+
+// Error Handling
+window.onerror = function(msg, file, line) {
+	error_log(msg +  '; ' + file + ' line ' + line)
 }
