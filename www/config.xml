@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="67" version="1.1.0-beta+20150520">
+	versionCode="68" version="1.1.0-beta+20150523">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
@@ -24,9 +24,7 @@
 	<gap:platform name="android"/>
 	<preference name="android-minSdkVersion" value="16" />
 	<gap:plugin name="org.apache.cordova.globalization" version="0.3.1" />
-	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6">
-		<param name="BILLING_KEY" value="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlfQeEBfNKfa/e3mzq/xDvBhSqMvt5PjO9VfTL2EdainlD28DtLtFyD/cht7MgpAa22DoDkj3Zi8yY4FMGpgaW8p3syEoWUl2fy38Qw3scpWg+GGnftZtsnktU8kRVBAKgP1HxrMZ0P3Z8OpV+Pe47EH0NBnaAjKxGm1yTm8FkHXrLeNKuT6yBV9Me+w6ql3Z+kHKiXUJyJ212jBfL4EwXVLPWzR+aP6LKKbrULmK1PD5tOVhxcOQHt9T+d48FBQlBb5pwE4bwngvh+QDik50u4bsy8eCLDmGhI9i/Ovoz1NewhyqS1BkmnI47m/RNwLPeGkH+/2Y1QSZZlFWdcI/JQIDAQAB"/>
-	</gap:plugin>
+	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6" />
 	<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
 	<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
 	<icon src="icons/ic_launcher_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
