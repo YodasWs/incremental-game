@@ -15,6 +15,7 @@ window.onReady(function() {
 
 	/** Initialize Items **/
 	Z(document).on('gameLoaded', function() {
+		if (!game.locs) game.locs = []
 		// Fencing
 		if (!game.items.fencing) game.items.fencing = {
 			hidden: true,
@@ -62,7 +63,7 @@ window.onReady(function() {
 			game.locs.push('carpenter')
 			game.showShops()
 		}
-		if (!game.items.fencing || !game.items.fencing.level) {
+		if (!game.items.fencing) {
 			setTimeout(function() { $(document).trigger('gameLoaded') }, 500)
 			game.items.fencing = {
 				hidden: true,

@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150520',
+	v:'1.1.0-beta+20150524',
 	animals:{
 		rabbits:0
 	},
@@ -35,12 +35,12 @@ game = Z.extend(game, {
 					items:game.items
 				}
 			)
+			if (!game.animals) game.animals = { rabbits: 0 }
 			// Update Save File
 			if (game.rabbits) {
 				game.animals['rabbits'] = game.rabbits
 				delete game.rabbits
 			}
-			if (!game.animals.rabbits) game.animals.rabbits = 0
 			game.save()
 			$(document).trigger('gameLoaded')
 		}
@@ -566,7 +566,8 @@ Z(document).on('menubutton', game.openMenu)
 
 // Load Tutorial
 Z(document).one('gameLoaded', function(e) {
-	if (game.animals.rabbits) return
+	if (!game.animals) game.animals = { rabbits: 0 }
+	if (game.animals.rabbits > 0) return
 	var a,m,d=document,t='script'
 	a=d.createElement(t);m=d.getElementsByTagName(t)[0];a.async=1
 	a.src='js/tutorial.js';m.parentNode.insertBefore(a,m)
@@ -575,7 +576,7 @@ Z(document).one('gameLoaded', function(e) {
 })
 
 // Build Localization Rules
-Z(document).one('gameLoaded', function(e) {
+;(function() {
 	try { if (Intl && Intl.NumberFormat)
 		game.format = {
 			whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
@@ -639,7 +640,7 @@ Z(document).one('gameLoaded', function(e) {
 				(d? p + (Math.floor((s - Math.floor(s)) * Math.pow(10, d)) / Math.pow(10, d) + '').substr(-1 * d) : '')
 		}
 	})()
-})
+})();
 
 // Styling Touchups
 Z(document).one('scroll', function(e) {

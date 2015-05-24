@@ -51,19 +51,29 @@ window.onReady(function() {
 	})
 	// Purchase In-app Product
 	Z(document).on('buyitem', function(e) {
+		if (!inappbilling) {
+			error_log('Tried to make purchase without inappbilling')
+			Z(document).trigger(Z.Event('refunditem', e))
+			return true
+		}
 		inappbilling.buy(function(r) {
 			Z(document).trigger(Z.Event('consumeitem', e))
-		}, function(e) {
-			error_log('Failed to make purchase: ' + e)
+		}, function(m) {
+			error_log('Failed to make purchase: ' + m)
 			Z(document).trigger(Z.Event('refunditem', e))
 		}, e.itemId)
 	})
 	// Consume In-app Product
 	Z(document).on('consumeitem', function(e) {
+		if (!inappbilling) {
+			error_log('Tried consuming purchase without inappbilling')
+			Z(document).trigger(Z.Event('refunditem', e))
+			return true
+		}
 		inappbilling.consumePurchase(function(r) {
 			Z(document).trigger(Z.Event('itemconsumed', e))
-		}, function(e) {
-			error_log('Failed to consume product: ' + e)
+		}, function(m) {
+			error_log('Failed to consume product: ' + m)
 			Z(document).trigger(Z.Event('refunditem', e))
 		}, e.itemId)
 	})
