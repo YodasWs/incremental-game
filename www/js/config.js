@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150523',
+	v:'1.1.0-beta+20150524',
 	animals:{
 		rabbits:0
 	},
@@ -576,7 +576,7 @@ Z(document).one('gameLoaded', function(e) {
 })
 
 // Build Localization Rules
-Z(document).one('gameLoaded', function(e) {
+;(function() {
 	try { if (Intl && Intl.NumberFormat)
 		game.format = {
 			whole: (new Intl.NumberFormat('en-US', {maximumFractionDigits: 0})).format,
@@ -640,7 +640,7 @@ Z(document).one('gameLoaded', function(e) {
 				(d? p + (Math.floor((s - Math.floor(s)) * Math.pow(10, d)) / Math.pow(10, d) + '').substr(-1 * d) : '')
 		}
 	})()
-})
+})();
 
 // Styling Touchups
 Z(document).one('scroll', function(e) {
