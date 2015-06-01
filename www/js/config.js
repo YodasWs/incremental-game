@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150524',
+	v:'1.1.0-beta+20150601',
 	animals:{
 		rabbits:0
 	},
@@ -37,10 +37,7 @@ game = Z.extend(game, {
 			)
 			if (!game.animals) game.animals = { rabbits: 0 }
 			// Update Save File
-			if (game.rabbits) {
-				game.animals['rabbits'] = game.rabbits
-				delete game.rabbits
-			}
+			if (!game.animals.rabbits) game.animals.rabbits = 0
 			game.save()
 			$(document).trigger('gameLoaded')
 		}
@@ -63,14 +60,15 @@ game = Z.extend(game, {
 			if (!i.hidden)
 				delete i.hidden
 		})
-		;[
-			'autoRate',
-			'itemSort',
-			'clkRate',
-			'format',
-			'toAuto'
-		].forEach(function(a) {
-			delete g[a]
+		// Delete unchanged data
+		Z.each(g, function(i) {
+			if (Z.inArray(i, [
+				'openLocs',
+				'animals',
+				'items',
+				'v',
+			]) > -1) return 1
+			delete g[i]
 		})
 		// Save
 		window.localStorage.game = JSON.stringify(g)
@@ -111,8 +109,7 @@ game = Z.extend(game, {
 		if (Math.floor(Date.now() / 1000) % 5 == 0) game.save()
 		if (
 			(Math.floor(Date.now() / 1000) % 60 == Math.floor(Math.random() * 10)) ||
-			((!game.locs || game.locs.length == 0) && game.animals['rabbits'] > 49) ||
-			(Z.inArray('carpenter', game.locs) == -1 && game.animals['rabbits'] > 99)
+			(Z.inArray('carpenter', game.openLocs) == -1 && game.animals['rabbits'] > 99)
 		) Z(document).trigger('chkStory')
 		game.enableShopItems()
 	},
@@ -269,10 +266,10 @@ game.openMenu = function(e) {
 // Display Shop Buttons
 game.showShops = function() {
 	Z('#lnkShop > a, body > nav > a.shop').hide()
-	if (!game.locs) game.locs = []
+	if (!game.openLocs) game.openLocs = []
 	Z('#lnkShop > a, body > nav > a.shop').each(function(i, l) {
 		var href = Z(this).attr('href').trim('#')
-		if (Z.inArray(href, game.locs) > -1)
+		if (Z.inArray(href, game.openLocs) > -1)
 			Z(this).show()
 	})
 	Z('#lnkShop > a[href="#shop"], body > nav > a[href="#shop"]').show()
@@ -519,7 +516,7 @@ game.restart = function(e) {
 	].forEach(function(a) {
 		delete game[a]
 	})
-	game.locs = []
+	game.openLocs = []
 	Z.each(game.animals, function(i) {
 		delete game.animals[i]
 	})
@@ -617,15 +614,13 @@ Z(document).one('gameLoaded', function(e) {
 		if (sec) time.push(sec + 's')
 		return time.length ? time.join(' ') : '0s'
 	}
-	game.format.money = (function() {
-		/*
+	if (!game.format.money) game.format.money = (function() {
 		try { if (Intl && Intl.NumberFormat)
 			return function(s,c) {
 				return (new Intl.Numberformat('en-US', { style: 'currency', currency: c })).format(s)
 			}
 		} catch (e) {
 		}
-		/**/
 		return function(s,c) {
 			var d = 2, p = '.'
 			switch (c) {

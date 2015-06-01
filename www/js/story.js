@@ -8,9 +8,9 @@
 window.onReady(function() {
 	/** Continue Story **/
 	Z(document).on('chkStory', function() {
-		if (!game.locs) game.locs = []
+		if (!game.openLocs) game.openLocs = []
 		if (Math.floor(Date.now() / 1000) % 10 == Math.floor(Math.random() * 4)) foxAttack()
-		else if (Z.inArray('carpenter', game.locs) == -1 && game.animals['rabbits'] > 99) foxAttack()
+		else if (Z.inArray('carpenter', game.openLocs) == -1 && game.animals['rabbits'] > 99) foxAttack()
 	})
 
 	/** Initialize Items **/
@@ -59,8 +59,8 @@ window.onReady(function() {
 		game.hideModals()
 		var txt = '', num = 0
 		// Open Carpenter's Shop
-		if (Z.inArray('carpenter', game.locs) == -1) {
-			game.locs.push('carpenter')
+		if (Z.inArray('carpenter', game.openLocs) == -1) {
+			game.openLocs.push('carpenter')
 			game.showShops()
 		}
 		if (!game.items.fencing) {
