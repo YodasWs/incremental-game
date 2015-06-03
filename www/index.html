@@ -26,8 +26,8 @@ window.onReady(function() {
 })
 // Load shim for browser testing
 if (!window.cordova) {
-	document.write('<script src="res/phonegap-shim.js"><\/script>');
-	document.write('<script src="js/web.js"><\/script>');
+	document.write('<script src="js/web/phonegap-shim.js"><\/script>');
+	document.write('<script src="js/web/web.js"><\/script>');
 }
 // Game Object
 window.game={}
@@ -36,6 +36,7 @@ window.game={}
 <script src="js/config.js" async></script>
 <script src="js/items.js" async></script>
 <script src="js/story.js" async></script>
+<script src="js/locs.js" async></script>
 <script>
 try{
 	window.platform=navigator.userAgent.match(/\w*(Android|Win|iPod|iPhone|iPad|Mac)\w*/)[0].trim()
@@ -43,14 +44,13 @@ try{
 	if (platform.indexOf('Win') > -1) platform = 'Win32'
 }catch(e){window.platform='unknown'}
 // Load Android Polyfills and Plugins
-window.onReady(function(){
-	if(platform.indexOf('Android')==-1)return
+if(platform.indexOf('Android')!=-1) {
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
 	a.src='js/android.js';m.parentNode.insertBefore(a,m)
 	a=d.createElement('link');a.rel="stylesheet"
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
-})
+}
 window.onload = function() {
 	game.load()
 	Z('body > #intro').css({
@@ -89,10 +89,7 @@ window.onload = function() {
 		<small>0</small>
 	</header>
 	<img id="rabbit" src="www/img/rabbit-1.png" alt="&#x1f407;" />
-	<div id="lnkShop">
-		<a href="#shop">Country Store</a>
-		<a href="#carpenter">Carpenter's Shop</a>
-	</div>
+	<div id="lnkShop"></div>
 </main>
 <section id="shop" class="shop">
 	<h1>Country Store</h1>

@@ -8,11 +8,14 @@
 window.onReady(function() {
 	/** Continue Story **/
 	Z(document).on('chkStory', function() {
+		if (!game.openLocs) game.openLocs = []
 		if (Math.floor(Date.now() / 1000) % 10 == Math.floor(Math.random() * 4)) foxAttack()
+		else if (Z.inArray('carpenter', game.openLocs) == -1 && game.animals['rabbits'] > 99) foxAttack()
 	})
 
 	/** Initialize Items **/
 	Z(document).on('gameLoaded', function() {
+		if (!game.openLocs) game.openLocs = []
 		// Fencing
 		if (!game.items.fencing) game.items.fencing = {
 			hidden: true,
@@ -27,6 +30,16 @@ window.onReady(function() {
 			buildTime: 60,
 			story: true
 		})
+	})
+
+	// Prevent too many upgrades between story
+	Z(document).on('itemconsumed', function(e) {
+		switch (e.itemId) {
+		case 'fencing':
+			if (game.items.fencing.level > Math.log10(game.animals.rabbits) + 1)
+				game.items.fencing.hidden = true
+			break;
+		}
 	})
 
 	game.showStory = function(cb) {
@@ -46,12 +59,11 @@ window.onReady(function() {
 		game.hideModals()
 		var txt = '', num = 0
 		// Open Carpenter's Shop
-		if (!game.locs) game.locs = []
-		if (Z.inArray('carpenter' , game.locs) == -1) {
-			game.locs.push('carpenter')
+		if (Z.inArray('carpenter', game.openLocs) == -1) {
+			game.openLocs.push('carpenter')
 			game.showShops()
 		}
-		if (!game.items.fencing || !game.items.fencing.level) {
+		if (!game.items.fencing) {
 			setTimeout(function() { $(document).trigger('gameLoaded') }, 500)
 			game.items.fencing = {
 				hidden: true,

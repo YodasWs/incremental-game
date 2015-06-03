@@ -36,7 +36,7 @@ window.device = {
 		return (navigator.userAgent.match(/\w*(Win|iPod|iPhone|iPad|Mac|Android)\w*/))[0].trim()
 	})(),
 	version:(function() {
-		return (navigator.userAgent.match(/(IE|Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()
+		return (navigator.userAgent.match(/(MSIE|Trident|Android|Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()
 	})(),
 	uuid:'testing',
 	cordova:'sam-testing'

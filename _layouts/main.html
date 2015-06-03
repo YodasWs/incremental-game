@@ -20,14 +20,17 @@ main > h1 {
 	text-align: center; letter-spacing: 1px;
 	padding-top: 1rem; padding-bottom: 1rem; margin-top: 0;
 }
-main > div#link { display: block; text-align: center; margin: 3rem 0; }
+main > div#link { display: block; text-align: center; margin: 3rem auto; }
 main > div#description {
 	font-size: 1.3rem; text-align: justify;
 	max-width: 400px; margin: 1rem auto;
 }
+main > div {
+	max-width: 600px; margin: 1rem auto; text-align: justify; font-size: .9rem;
+}
 /** Footer **/
-footer { padding: 0 5px; }
-footer > small { display: block; max-width: 250px; }
+footer { padding: 0 5px; margin-top: 3rem; }
+footer > small { display: block; max-width: 300px; }
 footer > small:nth-of-type(2n-1) { float: left; }
 footer > small:nth-of-type(2n) { text-align: right; float: right; }
 footer::after { display: block; content: ''; float: none; clear: both; }
