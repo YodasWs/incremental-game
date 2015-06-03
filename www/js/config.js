@@ -63,6 +63,7 @@ game = Z.extend(game, {
 		// Delete unchanged data
 		Z.each(g, function(i) {
 			if (Z.inArray(i, [
+				'achievements',
 				'openLocs',
 				'animals',
 				'items',

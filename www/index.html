@@ -48,6 +48,8 @@ if(platform.indexOf('Android')!=-1) {
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
 	a.src='js/android.js';m.parentNode.insertBefore(a,m)
+	a=d.createElement(t);a.async=1
+	a.src='js/achievements.js';m.parentNode.insertBefore(a,m)
 	a=d.createElement('link');a.rel="stylesheet"
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 }

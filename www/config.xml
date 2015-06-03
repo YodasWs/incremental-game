@@ -24,7 +24,7 @@
 	<!-- Android -->
 	<gap:platform name="android"/>
 	<preference name="android-minSdkVersion" value="16" />
-	<gap:plugin name="org.apache.cordova.globalization" version="0.3.1" />
+	<gap:plugin name="com.a42.cordova.googleplaygame" version="2.0.4" />
 	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6" />
 	<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
 	<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
