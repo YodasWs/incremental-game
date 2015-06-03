@@ -86,4 +86,6 @@ game.sortItems = function() {
 		return r
 	})
 }
-Z(document).on('gameLoaded', game.sortItems)
+window.onReady(function() {
+	Z(document).on('gameLoaded', game.sortItems)
+})

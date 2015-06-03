@@ -661,7 +661,7 @@ window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':msg + '; browser: ' + platform}
+		data:{'msg':msg + '; platform: ' + platform}
 	})
 }
 
