@@ -15,7 +15,7 @@ window.onReady(function() {
 
 	/** Initialize Items **/
 	Z(document).on('gameLoaded', function() {
-		if (!game.locs) game.locs = []
+		if (!game.openLocs) game.openLocs = []
 		// Fencing
 		if (!game.items.fencing) game.items.fencing = {
 			hidden: true,
