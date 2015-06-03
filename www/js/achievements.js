@@ -28,6 +28,15 @@ window.onReady(function() {
 				}
 			})
 		}
+		googleplaygame.isSignedIn(function(r) {
+			if (!r.isSignedIn) return
+			var lnk = Z('<a>').attr('href', '#achievements').text("Achievements")
+			Z('body > nav > a[href="#about"]').before(lnk)
+			Z('a#achievements').on('click', function() {
+				googleplaygame.showAchievements()
+				return false
+			})
+		})
 	}
 	if (!obj.unlock) return
 	Z(document).on('itembuilt', function(e) {
@@ -35,7 +44,7 @@ window.onReady(function() {
 		// Natural Breeder Achievement
 		if (Z.inArray('CgkI8vC6qdsCEAIQAg', game.achievements) == -1 && item.bonus && item.bonus.rabbits > 0) {
 			// Increment Natural Breeder Achievement
-			obj.increment('CgkI8vC6qdsCEAIQAg', item.bonus.rabbits * 10)
+			if (obj.increment) obj.increment('CgkI8vC6qdsCEAIQAg', item.bonus.rabbits * 10)
 			// Unlock
 			setTimeout(function() {
 				if (game.autoRate.rabbits >= 100) obj.unlock('CgkI8vC6qdsCEAIQAg')
