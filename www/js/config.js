@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150601',
+	v:'1.1.0-beta+20150603',
 	animals:{
 		rabbits:0
 	},
@@ -293,6 +293,7 @@ game.openShop = function(e) {
 game.updateShop = function(href) {
 	var el, i=0, k=0
 	Z('#' + href + ' > ul').children().remove()
+	if (!game.itemSort) game.sortItems()
 	for (i=0; i<game.itemSort.length; i++) {
 		k = game.itemSort[i]
 		if (game.items[k].loc != href) continue

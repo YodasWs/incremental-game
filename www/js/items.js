@@ -69,22 +69,21 @@ game.items = {
 		bonus:{ rabbits:1000 }
 	}
 }
-window.onReady(function() {
-	// Sort Items in Shops
-	Z(document).on('gameLoaded', function() {
-		game.itemSort = []
-		Z.each(game.items, function(k,i) {
-			game.itemSort.push(k)
-		})
-		game.itemSort.sort(function(a,b) {
-			var r = 0
-			if (game.items[a].order != null && game.items[b].order != null && game.items[a].order != game.items[b].order)
-				r = Math.sign(game.items[a].order - game.items[b].order)
-			if (r == 0 && game.items[a].baseCost && game.items[b].baseCost) {
-				if (game.items[a].baseCost.rabbits && game.items[b].baseCost.rabbits)
-					r = Math.sign(game.items[a].baseCost.rabbits - game.items[b].baseCost.rabbits)
-			}
-			return r
-		})
+// Sort Items in Shops
+game.sortItems = function() {
+	game.itemSort = []
+	Z.each(game.items, function(k,i) {
+		game.itemSort.push(k)
 	})
-})
+	game.itemSort.sort(function(a,b) {
+		var r = 0
+		if (game.items[a].order != null && game.items[b].order != null && game.items[a].order != game.items[b].order)
+			r = Math.sign(game.items[a].order - game.items[b].order)
+		if (r == 0 && game.items[a].baseCost && game.items[b].baseCost) {
+			if (game.items[a].baseCost.rabbits && game.items[b].baseCost.rabbits)
+				r = Math.sign(game.items[a].baseCost.rabbits - game.items[b].baseCost.rabbits)
+		}
+		return r
+	})
+}
+Z(document).on('gameLoaded', game.sortItems)
