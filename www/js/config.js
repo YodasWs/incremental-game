@@ -518,7 +518,12 @@ game.restart = function(e) {
 	].forEach(function(a) {
 		delete game[a]
 	})
-	game.openLocs = []
+	;[
+		'achievements',
+		'openLocs'
+	].forEach(function(a) {
+		game[a] = []
+	})
 	Z.each(game.animals, function(i) {
 		delete game.animals[i]
 	})

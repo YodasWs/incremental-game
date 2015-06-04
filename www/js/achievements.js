@@ -7,9 +7,11 @@
  */
 window.onReady(function() {
 	var obj = {}
-	if (!game.achievements) game.achievements = []
+	window.constants = window.constants || {}
+	game.achievements = game.achievements || []
 	// Google Play Game Services
 	if (window.googleplaygame) {
+		// Login
 		googleplaygame.auth()
 		// Unlock Achievement
 		obj.unlock = function(id) {
@@ -28,6 +30,7 @@ window.onReady(function() {
 				}
 			})
 		}
+		// Show Achievements
 		googleplaygame.isSignedIn(function(r) {
 			if (!r.isSignedIn) return
 			var lnk = Z('<a>').attr('href', '#achievements').text("Achievements")
@@ -37,17 +40,20 @@ window.onReady(function() {
 				return false
 			})
 		})
+		// Achievement IDs
+		constants.ACH_NATURAL_BREEDER = 'CgkI8vC6qdsCEAIQAg'
 	}
 	if (!obj.unlock) return
 	Z(document).on('itembuilt', function(e) {
+		game.achievements = game.achievements || []
 		var item = game.findItem(e)
 		// Natural Breeder Achievement
-		if (Z.inArray('CgkI8vC6qdsCEAIQAg', game.achievements) == -1 && item.bonus && item.bonus.rabbits > 0) {
+		if (Z.inArray(constants.ACH_NATURAL_BREEDER, game.achievements) == -1 && item.bonus && item.bonus.rabbits > 0) {
 			// Increment Natural Breeder Achievement
-			if (obj.increment) obj.increment('CgkI8vC6qdsCEAIQAg', item.bonus.rabbits * 10)
+			if (obj.increment) obj.increment(constants.ACH_NATURAL_BREEDER, item.bonus.rabbits * 10)
 			// Unlock
 			setTimeout(function() {
-				if (game.autoRate.rabbits >= 100) obj.unlock('CgkI8vC6qdsCEAIQAg')
+				if (game.autoRate.rabbits >= 20) obj.unlock(constants.ACH_NATURAL_BREEDER)
 			}, 1000)
 		}
 	})
