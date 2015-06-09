@@ -13,25 +13,24 @@ window.onReady(function() {
 	var v = device.version ? Number.parseFloat(device.version) : 0,
 		h = Z(window).height(), w = Z(window).width()
 
-	/** UI Element Placement **/
-	if (v < 4.4) {
-		// Placement of Shop Modal
-		Z(document).on('update','.shop',function(){
-			Z(this).css({position:'absolute',height:'auto','min-height':h*.7+'px',top:h*.2+'px'})
-		})
-		// Placement of Story Modal
-		Z(document).on('update','#story',function(){
-			Z(this).css({position:'absolute',height:'auto','min-height':h*.5+'px',top:h*.3+'px',width:w*.8+'px',left:w*.1+'px'})
-		})
-		// Menu Height
-		Z('body>nav').css({height:h})
-		// Touch Screen
-		Z('body').addClass('touch')
-		// Placement of About Modal
-		Z(document).on('revealstart revealend','#about',function(){
-			Z(this).css({top:(h-200)+'px'})
-		})
-	}
+	// Placement of Shop Modal
+	Z(document).on('update','.shop',function(){
+		Z(this).css({position:'absolute',height:'auto','min-height':h*.7+'px',top:h*.2+'px'})
+	})
+	// Placement of Story Modal
+	Z(document).on('update','#story',function(){
+		Z(this).css({position:'absolute',height:'auto','min-height':h*.5+'px',top:h*.3+'px',width:w*.8+'px',left:w*.1+'px'})
+	})
+	// Placement of About Modal
+	Z(document).on('revealstart revealend','#about',function(){
+		Z(this).css({top:(h-200)+'px'})
+	})
+
+	// Touch Screen
+	Z('body').addClass('touch')
+
+	// Menu Height
+	if (v < 4.4) Z('body>nav').css({height:h})
 
 	/** In-App Billing **/
 	if (window.inappbilling) {
