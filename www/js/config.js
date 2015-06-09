@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150603',
+	v:'1.1.0-beta+20150609',
 	animals:{
 		rabbits:0
 	},
@@ -549,7 +549,7 @@ Z(document).on(evtClick, '#lnkShop > a', game.openShop)
 Z(document).on(evtClick, '#modal-bg', game.hideModals)
 
 // Pause/Resume Game
-Z(document).on('pause', function() { clearTimeout(game.toAuto) })
+Z(document).on('pause', function() { game.save(); clearTimeout(game.toAuto) })
 Z(document).on('resume', game.autoClick)
 
 // Keyboard Support
@@ -659,6 +659,17 @@ Z(document).on('scroll', function(){
 // Keep Phone Awake
 if (window.plugins && window.plugins.insomnia)
 	window.plugins.insomnia.keepAwake()
+
+// Open Web Links in Browser
+if (window.InAppBrowser) {
+	Z(document).on('click','a[target="_blank"], a[href^="http://"], a[href^="https://"]',function(e){
+		var win = window.open(Z(this).attr('href'), '_system')
+		if (win.close) Z(document).on('pause', function(e){
+			win.close()
+		})
+		return false
+	})
+}
 
 })
 window.error_log = function(msg) {
