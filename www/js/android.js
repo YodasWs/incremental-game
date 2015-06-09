@@ -37,35 +37,46 @@ window.onReady(function() {
 	if (window.inappbilling) {
 		// Build In-app Products
 		Z(document).on('gameLoaded', function() {
-			if (game.showStory) {
-				var txt = "InAppBilling.js successfully loaded!"
-				Z('#story').children().remove()
-				Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
-				game.showStory()
-			}
 			inappbilling.init(function() {
-				if (game.showStory) {
-					var txt = "InAppBilling successfully initiated!"
-					Z('#story').children().remove()
-					Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
-					game.showStory()
-				}
 				// In-app Billing Initiated!
 				// Load Available Products
 				inappbilling.getAvailableProducts(function(r) {
 					if (typeof r == 'string') r = JSON.parse(r)
 					// Merge Item Listings
 					var prods = {}
-					Z.each(r, function(i,p) {
-						prods[p.productId] = p
-						prods[p.productId].hidden = false
-					})
-					game.items = Z.extend(true, game.items, prods)
+					if (game.showStory) {
+						var txt = "Successfully loaded " + r.length + " available products!"
+						Z('#story').children().remove()
+						Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+						game.showStory()
+					}
+					try {
+						Z.each(r, function(i,p) {
+							if (typeof p == 'string') p = JSON.parse(p)
+							prods[p.productId] = p
+							prods[p.productId].hidden = false
+						})
+						game.items = Z.extend(true, game.items, prods)
+					} catch (e) {
+						var txt = "Error merging items: " + e.message
+						if (game.showStory) {
+							Z('#story').children().remove()
+							Z('#story').append('<h1>Error</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+							game.showStory()
+						}
+						error_log(txt)
+					}
 				}, function(e) {
-					error_log('Could not load product list: ' + e)
+					error_log('Could not load product list: ' + e.message)
+					if (game.showStory) {
+						var txt = "Could not load available products"
+						Z('#story').children().remove()
+						Z('#story').append('<h1>InAppBilling Failed</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+						game.showStory()
+					}
 				})
 			}, function(e) {
-				error_log('Could not start inappbilling: ' + e)
+				error_log('Could not start inappbilling: ' + e.message)
 			}, {})
 		})
 		// Purchase In-app Product
