@@ -1,5 +1,5 @@
 ---
-include: ['www/','www/css/','www/img/','www/js/']
+include: ['www/','www/css/','www/img/','www/js/','LICENSE.md']
 exclude: ['README.md','Thumbs.db','Start Command Prompt with Ruby.lnk','icons','screenshots','splashscreens','debug','license.keystore','config.xml','zepto-license.txt','RabbitFarm.apk']
 encoding: 'UTF-8'
 future: false
