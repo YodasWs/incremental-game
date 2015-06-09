@@ -57,8 +57,8 @@ window.onReady(function() {
 					// Merge Item Listings
 					var prods = {}
 					Z.each(r, function(i,p) {
-						prod[p.productId] = p
-						prod[p.productId].hidden = false
+						prods[p.productId] = p
+						prods[p.productId].hidden = false
 					})
 					game.items = Z.extend(true, game.items, prods)
 				}, function(e) {
