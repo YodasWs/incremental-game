@@ -11,6 +11,7 @@
 	<icon src="icons/ic_launcher_xxhdpi.png" />
 
 	<!-- Cross-platform Plugins -->
+	<gap:plugin name="org.apache.cordova.inappbrowser" version="0.5.2" />
 	<gap:plugin name="nl.x-services.plugins.insomnia" version="4.0.1" />
 	<gap:plugin name="org.apache.cordova.device" version="0.2.12" />
 	<!-- For future game development

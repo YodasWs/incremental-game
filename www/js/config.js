@@ -660,6 +660,17 @@ Z(document).on('scroll', function(){
 if (window.plugins && window.plugins.insomnia)
 	window.plugins.insomnia.keepAwake()
 
+// Open Web Links in Browser
+if (window.InAppBrowser) {
+	Z(document).on('click','a[target="_blank"], a[href^="http://"], a[href^="https://"]',function(e){
+		var win = window.open(Z(this).attr('href'), '_system')
+		if (win.close) Z(document).on('pause', function(e){
+			win.close()
+		})
+		return false
+	})
+}
+
 })
 window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
