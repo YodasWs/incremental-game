@@ -37,7 +37,19 @@ window.onReady(function() {
 	if (window.inappbilling) {
 		// Build In-app Products
 		Z(document).on('gameLoaded', function() {
+			if (game.showStory) {
+				var txt = "InAppBilling.js successfully loaded!"
+				Z('#story').children().remove()
+				Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+				game.showStory()
+			}
 			inappbilling.init(function() {
+				if (game.showStory) {
+					var txt = "InAppBilling successfully initiated!"
+					Z('#story').children().remove()
+					Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+					game.showStory()
+				}
 				// In-app Billing Initiated!
 				// Load Available Products
 				inappbilling.getAvailableProducts(function(r) {
