@@ -8,6 +8,9 @@
 /**
  * Polyfills and Plugins for Android
  */
+window.skus = [
+	'nesting_box'
+]
 window.onReady(function() {
 	if (platform.indexOf('Android') == -1) return;
 	var v = device.version ? Number.parseFloat(device.version) : 0,
@@ -28,19 +31,21 @@ window.onReady(function() {
 	// Menu Height
 	if (v < 4.4) Z('body>nav').css({height:h})
 
-	/** In-App Billing **/
+	/** License Check and In-App Billing **/
 	if (window.inappbilling) {
-		// Build In-app Products
+//	if (window.inappbilling && window.AndroidLicensePlugin) {
 		Z(document).on('gameLoaded', function() {
-			inappbilling.init(function() {
-				// In-app Billing Initiated!
-				// Load Available Products
-				inappbilling.getAvailableProducts(function(r) {
+			// Check Android License
+//			AndroidLicensePlugin.check(function(d) {
+				// TODO: Verify d.signedData and d.signature on a server
+				// Start InAppBilling
+				inappbilling.init(function(r) {
+					// In-app Billing Initiated!
+					var prods = {}, txt = ''
 					if (typeof r == 'string') r = JSON.parse(r)
 					// Merge Item Listings
-					var prods = {}
 					if (game.showStory) {
-						var txt = "Successfully loaded " + r.length + " available products!"
+						txt = "Successfully loaded " + r.length + " available products!"
 						Z('#story').children().remove()
 						Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
 						Z('#story').append('<p style="font-family: monospace; white-space: pre-line">' + JSON.stringify(r))
@@ -48,13 +53,12 @@ window.onReady(function() {
 					}
 					try {
 						Z.each(r, function(i,p) {
-							if (typeof p == 'string') p = JSON.parse(p)
 							prods[p.productId] = p
 							prods[p.productId].hidden = false
 						})
 						game.items = Z.extend(true, game.items, prods)
 					} catch (e) {
-						var txt = "Error merging items: " + e.message
+						txt = "Error merging items: " + e.message
 						if (game.showStory) {
 							Z('#story').children().remove()
 							Z('#story').append('<h1>Error</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
@@ -63,17 +67,11 @@ window.onReady(function() {
 						error_log(txt)
 					}
 				}, function(e) {
-					error_log('Could not load product list: ' + e.message)
-					if (game.showStory) {
-						var txt = "Could not load available products"
-						Z('#story').children().remove()
-						Z('#story').append('<h1>InAppBilling Failed</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
-						game.showStory()
-					}
-				})
-			}, function(e) {
-				error_log('Could not start inappbilling: ' + e.message)
-			}, {})
+					error_log('Could not start inappbilling: ' + e.message)
+				}, {showLog:false}, skus)
+//			}, function(e) {
+//				error_log('Could not check Android App License; ' + e)
+//			})
 		})
 		// Purchase In-app Product
 		Z(document).on('buyitem', function(e) {
