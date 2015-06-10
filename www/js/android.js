@@ -21,10 +21,6 @@ window.onReady(function() {
 	Z(document).on('update','#story',function(){
 		Z(this).css({position:'absolute',height:'auto','min-height':h*.5+'px',top:h*.3+'px',width:w*.8+'px',left:w*.1+'px'})
 	})
-	// Placement of About Modal
-	Z(document).on('revealstart revealend','#about',function(){
-		Z(this).css({top:(h-200)+'px'})
-	})
 
 	// Touch Screen
 	Z('body').addClass('touch')
