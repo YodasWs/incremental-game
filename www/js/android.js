@@ -47,6 +47,7 @@ window.onReady(function() {
 						var txt = "Successfully loaded " + r.length + " available products!"
 						Z('#story').children().remove()
 						Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+						Z('#story').append('<p style="font-family: monospace; white-space: pre-line">' + JSON.stringify(r))
 						game.showStory()
 					}
 					try {
