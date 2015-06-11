@@ -26,14 +26,12 @@ window.onReady(function() {
 	})
 
 	// Placement of About Modal
-	if (v < 4.4) {
-		Z(document).on('reveal','#about',function(){
-			Z('html,body').scrollTop(0)
-			Z(this).css({top:h+'px'}).animate({
-				top:'200px'
-			}, 400)
-		})
-	}
+	Z(document).on('reveal','#about',function(){
+		Z('html,body').scrollTop(0)
+		Z(this).css({top:h+'px'}).animate({
+			top:'200px'
+		}, 400)
+	})
 
 	// Touch Screen
 	Z('body').addClass('touch')
