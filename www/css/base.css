@@ -98,7 +98,7 @@ body > nav {
 }
 @media (min-width: 500px) {
 	body > nav {
-		width: 400px; max-width: 80vw;
+		width: 300px;
 	}
 }
 body > nav > a {
