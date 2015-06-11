@@ -8,7 +8,7 @@
 /**
  * Polyfills and Plugins for Android
  */
-window.skus = [
+game.skus = [
 	'nesting_box'
 ]
 window.onReady(function() {
@@ -43,42 +43,46 @@ window.onReady(function() {
 
 	/** License Check and In-App Billing **/
 	if (window.inappbilling) {
-//	if (window.inappbilling && window.AndroidLicensePlugin) {
+//	if (window.inappbilling && window.AndroidLicensePlugin)
 		Z(document).on('gameLoaded', function() {
 			// Check Android License
 //			AndroidLicensePlugin.check(function(d) {
 				// TODO: Verify d.signedData and d.signature on a server
 				// Start InAppBilling
-				inappbilling.init(function(r) {
+				inappbilling.init(function() {
 					// In-app Billing Initiated!
-					var prods = {}, txt = ''
-					if (typeof r == 'string') r = JSON.parse(r)
-					// Merge Item Listings
-					if (game.showStory) {
-						txt = "Successfully loaded " + r.length + " available products!"
-						Z('#story').children().remove()
-						Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
-						Z('#story').append('<p style="font-family: monospace; white-space: pre-line">' + JSON.stringify(r))
-						game.showStory()
-					}
-					try {
-						Z.each(r, function(i,p) {
-							prods[p.productId] = p
-							prods[p.productId].hidden = false
-						})
-						game.items = Z.extend(true, game.items, prods)
-					} catch (e) {
-						txt = "Error merging items: " + e.message
+					inappbilling.getAvailableProducts(function(r) {
+						var prods = {}, txt = ''
+						if (typeof r == 'string') r = JSON.parse(r)
+						// Merge Item Listings
 						if (game.showStory) {
+							txt = "Successfully loaded " + r.length + " available products!"
 							Z('#story').children().remove()
-							Z('#story').append('<h1>Error</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+							Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+							Z('#story').append('<p style="font-family: monospace; white-space: pre-line">' + JSON.stringify(r))
 							game.showStory()
 						}
-						error_log(txt)
-					}
+						try {
+							Z.each(r, function(i,p) {
+								prods[p.productId] = p
+								prods[p.productId].hidden = false
+							})
+							game.items = Z.extend(true, game.items, prods)
+						} catch (e) {
+							txt = "Error merging items: " + e.message
+							if (game.showStory) {
+								Z('#story').children().remove()
+								Z('#story').append('<h1>Error</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+								game.showStory()
+							}
+							error_log(txt)
+						}
+					}, function(e) {
+						error_log('Could not get available products; ' + e.message)
+					})
 				}, function(e) {
 					error_log('Could not start inappbilling: ' + e.message)
-				}, {showLog:false}, skus)
+				}, game.skus)
 //			}, function(e) {
 //				error_log('Could not check Android App License; ' + e)
 //			})
