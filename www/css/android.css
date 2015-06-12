@@ -7,6 +7,8 @@
  */
 
 /** Android CSS Fixes **/
+body { width: 100%; min-height: 100%; }
+body > * { min-height: 100%; width: 100%; }
 body > nav { position: fixed; z-index: 10; }
 main > header > output { max-width: 90%; }
 .shop > ul > li { padding: 5px 10px 5px 2.5rem; }
