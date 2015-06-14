@@ -30,6 +30,7 @@ window.onReady(function() {
 			buildTime: 60,
 			story: true
 		})
+		if (!game.itemSort || (game.itemSort && Z.inArray('fencing', game.itemSort) == -1)) Z(document).trigger('needsort')
 	})
 
 	// Prevent too many upgrades between story
