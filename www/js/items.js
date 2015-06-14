@@ -88,4 +88,5 @@ game.sortItems = function() {
 }
 window.onReady(function() {
 	Z(document).on('gameLoaded', game.sortItems)
+	Z(document).on('needsort', game.sortItems)
 })
