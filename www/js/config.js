@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150603',
+	v:'1.1.0-beta+20150614',
 	animals:{
 		rabbits:0
 	},
@@ -279,42 +279,42 @@ game.showShops = function() {
 // Open Shop
 game.openShop = function(e) {
 	game.closeMenu()
-	var t = 600, href = Z(e.target).attr('href').trim('#')
+	var t = 600, href = Z(e.target).attr('href').trim('#'), Zt = Z('#' + href + '')
 	game.showModalBG(t)
 	game.updateShop(href)
-	Z('#' + href + '').find('li').attr('disabled','disabled')
+	Zt.find('li').attr('disabled','disabled')
 	// Slide Shop into View
-	Z('#' + href + '').show().css({
+	Zt.show().css({
 		left:'100vw'
 	}).animate({
-		left:0
+		left: Math.max((Z(window).width() - Zt.width()) / 2, 0) + 'px'
 	}, t, 'ease-out', game.enableShopItems)
 }
 // Update Shop Items
 game.updateShop = function(href) {
-	var el, i=0, k=0
-	Z('#' + href + ' > ul').children().remove()
+	var el, i=0, k=0, Zl = Z('#' + href + ' > ul')
+	Zl.children().remove()
 	if (!game.itemSort) game.sortItems()
 	for (i=0; i<game.itemSort.length; i++) {
 		k = game.itemSort[i]
 		if (game.items[k].loc != href) continue
 		el = game.updateShopItem(game.items[k], Z('<li></li>'))
-		Z('#' + href + ' > ul').append(el)
+		Zl.append(el)
 	}
-	if (Z('#' + href + ' > ul').children('li').length) game.enableShopItems()
-	else Z('#' + href + ' > ul').append('<li disabled>No items available at this time')
+	if (Zl.children('li').length) game.enableShopItems()
+	else Zl.append('<li disabled>No items available at this time')
 	Z('#' + href).trigger('update')
 }
 
 // Close Open Shop
 game.closeShops = function(e) {
 	Z('#lnkShop').children('a').each(function() {
-		var href = Z(this).attr('href').trim('#'), t = 400
-		if (Z('#' + href).css('display') == 'block') {
+		var href = Z(this).attr('href').trim('#'), t = 400, Zt = Z('#' + href + '')
+		if (Zt.css('display') == 'block') {
 			game.hideModalBG(t)
-			Z('#' + href).css({
+			Zt.css({
 			}).animate({
-				left:'-' + Z('#' + href).width() + 'px'
+				left:'-' + Zt.width() + 'px'
 			}, t, 'ease-in', function() {
 				Z(this).hide()
 			})
@@ -381,31 +381,19 @@ game.openAbout = function(e) {
 	var t = 400
 	game.showModalBG(t)
 	game.closeMenu(e,t/2)
-	Z('#about').trigger('revealstart').show().css({
-		top:'100vh'
-	}).animate({
-		top:'calc(100vh - ' + Z('#about').height() + 'px)'
-	}, t, 'ease-out', function() {
-		Z('#about').trigger('revealend')
-	})
+	Z('#about').show()
+	setTimeout(function(){
+		Z('#about').trigger('reveal').addClass('revealed')
+	}, 1)
 }
 // Close About Screen
 game.closeAbout = function(e) {
 	var t = 200
 	game.hideModalBG(t)
-	try {
-		Z('#about').animate({
-			top:'100vh'
-		}, t, function() {
-			Z('#about').hide()
-		})
-	} catch (er) {
-		Z('#about').animate({
-			top:'100%'
-		}, t, function() {
-			Z('#about').hide()
-		})
-	}
+	Z('#about').removeClass('revealed')
+	setTimeout(function(){
+		Z('#about').trigger('hide').hide()
+	}, t + 1)
 }
 
 // Close Story Modal
@@ -555,7 +543,7 @@ Z(document).on(evtClick, '#lnkShop > a', game.openShop)
 Z(document).on(evtClick, '#modal-bg', game.hideModals)
 
 // Pause/Resume Game
-Z(document).on('pause', function() { clearTimeout(game.toAuto) })
+Z(document).on('pause', function() { game.save(); clearTimeout(game.toAuto) })
 Z(document).on('resume', game.autoClick)
 
 // Keyboard Support
@@ -665,6 +653,17 @@ Z(document).on('scroll', function(){
 // Keep Phone Awake
 if (window.plugins && window.plugins.insomnia)
 	window.plugins.insomnia.keepAwake()
+
+// Open Web Links in Browser
+if (window.InAppBrowser) {
+	Z(document).on('click','a[target="_blank"], a[href^="http://"], a[href^="https://"]',function(e){
+		var win = window.open(Z(this).attr('href'), '_system')
+		if (win.close) Z(document).on('pause', function(e){
+			win.close()
+		})
+		return false
+	})
+}
 
 })
 window.error_log = function(msg) {
