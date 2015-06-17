@@ -35,8 +35,8 @@ function visitStore(e) {
 ;(function(el,cb){
 	var c=0,b=function(){if(!c){if(el.readyState=='complete'){cb();c=true}}}
 	if(el.readyState=='complete')b()
-	else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
-	else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
+	else if(Element.prototype.addEventListener)el.addEventListener('readystatechange',b)
+	else if(Element.prototype.attachEvent)el.attachEvent('onreadystatechange',b)
 })(rabbit.get(0), function() {
 	tutorial.offset({
 		top:rabbit.offset().top + rabbit.height(),
