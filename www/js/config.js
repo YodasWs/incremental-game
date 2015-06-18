@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150617',
+	v:'1.1.0-beta+20150618',
 	animals:{
 		rabbits:0
 	},
