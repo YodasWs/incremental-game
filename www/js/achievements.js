@@ -52,9 +52,9 @@ window.onReady(function() {
 			// Increment Natural Breeder Achievement
 			if (obj.increment) obj.increment(constants.ACH_NATURAL_BREEDER, item.bonus.rabbits * 10)
 			// Unlock
-			setTimeout(function() {
+			Z(document).one('updatestate', function() {
 				if (game.autoRate.rabbits >= 20) obj.unlock(constants.ACH_NATURAL_BREEDER)
-			}, 1000)
+			})
 		}
 	})
 })

@@ -408,6 +408,7 @@ game.closeStory = function(e) {
 }
 
 game.updateState = function(animal, item) {
+	Z(document).trigger('updatestate')
 	game.save()
 	if (item) {
 		game.updateShopItem(item)
