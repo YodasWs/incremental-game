@@ -66,6 +66,7 @@ window.onReady(function() {
 								prods[p.productId].hidden = false
 							})
 							game.items = Z.extend(true, game.items, prods)
+							Z(document).trigger('needsort')
 						} catch (e) {
 							txt = "Error merging items: " + e.message
 							if (game.showStory) {
