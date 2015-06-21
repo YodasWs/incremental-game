@@ -63,6 +63,7 @@ game = Z.extend(game, {
 		// Delete unchanged data
 		Z.each(g, function(i) {
 			if (Z.inArray(i, [
+				'achievements',
 				'openLocs',
 				'animals',
 				'items',
@@ -407,6 +408,7 @@ game.closeStory = function(e) {
 }
 
 game.updateState = function(animal, item) {
+	Z(document).trigger('updatestate')
 	game.save()
 	if (item) {
 		game.updateShopItem(item)
@@ -505,7 +507,12 @@ game.restart = function(e) {
 	].forEach(function(a) {
 		delete game[a]
 	})
-	game.openLocs = []
+	;[
+		'achievements',
+		'openLocs'
+	].forEach(function(a) {
+		game[a] = []
+	})
 	Z.each(game.animals, function(i) {
 		delete game.animals[i]
 	})
