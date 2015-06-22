@@ -13,7 +13,19 @@ window.onReady(function() {
 	if (window.googleplaygame) {
 		// Login
 		try {
-			googleplaygame.auth()
+			googleplaygame.auth(function() {
+				// Add Link to Show Achievements
+				googleplaygame.isSignedIn(function(r) {
+					if (!r.isSignedIn) return
+					if (Z('body > nav > a[href="#achievements"]').length) return
+					var lnk = Z('<a>').attr('href', '#achievements').text("Achievements")
+					Z('body > nav > a[href="#about"]').before(lnk)
+					Z('a[href="#achievements"]').on('click', function() {
+						googleplaygame.showAchievements()
+						return false
+					})
+				})
+			})
 			// Unlock Achievement
 			obj.unlock = function(id) {
 				googleplaygame.isSignedIn(function(r) {
@@ -31,16 +43,6 @@ window.onReady(function() {
 					}
 				})
 			}
-			// Show Achievements
-			googleplaygame.isSignedIn(function(r) {
-				if (!r.isSignedIn) return
-				var lnk = Z('<a>').attr('href', '#achievements').text("Achievements")
-				Z('body > nav > a[href="#about"]').before(lnk)
-				Z('a[href="#achievements"]').on('click', function() {
-					googleplaygame.showAchievements()
-					return false
-				})
-			})
 			// Achievement IDs
 			constants.ACH_NATURAL_BREEDER = 'CgkI8vC6qdsCEAIQAg'
 		} catch (e) {
