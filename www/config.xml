@@ -41,9 +41,6 @@
 		<uses-permission android:name="com.android.vending.CHECK_LICENSE" />
 		<uses-permission android:name="com.android.vending.BILLING" />
 	</gap:config-file>
-	<gap:config-file platform="android" parent="/manifest/application" mode="merge">
-		<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/93234051186"/>
-	</gap:config-file>
 
 	<!-- For future iOS support
 	<gap:platform name="ios" />
