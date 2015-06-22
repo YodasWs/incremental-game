@@ -44,6 +44,7 @@ window.onReady(function() {
 			// Achievement IDs
 			constants.ACH_NATURAL_BREEDER = 'CgkI8vC6qdsCEAIQAg'
 		} catch (e) {
+			obj = {}
 			if (window.error_log) error_log("Problem with Google Play Game Services: " + e.message)
 		}
 	}
