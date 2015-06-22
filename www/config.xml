@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="79" version="1.1.0-beta+20150622">
+	versionCode="80" version="1.1.0-beta+20150622.2">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
@@ -38,6 +38,7 @@
 	<icon src="icons/ic_launcher_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
 	<icon src="icons/ic_launcher_xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
 	<gap:config-file platform="android" parent="/manifest" mode="merge">
+		<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="93234051186"/>
 		<uses-permission android:name="com.android.vending.CHECK_LICENSE" />
 		<uses-permission android:name="com.android.vending.BILLING" />
 	</gap:config-file>
