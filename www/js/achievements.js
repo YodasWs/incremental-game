@@ -52,6 +52,7 @@ window.onReady(function() {
 	}
 	if (!obj.unlock) return
 	Z(document).on('itembuilt', function(e) {
+		if (!obj.unlock) return
 		game.achievements = game.achievements || []
 		var item = game.findItem(e)
 		// Natural Breeder Achievement
