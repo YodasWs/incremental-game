@@ -28,7 +28,7 @@
 	<gap:platform name="android"/>
 	<preference name="android-minSdkVersion" value="16" />
 	<gap:plugin name="com.a42.cordova.googleplaygame" version="2.0.4">
-		<param name="APP_ID" value="ws.yodas.rabbitfarm"/>
+		<param name="APP_ID" value="93234051186"/>
 	</gap:plugin>
 	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6" />
 	<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
