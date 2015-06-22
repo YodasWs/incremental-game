@@ -12,36 +12,40 @@ window.onReady(function() {
 	// Google Play Game Services
 	if (window.googleplaygame) {
 		// Login
-		googleplaygame.auth()
-		// Unlock Achievement
-		obj.unlock = function(id) {
+		try {
+			googleplaygame.auth()
+			// Unlock Achievement
+			obj.unlock = function(id) {
+				googleplaygame.isSignedIn(function(r) {
+					if (r.isSignedIn && Z.inArray(id, game.achievements) == -1) {
+						googleplaygame.unlockAchievement({achievementId:id})
+						game.achievements.push(id)
+					}
+				})
+			}
+			// Increment Achievement Progress
+			obj.increment = function(id, steps) {
+				googleplaygame.isSignedIn(function(r) {
+					if (r.isSignedIn && Z.inArray(id, game.achievements) == -1) {
+						googleplaygame.incrementAchievement({achievementId:id,numSteps:steps})
+					}
+				})
+			}
+			// Show Achievements
 			googleplaygame.isSignedIn(function(r) {
-				if (r.isSignedIn && Z.inArray(id, game.achievements) == -1) {
-					googleplaygame.unlockAchievement({achievementId:id})
-					game.achievements.push(id)
-				}
+				if (!r.isSignedIn) return
+				var lnk = Z('<a>').attr('href', '#achievements').text("Achievements")
+				Z('body > nav > a[href="#about"]').before(lnk)
+				Z('a[href="#achievements"]').on('click', function() {
+					googleplaygame.showAchievements()
+					return false
+				})
 			})
+			// Achievement IDs
+			constants.ACH_NATURAL_BREEDER = 'CgkI8vC6qdsCEAIQAg'
+		} catch (e) {
+			if (window.error_log) error_log("Problem with Google Play Game Services: " + e.message)
 		}
-		// Increment Achievement Progress
-		obj.increment = function(id, steps) {
-			googleplaygame.isSignedIn(function(r) {
-				if (r.isSignedIn && Z.inArray(id, game.achievements) == -1) {
-					googleplaygame.incrementAchievement({achievementId:id,numSteps:steps})
-				}
-			})
-		}
-		// Show Achievements
-		googleplaygame.isSignedIn(function(r) {
-			if (!r.isSignedIn) return
-			var lnk = Z('<a>').attr('href', '#achievements').text("Achievements")
-			Z('body > nav > a[href="#about"]').before(lnk)
-			Z('a#achievements').on('click', function() {
-				googleplaygame.showAchievements()
-				return false
-			})
-		})
-		// Achievement IDs
-		constants.ACH_NATURAL_BREEDER = 'CgkI8vC6qdsCEAIQAg'
 	}
 	if (!obj.unlock) return
 	Z(document).on('itembuilt', function(e) {
