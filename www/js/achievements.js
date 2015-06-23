@@ -22,6 +22,7 @@ window.onReady(function() {
 					Z('body > nav > a[href="#about"]').before(lnk)
 					Z('a[href="#achievements"]').on('click', function() {
 						googleplaygame.showAchievements()
+						game.closeAll()
 						return false
 					})
 				})

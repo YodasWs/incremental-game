@@ -98,6 +98,11 @@ body > nav {
 }
 @media (min-width: 500px) {
 	body > nav {
+		width: 250px;
+	}
+}
+@media (min-width: 800px) {
+	body > nav {
 		width: 300px;
 	}
 }
@@ -317,4 +322,14 @@ body.touch > nav > a[href="#main"] {
 }
 .touch section.shop > a[href="#main"] {
 	font-size: 1.2em;
+}
+
+/** For Large Touch Screens **/
+@media (min-width: 800px) {
+	.touch #history > a[href="#main"],
+	.touch #about > a[href="#main"],
+	.touch #story > a[href="#main"],
+	body.touch > nav > a[href="#main"] {
+		width: 40px; height: 40px; font-size: 44px; line-height: 40px;
+	}
 }

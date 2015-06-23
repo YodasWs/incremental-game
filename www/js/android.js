@@ -42,7 +42,7 @@ window.onReady(function() {
 	/** License Check and In-App Billing **/
 	if (window.inappbilling) {
 //	if (window.inappbilling && window.AndroidLicensePlugin)
-		Z(document).on('gameLoaded', function() {
+		Z(document).one('gameLoaded', function() {
 			// Check Android License
 //			AndroidLicensePlugin.check(function(d) {
 				// TODO: Verify d.signedData and d.signature on a server
