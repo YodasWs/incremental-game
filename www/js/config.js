@@ -279,7 +279,7 @@ game.showShops = function() {
 // Open Shop
 game.openShop = function(e) {
 	game.closeMenu()
-	var t = 600, href = Z(e.target).attr('href').trim('#'), Zt = Z('#' + href + '')
+	var t = 600, href = Z(e.target).closest('a[href]').attr('href').trim('#'), Zt = Z('#' + href + '')
 	game.showModalBG(t)
 	game.updateShop(href)
 	Zt.find('li').attr('disabled','disabled')
@@ -436,7 +436,7 @@ game.findItem = function() {
 
 // Buy Item from Shop
 game.buyItem = function(e) {
-	var el = Z(e.target).attr('disabled','disabled'),
+	var el = Z(e.target).closest('li').attr('disabled','disabled'),
 		name = el.find('.name').text(),
 		cost = el.attr('data-cost'),
 		item, data, k
@@ -531,15 +531,18 @@ if (platform.indexOf('Android') != -1 && device.version) (function(v){
 })(device.version);
 
 // User Interaction Events
+Z(document).on(evtClick, 'section.shop > ul > li:not([disabled]) *', game.buyItem)
 Z(document).on(evtClick, 'section.shop > ul > li:not([disabled])', game.buyItem)
 Z(document).on(evtClick, 'section.shop a[href="#main"]', game.closeShops)
 Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
 Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
 Z(document).on(evtClick, '#story a[href="#main"]', game.closeStory)
 Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
+Z(document).on(evtClick, 'body > nav a.shop *', game.openShop)
 Z(document).on(evtClick, 'body > nav a.shop', game.openShop)
 Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
 Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
+Z(document).on(evtClick, '#lnkShop > a *', game.openShop)
 Z(document).on(evtClick, '#lnkShop > a', game.openShop)
 Z(document).on(evtClick, '#modal-bg', game.hideModals)
 
