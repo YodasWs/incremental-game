@@ -78,6 +78,7 @@ window.onReady(function() {
 			if (game.items.fencing.level > 1) game.items.fencing.level--
 			game.items.fencing.hidden = (game.items.fencing.level - Math.log10(game.animals.rabbits) > 2)
 			if (!game.items.fencing.level) game.items.fencing.hidden = false
+			Z(document).trigger(Z.Event('foxattack', { success:true }))
 		} else {
 			// Need more fencing, lost rabbits
 			num = Math.floor((Math.round(Math.random() * 10) + 10) / 100 * game.animals.rabbits)
@@ -86,6 +87,7 @@ window.onReady(function() {
 			txt = 'A fox came and carried away ' + game.format.whole(num) + ' rabbits in the night! We should build some fences&hellip;'
 			game.items.fencing.hidden = false
 			game.animals.rabbits -= num
+			Z(document).trigger(Z.Event('foxattack', { success:false }))
 		}
 		// Display Event Modal
 		Z('#story').children().remove()

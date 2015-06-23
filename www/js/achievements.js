@@ -46,6 +46,7 @@ window.onReady(function() {
 			}
 			// Achievement IDs
 			constants.ACH_NATURAL_BREEDER = 'CgkI8vC6qdsCEAIQAg'
+			constants.ACH_PROTECTOR = 'CgkI8vC6qdsCEAIQBA'
 		} catch (e) {
 			obj = {}
 			if (window.error_log) error_log("Problem with Google Play Game Services: " + e.message)
@@ -65,5 +66,10 @@ window.onReady(function() {
 				if (game.autoRate.rabbits >= 20) obj.unlock(constants.ACH_NATURAL_BREEDER)
 			})
 		}
+	})
+	// Protector Achievement
+	Z(document).on('foxattack', function(e){
+		if (Z.inArray(constants.ACH_PROTECTOR, game.achievements) != -1) return
+		if (e.success && obj.increment) obj.increment(constants.ACH_PROTECTOR, 1)
 	})
 })
