@@ -172,20 +172,25 @@ section.shop > a[href="#main"] {
 	position: absolute; top: 1rem; right: 1rem;
 	z-index: 1;
 }
-section.shop .name, section.shop .cost { float: left; }
-section.shop .level, section.shop .bonus, section.shop .buildTime, section.shop .wait { float: right; }
-section.shop .cost { clear: left; }
-section.shop .bonus, section.shop .wait, section.shop .buildTime { clear: right; }
+section.shop .name, section.shop .cost, section.shop .wait { float: left; }
+section.shop .level, section.shop .bonus, section.shop .buildTime { float: right; }
+section.shop .cost, section.shop .wait { clear: left; }
+section.shop .bonus, section.shop .buildTime { clear: right; }
 section.shop .level::before {
 	content: 'lvl ';
 }
 section.shop .bonus::before {
 	content: '+';
 }
+section.shop .cost::after, section.shop .bonus::after {
+	content: ' ' attr(data-unit); font-size: smaller;
+}
+section.shop .cost { margin-left: 0.5em; }
+section.shop .wait { margin-left: 1em; }
 section.shop .wait, section.shop .buildTime {
 	font-size: small;
 }
-section.shop .wait::before, section.shop .buildTime::before {
+section.shop .buildTime::before {
 	content: 'build time: ';
 }
 section.shop > ul > li > img {

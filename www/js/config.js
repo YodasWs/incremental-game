@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150622.3',
+	v:'1.1.0-beta+20150623',
 	animals:{
 		rabbits:0
 	},
@@ -183,10 +183,10 @@ game = Z.extend(game, {
 				cost = Math.ceil(i.baseCost['rabbits'] * Math.pow(mul, i.level))
 				if (cost > game.animals['rabbits']) Z(el).attr('disabled', 'disabled')
 				el.attr('data-cost', cost)
-				el.append('<span class="cost">' + game.format.whole(cost) + '</span>')
+				el.append('<span class="cost" data-unit="rabbits">' + game.format.whole(cost) + '</span>')
 			}
 			if (i.bonus)
-				el.append('<span class="bonus">' + game.format.rate(i.bonus['rabbits']) + '</span>')
+				el.append('<span class="bonus" data-unit="rps">' + game.format.rate(i.bonus['rabbits']) + '</span>')
 			if (i.price && i.price_currency_code)
 				el.append('<span class="cost price">' + game.format.money(i.price, i.price_currency_code) + '</span>')
 			if (i.buildTime) {
