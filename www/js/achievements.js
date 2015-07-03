@@ -46,6 +46,7 @@ window.onReady(function() {
 			}
 			// Achievement IDs
 			constants.ACH_NATURAL_BREEDER = 'CgkI8vC6qdsCEAIQAg'
+			constants.ACH_RABBIT_CAREGIVER = 'CgkI8vC6qdsCEAIQBQ'
 			constants.ACH_PROTECTOR = 'CgkI8vC6qdsCEAIQBA'
 		} catch (e) {
 			obj = {}
@@ -59,11 +60,20 @@ window.onReady(function() {
 		var item = game.findItem(e)
 		// Natural Breeder Achievement
 		if (Z.inArray(constants.ACH_NATURAL_BREEDER, game.achievements) == -1 && item.bonus && item.bonus.rabbits > 0) {
-			// Increment Natural Breeder Achievement
+			// Increment
 			if (obj.increment) obj.increment(constants.ACH_NATURAL_BREEDER, item.bonus.rabbits * 10)
 			// Unlock
 			Z(document).one('updatestate', function() {
 				if (game.autoRate.rabbits >= 20) obj.unlock(constants.ACH_NATURAL_BREEDER)
+			})
+		}
+		// Rabbit Caregiver Achievement
+		if (Z.inArray(constants.ACH_RABBIT_CAREGIVER, game.achievements) == -1 && item.bonus && item.bonus.rabbits > 0) {
+			// Increment
+			if (obj.increment) obj.increment(constants.ACH_RABBIT_CAREGIVER, item.bonus.rabbits * 10)
+			// Unlock
+			Z(document).one('updatestate', function() {
+				if (game.autoRate.rabbits >= 100) obj.unlock(constants.ACH_RABBIT_CAREGIVER)
 			})
 		}
 	})
