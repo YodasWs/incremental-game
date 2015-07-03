@@ -661,8 +661,9 @@ if (window.plugins && window.plugins.insomnia)
 // Open Web Links in Browser
 if (window.InAppBrowser) {
 	Z(document).on('click','a[target="_blank"], a[href^="http://"], a[href^="https://"]',function(e){
-		var win = window.open(Z(e.target).attr('href'), '_system')
-		if (win.close) Z(document).on('pause', function(e){
+		var a = Z(e.target).closest('a'),
+			win = window.open(a.attr('href'), '_system')
+		if (win.close) Z(document).one('pause', function(e){
 			win.close()
 		})
 		return false
