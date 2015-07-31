@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150703',
+	v:'1.1.0-beta+20150731',
 	animals:{
 		rabbits:0
 	},
@@ -660,14 +660,18 @@ if (window.plugins && window.plugins.insomnia)
 
 // Open Web Links in Browser
 if (window.InAppBrowser) {
-	Z(document).on('click','a[target="_blank"], a[href^="http://"], a[href^="https://"]',function(e){
-		var a = Z(e.target).closest('a'),
-			win = window.open(a.attr('href'), '_system')
-		if (win.close) Z(document).one('pause', function(e){
-			win.close()
-		})
-		return false
-	})
+	alert('InAppBrowser present and ready')
+	Z(document).on('click',
+		'a[target="_blank"],a[target="_blank"] *,a[href^="http://"],a[href^="http://"] *,a[href^="https://"],a[href^="https://"] *',
+		function(e){
+			var a = Z(e.target).closest('a'),
+				win = window.open(a.attr('href'), '_system')
+			if (win.close) Z(document).one('pause', function(e){
+				win.close()
+			})
+			return false
+		}
+	)
 }
 
 })
