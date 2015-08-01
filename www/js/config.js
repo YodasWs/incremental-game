@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150731',
+	v:'1.1.0-beta+20150801',
 	animals:{
 		rabbits:0
 	},
@@ -659,8 +659,8 @@ if (window.plugins && window.plugins.insomnia)
 	window.plugins.insomnia.keepAwake()
 
 // Open Web Links in Browser
-if (window.InAppBrowser) {
-	alert('InAppBrowser present and ready')
+if (window.cordova) {
+	alert('Built with Cordova')
 	Z(document).on('click',
 		'a[target="_blank"],a[target="_blank"] *,a[href^="http://"],a[href^="http://"] *,a[href^="https://"],a[href^="https://"] *',
 		function(e){
