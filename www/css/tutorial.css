@@ -1,0 +1,37 @@
+/**
+ * Rabbit Farm
+ * Copyright © 2015 Sam Grundman
+ *
+ * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+ * http://creativecommons.org/licenses/by-nc-sa/4.0/
+ */
+#tutorial {
+	position: absolute; top: 50%; left: 50%;
+	border: 2px solid black; border-radius: 10px;
+	padding: 2px 5px; background: white;
+	z-index: 100;
+}
+#tutorial::before {
+	display: block; content: ''; width: 0; height: 0;
+	position: absolute; top: -13px; left: 7px;
+	border-top: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-bottom: 6px solid black;
+	border-left: 6px solid black;
+}
+#tutorial::after {
+	display: block; content: ''; width: 0; height: 0;
+	position: absolute; top: -7px; left: 9px;
+	border-top: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid white;
+	border-left: 5px solid white;
+}
+#tutorial.down::before {
+	border-top: 6px solid black; top: auto; bottom: -13px;
+	border-bottom: 6px solid transparent;
+}
+#tutorial.down::after {
+	border-top: 5px solid white; top: auto; bottom: -9px;
+	border-bottom: 5px solid transparent;
+}

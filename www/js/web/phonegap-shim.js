@@ -14,7 +14,8 @@
 		event.initEvent('deviceready', true, true);event.eventName = 'deviceready';event.memo = {}
 		document.dispatchEvent(event)
 	},c=0,b=function(){if(!c){if(document.readyState=='complete'){a();c=true}}}
-	if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
+	if(document.readyState=='complete')b()
+	else if(Element.prototype.addEventListener)document.addEventListener('readystatechange',b)
 	else if(Element.prototype.attachEvent)document.attachEvent('onreadystatechange',b)
 })();
 
@@ -32,10 +33,10 @@ window.device = {
 		else return 'unknown'
 	})(),
 	platform:(function() {
-		return (navigator.userAgent.match(/\w*(IE|Chrome|iPod|iPhone|iPad|Safari|Android)\w*/))[0].trim()
+		return (navigator.userAgent.match(/\w*(Win|iPod|iPhone|iPad|Mac|Android)\w*/))[0].trim()
 	})(),
 	version:(function() {
-		return (navigator.userAgent.match(/(IE|Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()
+		return (navigator.userAgent.match(/(MSIE|Trident|Android|Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()
 	})(),
 	uuid:'testing',
 	cordova:'sam-testing'
@@ -77,6 +78,7 @@ camera = {
 }
 
 // for desktop testing
-if (device.platform.indexOf('Win') > -1) device.platform = 'Win32NT'
+if (device.platform.indexOf('Win') > -1) device.platform = 'Win32'
+if (device.platform.indexOf('Mac') > -1) device.platform = 'MacIntel'
 console.log('userAgent: ' + navigator.userAgent)
 console.log('device: ' + JSON.stringify(device))

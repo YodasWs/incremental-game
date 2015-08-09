@@ -1,5 +1,12 @@
 # .gitignore
 *.bak
 *.swp
+*.swo
 *~
 Thumbs.db
+*.Spp
+*.keystore
+*.lnk
+_site
+_drafts
+*.apk
