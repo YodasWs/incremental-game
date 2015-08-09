@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="85" version="1.1.0-beta+20150801">
+	versionCode="85" version="1.1.0-beta+20150809">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
@@ -12,10 +12,9 @@
 
 	<!-- Cross-platform Plugins -->
 	<gap:plugin name="org.apache.cordova.inappbrowser" version="0.5.2" />
-	<access origin="https://creativecommons.org" />
-	<access origin="http://yodasws.github.io" />
 	<gap:plugin name="nl.x-services.plugins.insomnia" version="4.0.1" />
 	<gap:plugin name="org.apache.cordova.device" version="0.2.12" />
+	<access origin="http://fonts.googleapis.com" />
 	<!-- For future game development
 	<gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1" />
 	<gap:plugin name="org.apache.cordova.vibration" version="0.3.11" />
