@@ -209,7 +209,7 @@ game = Z.extend(game, {
 			if (!Z(this).children('.name').length) li.push(i)
 			if (Number.parseInt(Z(this).attr('data-cost')) > game.animals['rabbits']) li.push(i)
 			if (Z(this).children('.wait').length) {
-				t = Math.floor((Number.parseInt(Z(this).data('finishTime')) - Date.now()) / 1000)
+				t = Math.floor((Number.parseInt(Z(this).data('finishTime'),10) - Date.now()) / 1000)
 				Z(this).children('.wait').html(game.format.time(t))
 				if (t < 0) game.updateShop(Z(this).parents('section.shop').attr('id').trim('#'))
 				li.push(i)
