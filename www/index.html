@@ -48,6 +48,8 @@ if(platform.indexOf('Android')!=-1) {
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
 	a.src='js/android.js';m.parentNode.insertBefore(a,m)
+	a=d.createElement(t);a.async=1
+	a.src='js/achievements.js';m.parentNode.insertBefore(a,m)
 	a=d.createElement('link');a.rel="stylesheet"
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 }
@@ -109,13 +111,13 @@ window.onload = function() {
 	<small id="version"></small>
 	<small rel="copyright">&copy;2015 Sam Grundman</small>
 	<div id="license">
-		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+		<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
 			<img alt="Creative Commons License" src="www/img/cc-by-nc-sa.png" />
 		</a><br />
-		The JavaScript code is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+		The JavaScript code is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
 			target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br/>
 		Many images are under public domain, others are under full copyright &copy;2015 Sam Grundman.<br/>
-		For full details, see <a rel="license" href="http://yodasws.github.io/incremental-game/LICENSE.md"
+		For full details, see <a rel="license" href="http://yodasws.github.io/incremental-game/LICENSE.html"
 			target="_blank">full license details</a>.
 	</div>
 </small>
