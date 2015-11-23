@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20150801',
+	v:'1.1.0-beta+20151123',
 	animals:{
 		rabbits:0
 	},
@@ -309,7 +309,7 @@ game.updateShop = function(href) {
 // Close Open Shop
 game.closeShops = function(e) {
 	Z('#lnkShop').children('a').each(function() {
-		var href = Z(this).attr('href').trim('#'), t = 400, Zt = Z('#' + href + '')
+		var href = Z(this).attr('href') + '', t = 400, Zt = Z(href)
 		if (Zt.css('display') == 'block') {
 			game.hideModalBG(t)
 			Zt.css({
@@ -552,10 +552,23 @@ Z(document).on('resume', game.autoClick)
 
 // Keyboard Support
 Z(document).on('keydown', function(e) {
+	// TODO: Use e.key for Firefox and IE
 	switch (e.keyCode) {
 		// ESC from modals
 		case 27:
 			game.closeAll(e)
+			break;
+		// M for Menu
+		case 77:
+			game.openMenu(e)
+			break;
+		// S for Store
+		case 83:
+			var href = Z('#lnkShop > a:first-of-type').attr('href') + '', Zt = Z(href)
+			if (Zt.css('display') == 'block') {
+				game.closeShops()
+			} else
+				Z('#lnkShop > a:first-of-type').trigger('click')
 			break;
 	}
 })
