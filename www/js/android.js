@@ -52,14 +52,8 @@ window.onReady(function() {
 					inappbilling.getAvailableProducts(function(r) {
 						var prods = {}, txt = ''
 						if (typeof r == 'string') r = JSON.parse(r)
-						// Merge Item Listings
-						if (game.showStory) {
-							txt = "Successfully loaded " + r.length + " available products!"
-							Z('#story').children().remove()
-							Z('#story').append('<h1>Status Update</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
-							Z('#story').append('<p style="font-family: monospace; white-space: pre-line">' + JSON.stringify(r))
-							game.showStory()
-						}
+						error_log("Successfully loaded " + r.length + " available products!" + "\n" + JSON.stringify(r))
+						// TODO: Merge Item Listings
 						try {
 							Z.each(r, function(i,p) {
 								prods[p.productId] = p
@@ -68,13 +62,7 @@ window.onReady(function() {
 							game.items = Z.extend(true, game.items, prods)
 							Z(document).trigger('needsort')
 						} catch (e) {
-							txt = "Error merging items: " + e.message
-							if (game.showStory) {
-								Z('#story').children().remove()
-								Z('#story').append('<h1>Error</h1>').append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
-								game.showStory()
-							}
-							error_log(txt)
+							error_log("Error merging items: " + e.message)
 						}
 					}, function(e) {
 						error_log('Could not get available products; ' + e.message)
