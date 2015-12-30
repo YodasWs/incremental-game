@@ -39,8 +39,8 @@ game = Z.extend(game, {
 			// Update Save File
 			if (!game.animals.rabbits) game.animals.rabbits = 0
 			game.save()
-			$(document).trigger('gameLoaded')
 		}
+		$(document).trigger('gameLoaded')
 		game.showShops()
 		game.autoClick()
 	},
