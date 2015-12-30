@@ -527,7 +527,7 @@ var evtClick = 'tap click'
 // Register Correct Tap on Android Devices
 if (platform.indexOf('Android') != -1 && device.version) (function(v){
 	v = Number.parseFloat(v)
-	if (isFinite(v)) evtClick = (v >= 4.4) ? 'tap longTap' : 'singleTap'
+	if (Number.isFinite(v)) evtClick = (v >= 4.4) ? 'tap longTap' : 'singleTap'
 })(device.version);
 
 // User Interaction Events
