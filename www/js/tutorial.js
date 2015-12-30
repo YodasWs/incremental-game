@@ -22,9 +22,9 @@ function visitStore(e) {
 			Z('#shop').one('update', function(e) {
 				setTimeout(function() {
 					var item = Z(Z('#shop').find('li').get(0))
-					tutorial.removeClass('down').appendTo('#shop').offset({
-						top:item.offset().top + item.height(),
-						left:100
+					tutorial.removeClass('down').appendTo('#shop').css({
+						top:item.position().top+item.height()+'px',
+						left:100+'px'
 					}).text('Buy items to earn rabbits automatically!')
 				}, 1000)
 			})
