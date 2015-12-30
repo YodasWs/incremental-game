@@ -552,23 +552,35 @@ Z(document).on('resume', game.autoClick)
 
 // Keyboard Support
 Z(document).on('keydown', function(e) {
-	// TODO: Use e.key for Firefox and IE
-	switch (e.keyCode) {
-		// ESC from modals
-		case 27:
+	// Use e.key for Firefox and IE
+	if (!e.key && e.keyCode) switch (e.keyCode) {
+		case 27:e.key='Esc';break
+		case 32:e.key=' ';break
+		case 77:e.key=e.shiftKey?'M':'m';break
+		case 83:e.key=e.shiftKey?'S':'s';break
+	}
+	if (!e.key) return
+	switch (e.key) {
+		// Esc from modals
+		case 'Esc':
 			game.closeAll(e)
 			break;
 		// M for Menu
-		case 77:
+		case 'M':
+		case 'm':
 			game.openMenu(e)
 			break;
 		// S for Store
-		case 83:
+		case 'S':
+		case 's':
 			var href = Z('#lnkShop > a:first-of-type').attr('href') + '', Zt = Z(href)
 			if (Zt.css('display') == 'block') {
 				game.closeShops()
 			} else
 				Z('#lnkShop > a:first-of-type').trigger('click')
+			break;
+		case ' ':
+			Z('img#rabbit').trigger('click')
 			break;
 	}
 })
