@@ -34,7 +34,7 @@
 		<icon src="icons/ic_launcher_xxxhdpi.png" gap:qualifier="xxxhdpi" />
 	`</platform>
 	<preference name="android-minSdkVersion" value="16" />
-	<plugin name="com.a42.cordova.googleplaygame" version="2.0.4" source="pgb">
+	<plugin name="com.appodeal.googleplayservices" spec="7.8.0" source="pgb">
 		<param name="APP_ID" value="93234051186"/>
 	</plugin>
 	<plugin name="com.mcm.plugins.androidinappbilling" spec="3.0.6" source="pgb" />
