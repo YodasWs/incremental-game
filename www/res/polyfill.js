@@ -6,7 +6,8 @@ Array.prototype.indexOf=function(a,b){if(this===undefined||this===null){throw ne
 // Extend String.prototype.trim to PHP behavior to remove more than just white space
 String.prototype.trim=function(chars){return this.replace(new RegExp('^['+(chars||'\\uffef\\ua0\\s')+']+|['+(chars||'\\uffef\\ua0\\s')+']+$','g'),'')}
 // ECMAScript 6
-Number.isInteger=Number.isInteger||function(a){return typeof a==='number'&&isFinite(a)&&Math.abs(a)<Math.pow(2,53)-1&&Math.floor(a)===a};
+Number.isFinite=Number.isFinite||function(n){return typeof n==='number'&&isFinite(n)};
+Number.isInteger=Number.isInteger||function(a){return Number.isFinite(a)&&Math.abs(a)<Math.pow(2,53)-1&&Math.floor(a)===a};
 Number.parseFloat=Number.parseFloat||parseFloat;
 Number.parseInt=Number.parseInt||parseInt;
 Math.log10=Math.log10||function(x){return Math.log(x)/Math.log(10)};

@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20151123',
+	v:'1.1.0-beta+20151231',
 	animals:{
 		rabbits:0
 	},
@@ -39,8 +39,8 @@ game = Z.extend(game, {
 			// Update Save File
 			if (!game.animals.rabbits) game.animals.rabbits = 0
 			game.save()
-			$(document).trigger('gameLoaded')
 		}
+		$(document).trigger('gameLoaded')
 		game.showShops()
 		game.autoClick()
 	},
@@ -309,7 +309,7 @@ game.updateShop = function(href) {
 // Close Open Shop
 game.closeShops = function(e) {
 	Z('#lnkShop').children('a').each(function() {
-		var href = Z(this).attr('href').trim('#'), t = 400, Zt = Z('#' + href + '')
+		var href = Z(this).attr('href') + '', t = 400, Zt = Z(href)
 		if (Zt.css('display') == 'block') {
 			game.hideModalBG(t)
 			Zt.css({
@@ -527,7 +527,7 @@ var evtClick = 'tap click'
 // Register Correct Tap on Android Devices
 if (platform.indexOf('Android') != -1 && device.version) (function(v){
 	v = Number.parseFloat(v)
-	if (isFinite(v)) evtClick = (v >= 4.4) ? 'tap longTap' : 'singleTap'
+	if (Number.isFinite(v)) evtClick = (v >= 4.4) ? 'tap longTap' : 'singleTap'
 })(device.version);
 
 // User Interaction Events
@@ -552,10 +552,35 @@ Z(document).on('resume', game.autoClick)
 
 // Keyboard Support
 Z(document).on('keydown', function(e) {
-	switch (e.keyCode) {
-		// ESC from modals
-		case 27:
+	// Use e.key for Firefox and IE
+	if (!e.key && e.keyCode) switch (e.keyCode) {
+		case 27:e.key='Esc';break
+		case 32:e.key=' ';break
+		case 77:e.key=e.shiftKey?'M':'m';break
+		case 83:e.key=e.shiftKey?'S':'s';break
+	}
+	if (!e.key) return
+	switch (e.key) {
+		// Esc from modals
+		case 'Esc':
 			game.closeAll(e)
+			break;
+		// M for Menu
+		case 'M':
+		case 'm':
+			game.openMenu(e)
+			break;
+		// S for Store
+		case 'S':
+		case 's':
+			var href = Z('#lnkShop > a:first-of-type').attr('href') + '', Zt = Z(href)
+			if (Zt.css('display') == 'block') {
+				game.closeShops()
+			} else
+				Z('#lnkShop > a:first-of-type').trigger('click')
+			break;
+		case ' ':
+			Z('img#rabbit').trigger('click')
 			break;
 	}
 })
