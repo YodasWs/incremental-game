@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
 	id="ws.yodas.rabbitfarm" xmlns:android="http://schemas.android.com/apk/res/android"
-	versionCode="85" version="1.1.0-beta+20151123">
+	versionCode="86" version="1.1.0-beta+20160101">
 	<name>Rabbit Farm</name>
 	<description>Experience the fun and excitement of running and managing your own rabbit farm!</description>
 	<author href="http://css3design.guru" email="rabbit-farm@yodas.ws">Sam Grundman</author>
+	<content src="index.html" />
 
 	<preference name="orientation" value="portrait" />
 	<preference name="fullscreen" value="true" />
 	<icon src="icons/ic_launcher_xxhdpi.png" />
 
 	<!-- Cross-platform Plugins -->
-	<gap:plugin name="org.apache.cordova.inappbrowser" version="0.5.2" />
-	<gap:plugin name="nl.x-services.plugins.insomnia" version="4.0.1" />
-	<gap:plugin name="org.apache.cordova.device" version="0.2.12" />
+	<plugin name="org.apache.cordova.inappbrowser" spec="0.6.0" source="pgb" />
+	<plugin name="nl.x-services.plugins.insomnia" spec="4.0.1" source="pgb" />
+	<plugin name="org.apache.cordova.device" spec="0.3.0" source="pgb" />
 	<access origin="http://fonts.googleapis.com" />
 	<!-- For future game development
-	<gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.8.1" />
-	<gap:plugin name="org.apache.cordova.vibration" version="0.3.11" />
-	<gap:plugin name="nl.x-services.plugins.toast" version="2.0.2" />
-	<gap:plugin name="com.adobe.plugins.gaplugin" version="2.4.0" />
+	<plugin name="de.appplant.cordova.plugin.local-notification" spec="0.8.1" source="pgb" />
+	<plugin name="org.apache.cordova.vibration" spec="0.3.11" source="pgb" />
+	<plugin name="nl.x-services.plugins.toast" spec="2.0.2" source="pgb" />
+	<plugin name="com.adobe.plugins.gaplugin" spec="2.4.0" source="pgb" />
 	<feature name="http://api.phonegap.com/1.0/notification" />
 	-->
 
 	<!-- Android -->
-	<gap:platform name="android"/>
+	<platform name="android">
+		<icon src="icons/ic_launcher_ldpi.png" gap:qualifier="ldpi" />
+		<icon src="icons/ic_launcher_mdpi.png" gap:qualifier="mdpi" />
+		<icon src="icons/ic_launcher_hdpi.png" gap:qualifier="hdpi" />
+		<icon src="icons/ic_launcher_xhdpi.png" gap:qualifier="xhdpi" />
+		<icon src="icons/ic_launcher_xxhdpi.png" gap:qualifier="xxhdpi" />
+		<icon src="icons/ic_launcher_xxxhdpi.png" gap:qualifier="xxxhdpi" />
+	`</platform>
 	<preference name="android-minSdkVersion" value="16" />
-	<gap:plugin name="com.a42.cordova.googleplaygame" version="2.0.4">
+	<plugin name="com.appodeal.googleplayservices" spec="7.8.0" source="pgb">
 		<param name="APP_ID" value="93234051186"/>
-	</gap:plugin>
-	<gap:plugin name="com.mcm.plugins.androidinappbilling" version="3.0.6" />
-	<icon src="icons/ic_launcher_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
-	<icon src="icons/ic_launcher_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
-	<icon src="icons/ic_launcher_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
-	<icon src="icons/ic_launcher_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
-	<icon src="icons/ic_launcher_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
-	<icon src="icons/ic_launcher_xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
+	</plugin>
+	<plugin name="com.mcm.plugins.androidinappbilling" spec="3.0.6" source="pgb" />
 	<gap:config-file platform="android" parent="/manifest" mode="merge">
 		<uses-permission android:name="com.android.vending.CHECK_LICENSE" />
 		<uses-permission android:name="com.android.vending.BILLING" />
 	</gap:config-file>
 
 	<!-- For future iOS support
-	<gap:platform name="ios" />
+	<platform name="ios" />
 	<preference name="target-device" value="handset" />
-	<gap:plugin name="cc.fovea.plugins.inapppurchase" version="3.4.0" />
-	<gap:plugin name="com.rjfun.cordova.plugin.iad" version="0.1.8" />
+	<plugin name="cc.fovea.plugins.inapppurchase" spec="3.4.0" source="pgb" />
+	<plugin name="com.rjfun.cordova.plugin.iad" spec="0.1.8" source="pgb" />
 	-->
 
 	<!-- For future Windows Phone support
-	<gap:platform name="winphone" />
+	<platform name="winphone" />
 	-->
 </widget>

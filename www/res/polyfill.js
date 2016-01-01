@@ -10,5 +10,6 @@ Number.isFinite=Number.isFinite||function(n){return typeof n==='number'&&isFinit
 Number.isInteger=Number.isInteger||function(a){return Number.isFinite(a)&&Math.abs(a)<Math.pow(2,53)-1&&Math.floor(a)===a};
 Number.parseFloat=Number.parseFloat||parseFloat;
 Number.parseInt=Number.parseInt||parseInt;
+Number.isNaN=Number.isNaN||function(x){return typeof x==='number'&&isNaN(x)};
 Math.log10=Math.log10||function(x){return Math.log(x)/Math.log(10)};
-Math.sign=Math.sign||function(x){x=+x;if(x===0||isNaN(x))return x;return x>0?1:-1};
+Math.sign=Math.sign||function(x){x=+x;if(x===0||Number.isNaN(x))return x;return x>0?1:-1};
