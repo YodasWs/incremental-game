@@ -6,7 +6,7 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
-	var obj = {}
+	var obj = {}, foxAchievements = []
 	window.constants = window.constants || {}
 	game.achievements = game.achievements || []
 	// Google Play Game Services
@@ -48,6 +48,11 @@ window.onReady(function() {
 			constants.ACH_NATURAL_BREEDER = 'CgkI8vC6qdsCEAIQAg'
 			constants.ACH_RABBIT_CAREGIVER = 'CgkI8vC6qdsCEAIQBQ'
 			constants.ACH_PROTECTOR = 'CgkI8vC6qdsCEAIQBA'
+			constants.ACH_DEFENDER = 'CgkI8vC6qdsCEAIQBg'
+			foxAchievements = [
+				'ACH_DEFENDER',
+				'ACH_PROTECTOR'
+			]
 		} catch (e) {
 			obj = {}
 			if (window.error_log) error_log("Problem with Google Play Game Services: " + e.message)
@@ -77,9 +82,12 @@ window.onReady(function() {
 			})
 		}
 	})
-	// Protector Achievement
+	// Fox Attack Achievements
 	Z(document).on('foxattack', function(e){
-		if (Z.inArray(constants.ACH_PROTECTOR, game.achievements) != -1) return
-		if (e.success && obj.increment) obj.increment(constants.ACH_PROTECTOR, 1)
+		if (!e.success || !foxAchievements.length || !obj.increment) return
+		game.achievements = game.achievements || []
+		foxAchievements.forEach(function(a){
+			if (Z.inArray(constants[a], game.achievements) == -1) obj.increment(constants[a], 1)
+		})
 	})
 })
