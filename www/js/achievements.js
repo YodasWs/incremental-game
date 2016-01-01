@@ -6,7 +6,7 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
-	var obj = {}, foxAchievements = []
+	var obj = {}, achClasses = {}
 	window.constants = window.constants || {}
 	game.achievements = game.achievements || []
 	// Google Play Game Services
@@ -49,7 +49,19 @@ window.onReady(function() {
 			constants.ACH_RABBIT_CAREGIVER = 'CgkI8vC6qdsCEAIQBQ'
 			constants.ACH_PROTECTOR = 'CgkI8vC6qdsCEAIQBA'
 			constants.ACH_DEFENDER = 'CgkI8vC6qdsCEAIQBg'
-			foxAchievements = [
+			achClasses.breeding = [
+				{
+					name:'ACH_NATURAL_BREEDER',
+					animal:'rabbits',
+					num:20
+				},
+				{
+					name:'ACH_RABBIT_CAREGIVER',
+					animal:'rabbits',
+					num:100
+				}
+			]
+			achClasses.foxAttack = [
 				'ACH_DEFENDER',
 				'ACH_PROTECTOR'
 			]
@@ -59,34 +71,28 @@ window.onReady(function() {
 		}
 	}
 	if (!obj.unlock) return
+	// Animal Breeder Achievements
 	Z(document).on('itembuilt', function(e) {
-		if (!obj.unlock) return
 		game.achievements = game.achievements || []
 		var item = game.findItem(e)
-		// Natural Breeder Achievement
-		if (Z.inArray(constants.ACH_NATURAL_BREEDER, game.achievements) == -1 && item.bonus && item.bonus.rabbits > 0) {
+		if (!item.bonus) return
+		achClasses.breeding.forEach(function(a) {
+			if (!item.bonus[a.animal]) return
+			if (game.achievements.indexOf(constants[a.name]) != -1) return
 			// Increment
-			if (obj.increment) obj.increment(constants.ACH_NATURAL_BREEDER, item.bonus.rabbits * 10)
+			if (obj.increment) obj.increment(constants[a.name], item.bonus[a.animal] * 10)
 			// Unlock
 			Z(document).one('updatestate', function() {
-				if (game.autoRate.rabbits >= 20) obj.unlock(constants.ACH_NATURAL_BREEDER)
+				if (game.autoRate[a.animal] >= a.num) obj.unlock(constants[a.name])
 			})
-		}
-		// Rabbit Caregiver Achievement
-		if (Z.inArray(constants.ACH_RABBIT_CAREGIVER, game.achievements) == -1 && item.bonus && item.bonus.rabbits > 0) {
-			// Increment
-			if (obj.increment) obj.increment(constants.ACH_RABBIT_CAREGIVER, item.bonus.rabbits * 10)
-			// Unlock
-			Z(document).one('updatestate', function() {
-				if (game.autoRate.rabbits >= 100) obj.unlock(constants.ACH_RABBIT_CAREGIVER)
-			})
-		}
+		})
 	})
+	if (!obj.increment) return
 	// Fox Attack Achievements
 	Z(document).on('foxattack', function(e){
-		if (!e.success || !foxAchievements.length || !obj.increment) return
+		if (!e.success || !achClasses.foxAttack.length) return
 		game.achievements = game.achievements || []
-		foxAchievements.forEach(function(a){
+		achClasses.foxAttack.forEach(function(a){
 			if (Z.inArray(constants[a], game.achievements) == -1) obj.increment(constants[a], 1)
 		})
 	})
