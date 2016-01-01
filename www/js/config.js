@@ -562,6 +562,7 @@ Z(document).on('keydown', function(e) {
 	if (!e.key) return
 	switch (e.key) {
 		// Esc from modals
+		case 'Escape':
 		case 'Esc':
 			game.closeAll(e)
 			break;
