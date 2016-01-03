@@ -1,13 +1,13 @@
 /**
  * Rabbit Farm
- * Copyright © 2015 Sam Grundman
+ * Copyright © 2015–2016 Sam Grundman
  *
  * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20160101',
+	v:'1.1.0-beta+20160103',
 	animals:{
 		rabbits:0
 	},
