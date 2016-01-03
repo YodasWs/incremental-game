@@ -1,6 +1,6 @@
 /**
  * Rabbit Farm
- * Copyright © 2015 Sam Grundman
+ * Copyright © 2015–2016 Sam Grundman
  *
  * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
@@ -27,23 +27,31 @@ if (!window.console) var console = {
 
 // device, http://docs.phonegap.com/en/3.0.0/cordova_device_device.md.html#Device
 window.device = {
-	name:(function() {
-		var a = navigator.userAgent.match(/\((.*?;)?\s*(.*?(windows|linux|iphone|mac os x).*?)\)/i)
-		if (a && a[2]) return a[2].trim()
-		else return 'unknown'
+	model:(function() {
+		var a = navigator.userAgent.match(/(Edge|MSIE|Android)/)
+		if (a && a[0]) return a[0].trim()
+		a = navigator.userAgent.match(/(Edge|MSIE|Trident|Android|Chrome|Safari|Firefox)/)
+		if (a && a[0]) return a[0].trim()
+		return 'unknown'
 	})(),
 	platform:(function() {
-		return (navigator.userAgent.match(/\w*(Win|iPod|iPhone|iPad|Mac|Android)\w*/))[0].trim()
+		var p = (navigator.userAgent.match(/\w*(Win|iOS|iPod|iPhone|iPad|Mac|Android)\w*/))[0].trim()
+		if (p.search(/(iOS|iPod|iPhone|iPad)/) > -1) p = 'iOS'
+		if (p.indexOf('Mac') > -1) p = 'MacIntel'
+		if (p.indexOf('Win') > -1) p = 'Win32NT'
+		return p
 	})(),
 	version:(function() {
-		return (navigator.userAgent.match(/(MSIE|Trident|Android|Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()
+		var v = navigator.userAgent.match(/(Edge|MSIE|Android)\/?\s*([\d\.]*)/)
+		if (v && v[2]) return v[2].trim()
+		return (navigator.userAgent.match(/(Chrome|Safari|Firefox)\/?\s*([\d\.]*)/))[2].trim()
 	})(),
+	isVirtual:true,
 	uuid:'testing',
 	cordova:'sam-testing'
 }
-device.model = device.name
 
-if (!navigator) var navigator = {}
+navigator = navigator || {}
 if (!navigator.maxTouchPoints) navigator.maxTouchPoints = 0
 
 // geolocation, http://docs.phonegap.com/en/2.9.0/cordova_geolocation_geolocation.md.html#Geolocation
@@ -68,17 +76,14 @@ navigator.geolocation.getCurrentPosition(function(position) {
 })
 
 // vibration, https://github.com/apache/cordova-plugin-vibration/blob/5adf530d3663226ad6913de6cfc8493672334023/doc/index.md
-if (!navigator.vibrate) navigator.vibrate = function(t){}
+navigator.vibrate = navigator.vibrate || function(t){}
 
 // camera, http://docs.phonegap.com/en/3.0.0/cordova_camera_camera.md.html#Camera
-if (!window.camera)
-camera = {
+window.camera = window.camera || {
 	getPicture:function(){},
 	cleanup:function(){}
 }
 
 // for desktop testing
-if (device.platform.indexOf('Win') > -1) device.platform = 'Win32'
-if (device.platform.indexOf('Mac') > -1) device.platform = 'MacIntel'
 console.log('userAgent: ' + navigator.userAgent)
 console.log('device: ' + JSON.stringify(device))
