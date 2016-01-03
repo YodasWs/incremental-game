@@ -1,6 +1,6 @@
 /**
  * Rabbit Farm
- * Copyright © 2015 Sam Grundman
+ * Copyright © 2015–2016 Sam Grundman
  *
  * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
@@ -12,7 +12,7 @@ game.skus = [
 	'nesting_box'
 ]
 window.onReady(function() {
-	if (platform.indexOf('Android') == -1) return;
+	if(device.platform.indexOf('Android')==-1)return
 	var v = device.version ? Number.parseFloat(device.version) : 0,
 		h = Z(window).height(), w = Z(window).width()
 

@@ -1,13 +1,13 @@
 /**
  * Rabbit Farm
- * Copyright © 2015 Sam Grundman
+ * Copyright © 2015–2016 Sam Grundman
  *
  * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
  * http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20160101',
+	v:'1.1.0-beta+20160103',
 	animals:{
 		rabbits:0
 	},
@@ -525,7 +525,7 @@ game.restart = function(e) {
 
 var evtClick = 'tap click'
 // Register Correct Tap on Android Devices
-if (platform.indexOf('Android') != -1 && device.version) (function(v){
+if (device.platform.indexOf('Android') != -1 && device.version) (function(v){
 	v = Number.parseFloat(v)
 	if (Number.isFinite(v)) evtClick = (v >= 4.4) ? 'tap longTap' : 'singleTap'
 })(device.version);
@@ -704,7 +704,7 @@ window.error_log = function(msg) {
 	if (Z && Z.ajax) Z.ajax({
 		type:'POST',
 		url:'http://1feed.me/log.php',
-		data:{'msg':msg + '; platform: ' + platform}
+		data:{'msg':msg + '; platform: ' + device.platform}
 	})
 }
 
