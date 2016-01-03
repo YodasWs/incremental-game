@@ -38,11 +38,6 @@ window.game={}
 <script src="js/story.js" async></script>
 <script src="js/locs.js" async></script>
 <script>
-try{
-	window.platform=navigator.userAgent.match(/\w*(Android|Win|iPod|iPhone|iPad|Mac)\w*/)[0].trim()
-	if (platform.indexOf('Mac') > -1) platform = 'MacIntel'
-	if (platform.indexOf('Win') > -1) platform = 'Win32'
-}catch(e){window.platform='unknown'}
 // Load Android Polyfills and Plugins
 window.onReady(function() {
 if(device.platform.indexOf('Android')!=-1) {
