@@ -307,9 +307,11 @@ game.updateShop = function(href) {
 }
 
 // Close Open Shop
-game.closeShops = function(e) {
+game.closeShops = function(e,cb) {
+	var t = 0
 	Z('#lnkShop').children('a').each(function() {
-		var href = Z(this).attr('href') + '', t = 400, Zt = Z(href)
+		var href = Z(this).attr('href') + '', Zt = Z(href)
+		t = 400
 		if (Zt.css('display') == 'block') {
 			game.hideModalBG(t)
 			Zt.css({
@@ -320,6 +322,7 @@ game.closeShops = function(e) {
 			})
 		}
 	})
+	if (Z.isFunction(cb)) setTimeout(cb, t)
 }
 
 // Show Modal Background Screen
@@ -574,11 +577,11 @@ Z(document).on('keydown', function(e) {
 		// S for Store
 		case 'S':
 		case 's':
-			var href = Z('#lnkShop > a:first-of-type').attr('href') + '', Zt = Z(href)
-			if (Zt.css('display') == 'block') {
-				game.closeShops()
-			} else
-				Z('#lnkShop > a:first-of-type').trigger('click')
+			var Zt = Z('#lnkShop > a:first-of-type')
+				isOpen = Z(Zt.attr('href')).css('display') == 'block'
+			game.closeShops(e, function(){
+				if (!isOpen) Zt.trigger('click')
+			})
 			break;
 		case ' ':
 			Z('img#rabbit').trigger('click')
