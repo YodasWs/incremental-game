@@ -39,8 +39,7 @@ window.game={}
 <script src="js/locs.js" async></script>
 <script>
 // Load Android Polyfills and Plugins
-window.onReady(function() {
-if(device.platform.indexOf('Android')!=-1) {
+if(navigator.userAgent.indexOf('Android')!=-1) {
 	var a,d=document,t='script',m=d.getElementsByTagName(t)[0]
 	a=d.createElement(t);a.async=1
 	a.src='js/android.js';m.parentNode.insertBefore(a,m)
@@ -49,7 +48,6 @@ if(device.platform.indexOf('Android')!=-1) {
 	a=d.createElement('link');a.rel="stylesheet"
 	a.href='css/android.css';m.parentNode.insertBefore(a,m)
 }
-})
 window.onload = function() {
 	game.load()
 	Z('body > #intro').css({
