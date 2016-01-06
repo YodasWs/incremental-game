@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20160105',
+	v:'1.1.0-beta+20160106',
 	animals:{
 		rabbits:0
 	},
@@ -222,9 +222,9 @@ game = Z.extend(game, {
 	}
 })
 Z('#version').text(game.v)
-Z('img#rabbit').on('tap click', game.clkRabbit)
+Z('img#rabbit').on('click', game.clkRabbit)
 Z('img#rabbit').on('selectstart contextmenu MSHoldVisual',false)
-Z(document).on('tap click','a[href^="#"]',function(e){e.preventDefault()})
+Z(document).on('click','a[href^="#"]',function(e){e.preventDefault()})
 
 // Close the Game Menu
 game.closeMenu = function(e,t) {
@@ -523,28 +523,21 @@ game.restart = function(e) {
 	game.showShops()
 }
 
-var evtClick = 'tap click'
-// Register Correct Tap on Android Devices
-if (device.platform.indexOf('Android') != -1 && device.version) (function(v){
-	v = Number.parseFloat(v)
-	if (Number.isFinite(v)) evtClick = (v >= 4.4) ? 'tap longTap' : 'singleTap'
-})(device.version);
-
 // User Interaction Events
-Z(document).on(evtClick, 'section.shop > ul > li:not([disabled]) *', game.buyItem)
-Z(document).on(evtClick, 'section.shop > ul > li:not([disabled])', game.buyItem)
-Z(document).on(evtClick, 'section.shop a[href="#main"]', game.closeShops)
-Z(document).on(evtClick, 'body > nav a[href="#main"]', game.closeMenu)
-Z(document).on(evtClick, '#about a[href="#main"]', game.closeAbout)
-Z(document).on(evtClick, '#story a[href="#main"]', game.closeStory)
-Z(document).on(evtClick, 'a[href="#destroy"]', game.restart)
-Z(document).on(evtClick, 'body > nav a.shop *', game.openShop)
-Z(document).on(evtClick, 'body > nav a.shop', game.openShop)
-Z(document).on(evtClick, 'a[href="#about"]', game.openAbout)
-Z(document).on(evtClick, 'a[href="#menu"]', game.openMenu)
-Z(document).on(evtClick, '#lnkShop > a *', game.openShop)
-Z(document).on(evtClick, '#lnkShop > a', game.openShop)
-Z(document).on(evtClick, '#modal-bg', game.hideModals)
+Z(document).on('click', 'section.shop > ul > li:not([disabled]) *', game.buyItem)
+Z(document).on('click', 'section.shop > ul > li:not([disabled])', game.buyItem)
+Z(document).on('click', 'section.shop a[href="#main"]', game.closeShops)
+Z(document).on('click', 'body > nav a[href="#main"]', game.closeMenu)
+Z(document).on('click', '#about a[href="#main"]', game.closeAbout)
+Z(document).on('click', '#story a[href="#main"]', game.closeStory)
+Z(document).on('click', 'a[href="#destroy"]', game.restart)
+Z(document).on('click', 'body > nav a.shop *', game.openShop)
+Z(document).on('click', 'body > nav a.shop', game.openShop)
+Z(document).on('click', 'a[href="#about"]', game.openAbout)
+Z(document).on('click', 'a[href="#menu"]', game.openMenu)
+Z(document).on('click', '#lnkShop > a *', game.openShop)
+Z(document).on('click', '#lnkShop > a', game.openShop)
+Z(document).on('click', '#modal-bg', game.hideModals)
 
 // Pause/Resume Game
 Z(document).on('pause', function() { game.save(); clearTimeout(game.toAuto) })
