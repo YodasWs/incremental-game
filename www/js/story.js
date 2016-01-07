@@ -43,17 +43,6 @@ window.onReady(function() {
 		}
 	})
 
-	game.showStory = function(cb) {
-		game.hideModalBG(0,function(){game.showModalBG(200)})
-		Z('#story').show().css({
-			opacity: 0
-		}).animate({
-			opacity: 1
-		}, 200, function() {
-			if (Z.isFunction(cb)) cb()
-		}).trigger('update')
-	}
-
 	var foxAttack = function() {
 		if (Z('#story').css('display') == 'block') return
 		if (game.animals.rabbits < 10) return

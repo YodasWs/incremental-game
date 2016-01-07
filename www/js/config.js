@@ -7,7 +7,7 @@
  */
 window.onReady(function() {
 game = Z.extend(game, {
-	v:'1.1.0-beta+20160106',
+	v:'1.1.0-beta+20160107',
 	animals:{
 		rabbits:0
 	},
@@ -342,7 +342,6 @@ game.showModalBG = function(t) {
 }
 // Hide Modal Background Screen
 game.hideModalBG = function(t,cb) {
-	console.log('in hideModalBG')
 	Z('main').removeClass('blur')
 	if (Z('#modal-bg').css('display') != 'block') {
 		if (Z.isFunction(cb)) cb()
@@ -392,7 +391,23 @@ game.closeAbout = function(e) {
 		Z('#about').trigger('hide').hide()
 	}, t + 1)
 }
-
+// Set Story Modal Text and Display
+game.setStory = function(h1, txt, cb) {
+	Z('#story').children().remove()
+	Z('#story').append('<h1>' + h1).append('<a href="#main">&#xd7;</a>').append('<p>' + txt)
+	game.showStory(cb)
+}
+// Show Story Modal
+game.showStory = function(cb) {
+	game.hideModalBG(0,function(){game.showModalBG(200)})
+	Z('#story').show().css({
+		opacity: 0
+	}).animate({
+		opacity: 1
+	}, 200, function() {
+		if (Z.isFunction(cb)) cb()
+	}).trigger('update')
+}
 // Close Story Modal
 game.closeStory = function(e) {
 	var t = 400
@@ -519,6 +534,8 @@ game.restart = function(e) {
 	game.load()
 	game.showShops()
 }
+
+device.version = Number.parseFloat(device.version)
 
 // User Interaction Events
 Z(document).on('click', 'section.shop > ul > li:not([disabled]) *', game.buyItem)
@@ -657,8 +674,15 @@ Z(document).one('gameLoaded', function(e) {
 	})()
 })();
 
+if (navigator.userAgent.indexOf('Android')!=-1) {
+	game.setStory('Android', 'Platform: ' + device.platform + '<br/>Version: ' + device.version)
+}
+
+var docScroll = 'main'
+if (device.platform == 'Android' && device.version < 4) docScroll = document
+
 // Set Fixed Header
-Z('html,body,main').one('scroll',function(){
+Z(docScroll).one('scroll',function(){
 	var m = Z('main')
 	Z('main > header').after(Z('<div>').css({height:Z('main > header').height()+'px'})).css({
 		left:m.offset().left,
@@ -667,8 +691,8 @@ Z('html,body,main').one('scroll',function(){
 	})
 })
 // Alter Header BG/Border on Scroll
-Z('html,body,main').on('scroll', function(){
-	var b = (Z('main').scrollTop() <= 2) ? 'transparent':'black'
+Z(docScroll).on('scroll', function(){
+	var b = (Z(docScroll).scrollTop() <= 2) ? 'transparent':'black'
 	Z('main > header').animate({
 		'border-bottom-color':b,
 		background:b=='black'?'#4b9c4b':'#4ea24e'
