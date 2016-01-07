@@ -40,6 +40,13 @@ div#intro { display: block; text-align: center; }
 /** Main Game Center **/
 main {
 	padding: 0; z-index: 0;
+	-webkit-filter: blur(0);
+	filter: blur(0);
+	transition: blur 800ms;
+}
+main.blur {
+	-webkit-filter: blur(2px);
+	filter: blur(2px);
 }
 img#rabbit {
 	display: block;

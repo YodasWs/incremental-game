@@ -223,7 +223,7 @@ game = Z.extend(game, {
 })
 Z('#version').text(game.v)
 Z('img#rabbit').on('click', game.clkRabbit)
-Z('img#rabbit').on('selectstart contextmenu MSHoldVisual',false)
+Z('img#rabbit').on('selectstart contextmenu MSHoldVisual doubleTap',false)
 Z(document).on('click','a[href^="#"]',function(e){e.preventDefault()})
 
 // Close the Game Menu
@@ -307,13 +307,12 @@ game.updateShop = function(href) {
 }
 
 // Close Open Shop
-game.closeShops = function(e,cb) {
+game.hideShops = function(cb) {
 	var t = 0
 	Z('#lnkShop').children('a').each(function() {
 		var href = Z(this).attr('href') + '', Zt = Z(href)
 		t = 400
 		if (Zt.css('display') == 'block') {
-			game.hideModalBG(t)
 			Zt.css({
 			}).animate({
 				left:'-' + Zt.width() + 'px'
@@ -324,37 +323,32 @@ game.closeShops = function(e,cb) {
 	})
 	if (Z.isFunction(cb)) setTimeout(cb, t)
 }
+game.closeShops = function(e,cb) {
+	game.hideModalBG(t)
+	game.hideShops(cb)
+}
 
 // Show Modal Background Screen
 game.showModalBG = function(t) {
-	t = t?t:400
-	Z('main').css({
-		'-webkit-filter':'blur(0)',
-		filter:'blur(0)'
-	}).animate({
-		'-webkit-filter':'blur(2px)',
-		filter:'blur(2px)'
-	}, t*2)
-	Z('#modal-bg').show().css({
-		opacity:0
-	}).animate({
-		opacity:0.4
-	}, t)
+	t=t||400
+	Z('main').addClass('blur')
+	if (Z('#modal-bg').css('display') != 'block' || Z('#modal-bg').css('opacity') == 0) {
+		Z('#modal-bg').show().css({
+			opacity:0
+		}).animate({
+			opacity:0.4
+		}, t)
+	}
 }
 // Hide Modal Background Screen
 game.hideModalBG = function(t,cb) {
+	console.log('in hideModalBG')
+	Z('main').removeClass('blur')
 	if (Z('#modal-bg').css('display') != 'block') {
 		if (Z.isFunction(cb)) cb()
 		return
 	}
-	t = t?t:400
-	Z('main').css({
-		'-webkit-filter':'blur(2px)',
-		filter:'blur(2px)'
-	}).animate({
-		'-webkit-filter':'blur(0)',
-		filter:'blur(0)'
-	}, t*2)
+	t=t||400
 	Z('#modal-bg').css({
 		opacity:0.4
 	}).animate({
@@ -572,8 +566,9 @@ Z(document).on('keydown', function(e) {
 		case 's':
 			var Zt = Z('#lnkShop > a:first-of-type')
 				isOpen = Z(Zt.attr('href')).css('display') == 'block'
-			game.closeShops(e, function(){
-				if (!isOpen) Zt.trigger('click')
+			game.hideShops(function(){
+				if (!isOpen) game.openShop({target:Zt.get(0)})
+				else game.hideModalBG()
 			})
 			break;
 		case ' ':
